@@ -2,9 +2,9 @@
   "name": "singapore-mrt",
   "version": "1.0.0",
   "description": "This application aims to determine the best route between two stations in Singapore's MRT.",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
-    "start": "ts-node index.ts",
+    "start": "ts-node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
