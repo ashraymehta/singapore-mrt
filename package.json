@@ -1,0 +1,19 @@
+{
+  "name": "singapore-mrt",
+  "version": "1.0.0",
+  "description": "This application aims to determine the best route between two stations in Singapore's MRT.",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashraymehta/singapore-mrt.git"
+  },
+  "author": "Ashray Mehta",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/ashraymehta/singapore-mrt/issues"
+  },
+  "homepage": "https://github.com/ashraymehta/singapore-mrt#readme"
+}
