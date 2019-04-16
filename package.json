@@ -4,6 +4,7 @@
   "description": "This application aims to determine the best route between two stations in Singapore's MRT.",
   "main": "index.ts",
   "scripts": {
+    "start": "ts-node index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/ashraymehta/singapore-mrt/issues"
   },
-  "homepage": "https://github.com/ashraymehta/singapore-mrt#readme"
+  "homepage": "https://github.com/ashraymehta/singapore-mrt#readme",
+  "dependencies": {
+    "ts-node": "8.1.0",
+    "typescript": "3.4.3"
+  }
 }
