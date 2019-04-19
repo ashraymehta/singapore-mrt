@@ -2,6 +2,7 @@ import {groupBy} from 'lodash';
 import {Line} from './models/line';
 import {Metro} from './models/metro';
 import {Station} from './models/station';
+import {Stations} from './models/stations';
 import {LineStop} from './models/line-stop';
 import {JSONFileReader} from './utils/json-file-reader';
 import {UnparsedStationMap} from './models/unparsed-station-map';
@@ -21,7 +22,7 @@ export class MetroBuilder {
         const unparsedStationsMap = await this.jsonFileReader.readFile(filePath) as UnparsedStationMap[];
         const unparsedStationsByLineCodes = groupBy(unparsedStationsMap, (station: UnparsedStationMap) => station.StationCode.substr(0, 2));
 
-        const stations = <Station[]>[];
+        const stations = new Stations();
         const lines = <Line[]>[];
         for (const lineCode in unparsedStationsByLineCodes) {
             const unparsedStopsForLine = unparsedStationsByLineCodes[lineCode] as UnparsedStationMap[];
@@ -29,11 +30,11 @@ export class MetroBuilder {
             unparsedStopsForLine.forEach(station => {
                 const lineStop = new LineStop(station.StationCode, new Date(station.OpeningDate));
                 stops.push(lineStop);
-                const parsedStation = stations.find(s => s.name === station.StationName);
+                const parsedStation = stations.findStationWithName(station.StationName);
                 if (parsedStation) {
                     parsedStation.lineStops.push(lineStop);
                 } else {
-                    stations.push(new Station(station.StationName, [lineStop]));
+                    stations.add(new Station(station.StationName, [lineStop]));
                 }
             });
             lines.push(new Line(stops));

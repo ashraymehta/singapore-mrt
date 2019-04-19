@@ -4,6 +4,7 @@ import {Metro} from '../src/models/metro';
 import {suite, test} from 'mocha-typescript';
 import {Station} from '../src/models/station';
 import {instance, mock, when} from 'ts-mockito';
+import {Stations} from '../src/models/stations';
 import {LineStop} from '../src/models/line-stop';
 import {MetroBuilder} from '../src/metro-builder';
 import {JSONFileReader} from '../src/utils/json-file-reader';
@@ -45,10 +46,10 @@ class MetroBuilderSpec {
         const jurongLineStop = new LineStop('NS1', new Date('10 March 1990'));
         const bukitBatokLineStop = new LineStop('NS2', new Date('10 March 1990'));
         const expectedLines = [new Line([jurongLineStop, bukitBatokLineStop])];
-        const expectedStations = [
+        const expectedStations = new Stations([
             new Station('Jurong East', [jurongLineStop]),
             new Station('Bukit Batok', [bukitBatokLineStop])
-        ];
+        ]);
         const expectedMetro = new Metro(expectedLines, expectedStations);
         expect(metro).to.deep.equal(expectedMetro);
     }
@@ -74,10 +75,10 @@ class MetroBuilderSpec {
         const jurongLineStop = new LineStop('NS1', new Date('10 March 1990'));
         const pasirRisLineStop = new LineStop('EW1', new Date('16 December 1989'));
         const expectedLines = [new Line([jurongLineStop]), new Line([pasirRisLineStop])];
-        const expectedMetro = new Metro(expectedLines, [
+        const expectedMetro = new Metro(expectedLines, new Stations([
             new Station('Jurong East', [jurongLineStop]),
             new Station('Pasir Ris', [pasirRisLineStop])
-        ]);
+        ]));
         expect(metro).to.deep.equal(expectedMetro);
     }
 
@@ -102,9 +103,9 @@ class MetroBuilderSpec {
         const dhobyGhautNELineStop = new LineStop('NE6', new Date('20 June 2003'));
         const dhobyGhautEWLineStop = new LineStop('CC1', new Date('17 April 2010'));
         const expectedLines = [new Line([dhobyGhautNELineStop]), new Line([dhobyGhautEWLineStop])];
-        const expectedMetro = new Metro(expectedLines, [
+        const expectedMetro = new Metro(expectedLines, new Stations([
             new Station('Dhoby Ghaut', [dhobyGhautNELineStop, dhobyGhautEWLineStop]),
-        ]);
+        ]));
         expect(metro).to.deep.equal(expectedMetro);
     }
 }
