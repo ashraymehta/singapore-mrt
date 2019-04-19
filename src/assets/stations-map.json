@@ -1,0 +1,832 @@
+[
+  {
+    "StationCode": "NS1",
+    "StationName": "Jurong East",
+    "OpeningDate": "10 March 1990"
+  },
+  {
+    "StationCode": "NS2",
+    "StationName": "Bukit Batok",
+    "OpeningDate": "10 March 1990"
+  },
+  {
+    "StationCode": "NS3",
+    "StationName": "Bukit Gombak",
+    "OpeningDate": "10 March 1990"
+  },
+  {
+    "StationCode": "NS4",
+    "StationName": "Choa Chu Kang",
+    "OpeningDate": "10 March 1990"
+  },
+  {
+    "StationCode": "NS5",
+    "StationName": "Yew Tee",
+    "OpeningDate": "10 February 1996"
+  },
+  {
+    "StationCode": "NS7",
+    "StationName": "Kranji",
+    "OpeningDate": "10 February 1996"
+  },
+  {
+    "StationCode": "NS8",
+    "StationName": "Marsiling",
+    "OpeningDate": "10 February 1996"
+  },
+  {
+    "StationCode": "NS9",
+    "StationName": "Woodlands",
+    "OpeningDate": "10 February 1996"
+  },
+  {
+    "StationCode": "NS10",
+    "StationName": "Admiralty",
+    "OpeningDate": "10 February 1996"
+  },
+  {
+    "StationCode": "NS11",
+    "StationName": "Sembawang",
+    "OpeningDate": "10 February 1996"
+  },
+  {
+    "StationCode": "NS12",
+    "StationName": "Canberra",
+    "OpeningDate": "December 2019"
+  },
+  {
+    "StationCode": "NS13",
+    "StationName": "Yishun",
+    "OpeningDate": "20 December 1988"
+  },
+  {
+    "StationCode": "NS14",
+    "StationName": "Khatib",
+    "OpeningDate": "20 December 1988"
+  },
+  {
+    "StationCode": "NS15",
+    "StationName": "Yio Chu Kang",
+    "OpeningDate": "7 November 1987"
+  },
+  {
+    "StationCode": "NS16",
+    "StationName": "Ang Mo Kio",
+    "OpeningDate": "7 November 1987"
+  },
+  {
+    "StationCode": "NS17",
+    "StationName": "Bishan",
+    "OpeningDate": "7 November 1987"
+  },
+  {
+    "StationCode": "NS18",
+    "StationName": "Braddell",
+    "OpeningDate": "7 November 1987"
+  },
+  {
+    "StationCode": "NS19",
+    "StationName": "Toa Payoh",
+    "OpeningDate": "7 November 1987"
+  },
+  {
+    "StationCode": "NS20",
+    "StationName": "Novena",
+    "OpeningDate": "12 December 1987"
+  },
+  {
+    "StationCode": "NS21",
+    "StationName": "Newton",
+    "OpeningDate": "12 December 1987"
+  },
+  {
+    "StationCode": "NS22",
+    "StationName": "Orchard",
+    "OpeningDate": "12 December 1987"
+  },
+  {
+    "StationCode": "NS23",
+    "StationName": "Somerset",
+    "OpeningDate": "12 December 1987"
+  },
+  {
+    "StationCode": "NS24",
+    "StationName": "Dhoby Ghaut",
+    "OpeningDate": "12 December 1987"
+  },
+  {
+    "StationCode": "NS25",
+    "StationName": "City Hall",
+    "OpeningDate": "12 December 1987"
+  },
+  {
+    "StationCode": "NS26",
+    "StationName": "Raffles Place",
+    "OpeningDate": "12 December 1987"
+  },
+  {
+    "StationCode": "NS27",
+    "StationName": "Marina Bay",
+    "OpeningDate": "4 November 1989"
+  },
+  {
+    "StationCode": "NS28",
+    "StationName": "Marina South Pier",
+    "OpeningDate": "23 November 2014"
+  },
+  {
+    "StationCode": "EW1",
+    "StationName": "Pasir Ris",
+    "OpeningDate": "16 December 1989"
+  },
+  {
+    "StationCode": "EW2",
+    "StationName": "Tampines",
+    "OpeningDate": "16 December 1989"
+  },
+  {
+    "StationCode": "EW3",
+    "StationName": "Simei",
+    "OpeningDate": "16 December 1989"
+  },
+  {
+    "StationCode": "EW4",
+    "StationName": "Tanah Merah",
+    "OpeningDate": "4 November 1989"
+  },
+  {
+    "StationCode": "EW5",
+    "StationName": "Bedok",
+    "OpeningDate": "4 November 1989"
+  },
+  {
+    "StationCode": "EW6",
+    "StationName": "Kembangan",
+    "OpeningDate": "4 November 1989"
+  },
+  {
+    "StationCode": "EW7",
+    "StationName": "Eunos",
+    "OpeningDate": "4 November 1989"
+  },
+  {
+    "StationCode": "EW8",
+    "StationName": "Paya Lebar",
+    "OpeningDate": "4 November 1989"
+  },
+  {
+    "StationCode": "EW9",
+    "StationName": "Aljunied",
+    "OpeningDate": "4 November 1989"
+  },
+  {
+    "StationCode": "EW10",
+    "StationName": "Kallang",
+    "OpeningDate": "4 November 1989"
+  },
+  {
+    "StationCode": "EW11",
+    "StationName": "Lavender",
+    "OpeningDate": "4 November 1989"
+  },
+  {
+    "StationCode": "EW12",
+    "StationName": "Bugis",
+    "OpeningDate": "4 November 1989"
+  },
+  {
+    "StationCode": "EW13",
+    "StationName": "City Hall",
+    "OpeningDate": "12 December 1987"
+  },
+  {
+    "StationCode": "EW14",
+    "StationName": "Raffles Place",
+    "OpeningDate": "12 December 1987"
+  },
+  {
+    "StationCode": "EW15",
+    "StationName": "Tanjong Pagar",
+    "OpeningDate": "12 December 1987"
+  },
+  {
+    "StationCode": "EW16",
+    "StationName": "Outram Park",
+    "OpeningDate": "12 December 1987"
+  },
+  {
+    "StationCode": "EW17",
+    "StationName": "Tiong Bahru",
+    "OpeningDate": "12 March 1988"
+  },
+  {
+    "StationCode": "EW18",
+    "StationName": "Redhill",
+    "OpeningDate": "12 March 1988"
+  },
+  {
+    "StationCode": "EW19",
+    "StationName": "Queenstown",
+    "OpeningDate": "12 March 1988"
+  },
+  {
+    "StationCode": "EW20",
+    "StationName": "Commonwealth",
+    "OpeningDate": "12 March 1988"
+  },
+  {
+    "StationCode": "EW21",
+    "StationName": "Buona Vista",
+    "OpeningDate": "12 March 1988"
+  },
+  {
+    "StationCode": "EW22",
+    "StationName": "Dover",
+    "OpeningDate": "18 October 2001"
+  },
+  {
+    "StationCode": "EW23",
+    "StationName": "Clementi",
+    "OpeningDate": "12 March 1988"
+  },
+  {
+    "StationCode": "EW24",
+    "StationName": "Jurong East",
+    "OpeningDate": "5 November 1988"
+  },
+  {
+    "StationCode": "EW25",
+    "StationName": "Chinese Garden",
+    "OpeningDate": "5 November 1988"
+  },
+  {
+    "StationCode": "EW26",
+    "StationName": "Lakeside",
+    "OpeningDate": "5 November 1988"
+  },
+  {
+    "StationCode": "EW27",
+    "StationName": "Boon Lay",
+    "OpeningDate": "6 July 1990"
+  },
+  {
+    "StationCode": "EW28",
+    "StationName": "Pioneer",
+    "OpeningDate": "28 February 2009"
+  },
+  {
+    "StationCode": "EW29",
+    "StationName": "Joo Koon",
+    "OpeningDate": "28 February 2009"
+  },
+  {
+    "StationCode": "EW30",
+    "StationName": "Gul Circle",
+    "OpeningDate": "18 June 2017"
+  },
+  {
+    "StationCode": "EW31",
+    "StationName": "Tuas Crescent",
+    "OpeningDate": "18 June 2017"
+  },
+  {
+    "StationCode": "EW32",
+    "StationName": "Tuas West Road",
+    "OpeningDate": "18 June 2017"
+  },
+  {
+    "StationCode": "EW33",
+    "StationName": "Tuas Link",
+    "OpeningDate": "18 June 2017"
+  },
+  {
+    "StationCode": "CG0",
+    "StationName": "Tanah Merah",
+    "OpeningDate": "4 November 1989"
+  },
+  {
+    "StationCode": "CG1",
+    "StationName": "Expo",
+    "OpeningDate": "10 January 2001"
+  },
+  {
+    "StationCode": "CG2",
+    "StationName": "Changi Airport",
+    "OpeningDate": "8 February 2002"
+  },
+  {
+    "StationCode": "NE1",
+    "StationName": "HarbourFront",
+    "OpeningDate": "20 June 2003"
+  },
+  {
+    "StationCode": "NE3",
+    "StationName": "Outram Park",
+    "OpeningDate": "20 June 2003"
+  },
+  {
+    "StationCode": "NE4",
+    "StationName": "Chinatown",
+    "OpeningDate": "20 June 2003"
+  },
+  {
+    "StationCode": "NE5",
+    "StationName": "Clarke Quay",
+    "OpeningDate": "20 June 2003"
+  },
+  {
+    "StationCode": "NE6",
+    "StationName": "Dhoby Ghaut",
+    "OpeningDate": "20 June 2003"
+  },
+  {
+    "StationCode": "NE7",
+    "StationName": "Little India",
+    "OpeningDate": "20 June 2003"
+  },
+  {
+    "StationCode": "NE8",
+    "StationName": "Farrer Park",
+    "OpeningDate": "20 June 2003"
+  },
+  {
+    "StationCode": "NE9",
+    "StationName": "Boon Keng",
+    "OpeningDate": "20 June 2003"
+  },
+  {
+    "StationCode": "NE10",
+    "StationName": "Potong Pasir",
+    "OpeningDate": "20 June 2003"
+  },
+  {
+    "StationCode": "NE11",
+    "StationName": "Woodleigh",
+    "OpeningDate": "20 June 2011"
+  },
+  {
+    "StationCode": "NE12",
+    "StationName": "Serangoon",
+    "OpeningDate": "20 June 2003"
+  },
+  {
+    "StationCode": "NE13",
+    "StationName": "Kovan",
+    "OpeningDate": "20 June 2003"
+  },
+  {
+    "StationCode": "NE14",
+    "StationName": "Hougang",
+    "OpeningDate": "20 June 2003"
+  },
+  {
+    "StationCode": "NE15",
+    "StationName": "Buangkok",
+    "OpeningDate": "15 January 2006"
+  },
+  {
+    "StationCode": "NE16",
+    "StationName": "Sengkang",
+    "OpeningDate": "20 June 2003"
+  },
+  {
+    "StationCode": "NE17",
+    "StationName": "Punggol",
+    "OpeningDate": "20 June 2003"
+  },
+  {
+    "StationCode": "CC1",
+    "StationName": "Dhoby Ghaut",
+    "OpeningDate": "17 April 2010"
+  },
+  {
+    "StationCode": "CC2",
+    "StationName": "Bras Basah",
+    "OpeningDate": "17 April 2010"
+  },
+  {
+    "StationCode": "CC3",
+    "StationName": "Esplanade",
+    "OpeningDate": "17 April 2010"
+  },
+  {
+    "StationCode": "CC4",
+    "StationName": "Promenade",
+    "OpeningDate": "17 April 2010"
+  },
+  {
+    "StationCode": "CC5",
+    "StationName": "Nicoll Highway",
+    "OpeningDate": "17 April 2010"
+  },
+  {
+    "StationCode": "CC6",
+    "StationName": "Stadium",
+    "OpeningDate": "17 April 2010"
+  },
+  {
+    "StationCode": "CC7",
+    "StationName": "Mountbatten",
+    "OpeningDate": "17 April 2010"
+  },
+  {
+    "StationCode": "CC8",
+    "StationName": "Dakota",
+    "OpeningDate": "17 April 2010"
+  },
+  {
+    "StationCode": "CC9",
+    "StationName": "Paya Lebar",
+    "OpeningDate": "17 April 2010"
+  },
+  {
+    "StationCode": "CC10",
+    "StationName": "MacPherson",
+    "OpeningDate": "17 April 2010"
+  },
+  {
+    "StationCode": "CC11",
+    "StationName": "Tai Seng",
+    "OpeningDate": "17 April 2010"
+  },
+  {
+    "StationCode": "CC12",
+    "StationName": "Bartley",
+    "OpeningDate": "28 May 2009"
+  },
+  {
+    "StationCode": "CC13",
+    "StationName": "Serangoon",
+    "OpeningDate": "28 May 2009"
+  },
+  {
+    "StationCode": "CC14",
+    "StationName": "Lorong Chuan",
+    "OpeningDate": "28 May 2009"
+  },
+  {
+    "StationCode": "CC15",
+    "StationName": "Bishan",
+    "OpeningDate": "28 May 2009"
+  },
+  {
+    "StationCode": "CC16",
+    "StationName": "Marymount",
+    "OpeningDate": "28 May 2009"
+  },
+  {
+    "StationCode": "CC17",
+    "StationName": "Caldecott",
+    "OpeningDate": "8 October 2011"
+  },
+  {
+    "StationCode": "CC19",
+    "StationName": "Botanic Gardens",
+    "OpeningDate": "8 October 2011"
+  },
+  {
+    "StationCode": "CC20",
+    "StationName": "Farrer Road",
+    "OpeningDate": "8 October 2011"
+  },
+  {
+    "StationCode": "CC21",
+    "StationName": "Holland Village",
+    "OpeningDate": "8 October 2011"
+  },
+  {
+    "StationCode": "CC22",
+    "StationName": "Buona Vista",
+    "OpeningDate": "8 October 2011"
+  },
+  {
+    "StationCode": "CC23",
+    "StationName": "one-north",
+    "OpeningDate": "8 October 2011"
+  },
+  {
+    "StationCode": "CC24",
+    "StationName": "Kent Ridge",
+    "OpeningDate": "8 October 2011"
+  },
+  {
+    "StationCode": "CC25",
+    "StationName": "Haw Par Villa",
+    "OpeningDate": "8 October 2011"
+  },
+  {
+    "StationCode": "CC26",
+    "StationName": "Pasir Panjang",
+    "OpeningDate": "8 October 2011"
+  },
+  {
+    "StationCode": "CC27",
+    "StationName": "Labrador Park",
+    "OpeningDate": "8 October 2011"
+  },
+  {
+    "StationCode": "CC28",
+    "StationName": "Telok Blangah",
+    "OpeningDate": "8 October 2011"
+  },
+  {
+    "StationCode": "CC29",
+    "StationName": "HarbourFront",
+    "OpeningDate": "8 October 2011"
+  },
+  {
+    "StationCode": "CE0",
+    "StationName": "Promenade",
+    "OpeningDate": "17 April 2010"
+  },
+  {
+    "StationCode": "CE1",
+    "StationName": "Bayfront",
+    "OpeningDate": "14 January 2012"
+  },
+  {
+    "StationCode": "CE2",
+    "StationName": "Marina Bay",
+    "OpeningDate": "14 January 2012"
+  },
+  {
+    "StationCode": "DT1",
+    "StationName": "Bukit Panjang",
+    "OpeningDate": "27 December 2015"
+  },
+  {
+    "StationCode": "DT2",
+    "StationName": "Cashew",
+    "OpeningDate": "27 December 2015"
+  },
+  {
+    "StationCode": "DT3",
+    "StationName": "Hillview",
+    "OpeningDate": "27 December 2015"
+  },
+  {
+    "StationCode": "DT5",
+    "StationName": "Beauty World",
+    "OpeningDate": "27 December 2015"
+  },
+  {
+    "StationCode": "DT6",
+    "StationName": "King Albert Park",
+    "OpeningDate": "27 December 2015"
+  },
+  {
+    "StationCode": "DT7",
+    "StationName": "Sixth Avenue",
+    "OpeningDate": "27 December 2015"
+  },
+  {
+    "StationCode": "DT8",
+    "StationName": "Tan Kah Kee",
+    "OpeningDate": "27 December 2015"
+  },
+  {
+    "StationCode": "DT9",
+    "StationName": "Botanic Gardens",
+    "OpeningDate": "27 December 2015"
+  },
+  {
+    "StationCode": "DT10",
+    "StationName": "Stevens",
+    "OpeningDate": "27 December 2015"
+  },
+  {
+    "StationCode": "DT11",
+    "StationName": "Newton",
+    "OpeningDate": "27 December 2015"
+  },
+  {
+    "StationCode": "DT12",
+    "StationName": "Little India",
+    "OpeningDate": "27 December 2015"
+  },
+  {
+    "StationCode": "DT13",
+    "StationName": "Rochor",
+    "OpeningDate": "27 December 2015"
+  },
+  {
+    "StationCode": "DT14",
+    "StationName": "Bugis",
+    "OpeningDate": "22 December 2013"
+  },
+  {
+    "StationCode": "DT15",
+    "StationName": "Promenade",
+    "OpeningDate": "22 December 2013"
+  },
+  {
+    "StationCode": "DT16",
+    "StationName": "Bayfront",
+    "OpeningDate": "22 December 2013"
+  },
+  {
+    "StationCode": "DT17",
+    "StationName": "Downtown",
+    "OpeningDate": "22 December 2013"
+  },
+  {
+    "StationCode": "DT18",
+    "StationName": "Telok Ayer",
+    "OpeningDate": "22 December 2013"
+  },
+  {
+    "StationCode": "DT19",
+    "StationName": "Chinatown",
+    "OpeningDate": "22 December 2013"
+  },
+  {
+    "StationCode": "DT20",
+    "StationName": "Fort Canning",
+    "OpeningDate": "21 October 2017"
+  },
+  {
+    "StationCode": "DT21",
+    "StationName": "Bencoolen",
+    "OpeningDate": "21 October 2017"
+  },
+  {
+    "StationCode": "DT22",
+    "StationName": "Jalan Besar",
+    "OpeningDate": "21 October 2017"
+  },
+  {
+    "StationCode": "DT23",
+    "StationName": "Bendemeer",
+    "OpeningDate": "21 October 2017"
+  },
+  {
+    "StationCode": "DT24",
+    "StationName": "Geylang Bahru",
+    "OpeningDate": "21 October 2017"
+  },
+  {
+    "StationCode": "DT25",
+    "StationName": "Mattar",
+    "OpeningDate": "21 October 2017"
+  },
+  {
+    "StationCode": "DT26",
+    "StationName": "MacPherson",
+    "OpeningDate": "21 October 2017"
+  },
+  {
+    "StationCode": "DT27",
+    "StationName": "Ubi",
+    "OpeningDate": "21 October 2017"
+  },
+  {
+    "StationCode": "DT28",
+    "StationName": "Kaki Bukit",
+    "OpeningDate": "21 October 2017"
+  },
+  {
+    "StationCode": "DT29",
+    "StationName": "Bedok North",
+    "OpeningDate": "21 October 2017"
+  },
+  {
+    "StationCode": "DT30",
+    "StationName": "Bedok Reservoir",
+    "OpeningDate": "21 October 2017"
+  },
+  {
+    "StationCode": "DT31",
+    "StationName": "Tampines West",
+    "OpeningDate": "21 October 2017"
+  },
+  {
+    "StationCode": "DT32",
+    "StationName": "Tampines",
+    "OpeningDate": "21 October 2017"
+  },
+  {
+    "StationCode": "DT33",
+    "StationName": "Tampines East",
+    "OpeningDate": "21 October 2017"
+  },
+  {
+    "StationCode": "DT34",
+    "StationName": "Upper Changi",
+    "OpeningDate": "21 October 2017"
+  },
+  {
+    "StationCode": "DT35",
+    "StationName": "Expo",
+    "OpeningDate": "21 October 2017"
+  },
+  {
+    "StationCode": "TE1",
+    "StationName": "Woodlands North",
+    "OpeningDate": "31 December 2019"
+  },
+  {
+    "StationCode": "TE2",
+    "StationName": "Woodlands",
+    "OpeningDate": "31 December 2019"
+  },
+  {
+    "StationCode": "TE3",
+    "StationName": "Woodlands South",
+    "OpeningDate": "31 December 2019"
+  },
+  {
+    "StationCode": "TE4",
+    "StationName": "Springleaf",
+    "OpeningDate": "31 December 2020"
+  },
+  {
+    "StationCode": "TE5",
+    "StationName": "Lentor",
+    "OpeningDate": "31 December 2020"
+  },
+  {
+    "StationCode": "TE6",
+    "StationName": "Mayflower",
+    "OpeningDate": "31 December 2020"
+  },
+  {
+    "StationCode": "TE7",
+    "StationName": "Bright Hill",
+    "OpeningDate": "31 December 2020"
+  },
+  {
+    "StationCode": "TE8",
+    "StationName": "Upper Thomson",
+    "OpeningDate": "31 December 2020"
+  },
+  {
+    "StationCode": "TE9",
+    "StationName": "Caldecott",
+    "OpeningDate": "31 December 2020"
+  },
+  {
+    "StationCode": "TE10",
+    "StationName": "Mount Pleasant",
+    "OpeningDate": "31 December 2021"
+  },
+  {
+    "StationCode": "TE11",
+    "StationName": "Stevens",
+    "OpeningDate": "31 December 2021"
+  },
+  {
+    "StationCode": "TE12",
+    "StationName": "Napier",
+    "OpeningDate": "31 December 2021"
+  },
+  {
+    "StationCode": "TE13",
+    "StationName": "Orchard Boulevard",
+    "OpeningDate": "31 December 2021"
+  },
+  {
+    "StationCode": "TE14",
+    "StationName": "Orchard",
+    "OpeningDate": "31 December 2021"
+  },
+  {
+    "StationCode": "TE15",
+    "StationName": "Great World",
+    "OpeningDate": "31 December 2021"
+  },
+  {
+    "StationCode": "TE16",
+    "StationName": "Havelock",
+    "OpeningDate": "31 December 2021"
+  },
+  {
+    "StationCode": "TE17",
+    "StationName": "Outram Park",
+    "OpeningDate": "31 December 2021"
+  },
+  {
+    "StationCode": "TE18",
+    "StationName": "Maxwell",
+    "OpeningDate": "31 December 2021"
+  },
+  {
+    "StationCode": "TE19",
+    "StationName": "Shenton Way",
+    "OpeningDate": "31 December 2021"
+  },
+  {
+    "StationCode": "TE20",
+    "StationName": "Marina Bay",
+    "OpeningDate": "31 December 2021"
+  },
+  {
+    "StationCode": "TE21",
+    "StationName": "Marina South",
+    "OpeningDate": "31 December 2021"
+  },
+  {
+    "StationCode": "TE22",
+    "StationName": "Gardens by the Bay",
+    "OpeningDate": "31 December 2021"
+  }
+]
