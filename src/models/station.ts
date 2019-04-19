@@ -8,4 +8,8 @@ export class Station {
         this.name = name;
         this.lineStops = lineStops;
     }
+
+    public addStop(stop: LineStop) {
+        this.lineStops.push(stop);
+    }
 }

@@ -32,7 +32,7 @@ export class MetroBuilder {
                 stops.push(lineStop);
                 const parsedStation = stations.findStationWithName(station.StationName);
                 if (parsedStation) {
-                    parsedStation.lineStops.push(lineStop);
+                    parsedStation.addStop(lineStop);
                 } else {
                     stations.add(new Station(station.StationName, [lineStop]));
                 }
