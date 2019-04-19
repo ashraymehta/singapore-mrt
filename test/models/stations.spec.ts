@@ -29,4 +29,32 @@ class StationsSpec {
 
         expect(result).to.be.undefined;
     }
+
+    @test
+    public async shouldAddStationIfItDoesNotExist(): Promise<void> {
+        const stations = new Stations();
+        const stationName = 'Serangoon';
+        const lineStop = new LineStop('CC13', new Date('28 May 2009'));
+
+        stations.createOrUpdate(stationName, lineStop);
+
+        expect(stations).to.have.lengthOf(1);
+        const createdStation = [...stations][0];
+        expect(createdStation).to.deep.equal(new Station(stationName, [lineStop]));
+    }
+
+    @test
+    public async shouldAddLineStopToExistingStationIfItAlreadyExists(): Promise<void> {
+        const stations = new Stations();
+        const stationName = 'Serangoon';
+        const newLineStop = new LineStop('CC13', new Date('28 May 2009'));
+        const existingLineStop = new LineStop(`NE12`, new Date(`20 June 2003`));
+        stations.add(new Station(stationName, [existingLineStop]));
+
+        stations.createOrUpdate(stationName, newLineStop);
+
+        expect(stations).to.have.lengthOf(1);
+        const serangoonStation = [...stations][0];
+        expect(serangoonStation).to.deep.equal(new Station(stationName, [existingLineStop, newLineStop]));
+    }
 }
