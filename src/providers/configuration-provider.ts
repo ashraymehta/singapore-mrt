@@ -3,6 +3,6 @@ export class ConfigurationProvider {
 
     public async providePathForStationsMapFile(): Promise<string> {
         const stationsMapFileName = `stations-map.json`;
-        return `${ConfigurationProvider.AssetsPath}${stationsMapFileName}`;
+        return ConfigurationProvider.AssetsPath + stationsMapFileName;
     }
 }
