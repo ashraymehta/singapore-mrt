@@ -1,5 +1,5 @@
 export class LineStop {
-    private readonly code: string;
+    public readonly code: string;
     private readonly openingDate: Date;
 
     constructor(code: string, openingDate: Date) {

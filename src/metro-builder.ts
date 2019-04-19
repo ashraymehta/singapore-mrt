@@ -1,6 +1,7 @@
 import {groupBy} from 'lodash';
 import {Line} from './models/line';
 import {Metro} from './models/metro';
+import {Station} from './models/station';
 import {LineStop} from './models/line-stop';
 import {JSONFileReader} from './utils/json-file-reader';
 import {UnparsedStationMap} from './models/unparsed-station-map';
@@ -17,15 +18,27 @@ export class MetroBuilder {
 
     public async build(): Promise<Metro> {
         const filePath = await this.configurationProvider.providePathForStationsMapFile();
-        const stationsMap = await this.jsonFileReader.readFile(filePath) as UnparsedStationMap[];
-        const stationsGroupedByLineCodes = groupBy(stationsMap, (station: UnparsedStationMap) => station.StationCode.substr(0, 2));
+        const unparsedStationsMap = await this.jsonFileReader.readFile(filePath) as UnparsedStationMap[];
+        const unparsedStationsByLineCodes = groupBy(unparsedStationsMap, (station: UnparsedStationMap) => station.StationCode.substr(0, 2));
 
-        const lines = Object.keys(stationsGroupedByLineCodes).map(lineCode => {
-            const stopsForLine = stationsGroupedByLineCodes[lineCode] as UnparsedStationMap[];
-            const stops = stopsForLine.map(station => new LineStop(station.StationCode, new Date(station.OpeningDate)));
-            return new Line(stops);
-        });
+        const stations = <Station[]>[];
+        const lines = <Line[]>[];
+        for (const lineCode in unparsedStationsByLineCodes) {
+            const unparsedStopsForLine = unparsedStationsByLineCodes[lineCode] as UnparsedStationMap[];
+            const stops = <LineStop[]>[];
+            unparsedStopsForLine.forEach(station => {
+                const lineStop = new LineStop(station.StationCode, new Date(station.OpeningDate));
+                stops.push(lineStop);
+                const parsedStation = stations.find(s => s.name === station.StationName);
+                if (parsedStation) {
+                    parsedStation.lineStops.push(lineStop);
+                } else {
+                    stations.push(new Station(station.StationName, [lineStop]));
+                }
+            });
+            lines.push(new Line(stops));
+        }
 
-        return new Metro(lines);
+        return new Metro(lines, stations);
     }
 }
