@@ -1,4 +1,6 @@
-import {Line, LineStop, Metro} from './models/metro';
+import {Line} from './models/line';
+import {Metro} from './models/metro';
+import {LineStop} from './models/line-stop';
 import {JSONFileReader} from './utils/json-file-reader';
 
 export class MetroBuilder {

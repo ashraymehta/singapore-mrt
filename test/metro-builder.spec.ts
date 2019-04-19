@@ -1,8 +1,10 @@
 import {expect} from 'chai';
+import {Line} from '../src/models/line';
+import {Metro} from '../src/models/metro';
 import {suite, test} from 'mocha-typescript';
 import {instance, mock, when} from 'ts-mockito';
+import {LineStop} from '../src/models/line-stop';
 import {MetroBuilder} from '../src/metro-builder';
-import {Line, LineStop, Metro} from '../src/models/metro';
 import {JSONFileReader} from '../src/utils/json-file-reader';
 
 @suite
