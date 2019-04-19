@@ -19,7 +19,7 @@ export class MetroBuilder {
     public async build(): Promise<Metro> {
         const filePath = await this.configurationProvider.providePathForStationsMapFile();
         const unparsedStationsMap = await this.jsonFileReader.readFile(filePath) as UnparsedStationMap[];
-        const unparsedStationsByLineCodes = groupBy(unparsedStationsMap, station => station.StationCode.substr(0, 2));
+        const unparsedStationsByLineCodes = groupBy(unparsedStationsMap, station => station.StationCode.substr(0, Line.LineCodeLength));
 
         const stations = new Stations();
         const lines: Line[] = [];
