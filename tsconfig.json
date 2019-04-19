@@ -3,6 +3,8 @@
     "module": "commonjs",
     "target": "es2017",
     "sourceMap": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
     "experimentalDecorators": true
   },
   "exclude": [
