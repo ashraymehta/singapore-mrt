@@ -6,14 +6,26 @@ import {instance, mock, when} from 'ts-mockito';
 import {LineStop} from '../src/models/line-stop';
 import {MetroBuilder} from '../src/metro-builder';
 import {JSONFileReader} from '../src/utils/json-file-reader';
+import {ConfigurationProvider} from '../src/providers/configuration-provider';
 
 @suite
 class MetroBuilderSpec {
+    private reader: JSONFileReader;
+    private metroBuilder: MetroBuilder;
+    private configurationProvider: ConfigurationProvider;
+    private static readonly StationsMapFilePath = '/a/good/file/path/stations-map.json';
+
+    public before(): void {
+        this.reader = mock(JSONFileReader);
+        this.configurationProvider = mock(ConfigurationProvider);
+        this.metroBuilder = new MetroBuilder(instance(this.reader), instance(this.configurationProvider));
+
+        when(this.configurationProvider.providePathForStationsMapFile()).thenResolve(MetroBuilderSpec.StationsMapFilePath)
+    }
+
     @test
     public async shouldBuildMetroFromTheStationsJSONWhenOnlyASingleLineIsPresent(): Promise<void> {
-        const reader = mock(JSONFileReader);
-        const metroBuilder = new MetroBuilder(instance(reader));
-        when(reader.readFile('src/assets/stations-map.json')).thenResolve([
+        when(this.reader.readFile(MetroBuilderSpec.StationsMapFilePath)).thenResolve([
             {
                 StationCode: "NS1",
                 StationName: "Jurong East",
@@ -26,7 +38,7 @@ class MetroBuilderSpec {
             }
         ]);
 
-        const metro = await metroBuilder.build();
+        const metro = await this.metroBuilder.build();
 
         expect(metro).to.be.an.instanceOf(Metro);
         const expectedLines = [
@@ -41,9 +53,7 @@ class MetroBuilderSpec {
 
     @test
     public async shouldBuildMetroFromTheStationsJSONWhenMultipleLinesArePresent(): Promise<void> {
-        const reader = mock(JSONFileReader);
-        const metroBuilder = new MetroBuilder(instance(reader));
-        when(reader.readFile('src/assets/stations-map.json')).thenResolve([
+        when(this.reader.readFile(MetroBuilderSpec.StationsMapFilePath)).thenResolve([
             {
                 StationCode: "NS1",
                 StationName: "Jurong East",
@@ -56,7 +66,7 @@ class MetroBuilderSpec {
             }
         ]);
 
-        const metro = await metroBuilder.build();
+        const metro = await this.metroBuilder.build();
 
         expect(metro).to.be.an.instanceOf(Metro);
         const expectedLines = [
