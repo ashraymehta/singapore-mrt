@@ -3,6 +3,7 @@ import {Line} from './models/line';
 import {Metro} from './models/metro';
 import {LineStop} from './models/line-stop';
 import {JSONFileReader} from './utils/json-file-reader';
+import {UnparsedStationMap} from './models/unparsed-station-map';
 
 export class MetroBuilder {
     private readonly jsonFileReader: JSONFileReader;
@@ -23,10 +24,4 @@ export class MetroBuilder {
 
         return new Metro(lines);
     }
-}
-
-interface UnparsedStationMap {
-    StationCode: string;
-    StationName: string;
-    OpeningDate: string;
 }
