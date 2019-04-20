@@ -6,6 +6,7 @@ import {Router} from '../../src/router/router';
 import {Station} from '../../src/models/station';
 import {Stations} from '../../src/models/stations';
 import {LineStop} from '../../src/models/line-stop';
+import {LineStopBuilder} from '../builders/line-stop.builder';
 import {RoutingDataPreparer} from '../../src/router/routing-data-preparer';
 
 @suite
@@ -104,5 +105,23 @@ class RouterSpec {
         const route = await this.router.findRouteBetween(firstStation, lastStation, metro);
 
         expect(route).to.deep.equal([firstStop, interchangeStopForNELine, interchangeStopForCCLine, lastStop]);
+    }
+
+    @test
+    public async shouldFindShortestRouteWhenMultipleRoutesAreAvailable(): Promise<void> {
+        const firstStop = LineStopBuilder.withDefaults().build();
+        const secondStop = LineStopBuilder.withDefaults().build();
+        const thirdStop = LineStopBuilder.withDefaults().build();
+        const fourthStop = LineStopBuilder.withDefaults().build();
+
+        const aLine = new Line([firstStop, secondStop, thirdStop, fourthStop]);
+        const anotherLine = new Line([secondStop, fourthStop]);
+
+        const lines = [aLine, anotherLine];
+        const metro = new Metro(lines, null);
+
+        const route = await this.router.findRouteBetween(firstStop.stoppingAt, fourthStop.stoppingAt, metro);
+
+        expect(route).to.deep.equal([firstStop, secondStop, fourthStop]);
     }
 }
