@@ -3,6 +3,7 @@ import {Metro} from '../models/metro';
 import {flatten, minBy} from 'lodash';
 import {Station} from '../models/station';
 import {LineStop} from '../models/line-stop';
+import {StopReachabilityData} from '../models/router/stop-reachability-data';
 
 export class Router {
     public async findRouteBetween(source: Station, destination: Station, metro: Metro): Promise<LineStop[]> {
@@ -11,7 +12,7 @@ export class Router {
         const destinationStop = allStops.find(stop => stop.isFor(destination));
 
         const unvisitedStops = new Set(allStops);
-        const stopReachabilityData = new Map<LineStop, { timeTaken: number, previousStop: LineStop }>();
+        const stopReachabilityData = new StopReachabilityData();
         unvisitedStops.forEach(stop => stopReachabilityData.set(stop, {timeTaken: Number.MAX_VALUE, previousStop: undefined}));
 
         let currentStop = sourceStop;
@@ -27,12 +28,20 @@ export class Router {
                 }
             });
             unvisitedStops.delete(currentStop);
-            currentStop = minBy([...stopReachabilityData.entries()], ([stop, datum]) => {
-                return unvisitedStops.has(stop) ? datum.timeTaken : Number.MAX_VALUE;
-            })[0];
+            currentStop = this.getNextUnvisitedStop(stopReachabilityData, unvisitedStops);
         }
 
-        currentStop = destinationStop;
+        return this.createRoute(sourceStop, destinationStop, stopReachabilityData);
+    }
+
+    private getNextUnvisitedStop(stopReachabilityData: StopReachabilityData, unvisitedStops: Set<LineStop>) {
+        return minBy([...stopReachabilityData.entries()], ([stop, datum]) => {
+            return unvisitedStops.has(stop) ? datum.timeTaken : Number.MAX_VALUE;
+        })[0];
+    }
+
+    private createRoute(sourceStop: LineStop, destinationStop: LineStop, stopReachabilityData: StopReachabilityData): LineStop[] {
+        let currentStop = destinationStop;
         const route: LineStop[] = [currentStop];
         while (currentStop !== sourceStop) {
             currentStop = stopReachabilityData.get(currentStop).previousStop;
