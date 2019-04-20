@@ -84,4 +84,24 @@ class RouterSpec {
 
         expect(route).to.deep.equal([]);
     }
+
+    @test
+    public async shouldFindRoutesWhichRequireALineChange(): Promise<void> {
+        const firstStation = new Station(`Punggol`);
+        const interchangeStation = new Station(`Serangoon`);
+        const lastStation = new Station(`Bartley`);
+
+        const firstStop = new LineStop(`NE17`, firstStation, new Date(`20 June 2003`));
+        const interchangeStopForNELine = new LineStop(`NE12`, interchangeStation, new Date(`28 May 2009`));
+        const interchangeStopForCCLine = new LineStop(`CC13`, interchangeStation, new Date(`28 May 2009`));
+        const lastStop = new LineStop(`CC12`, lastStation, new Date(`28 May 2009`));
+
+        const lines = [new Line([firstStop, interchangeStopForNELine]), new Line([interchangeStopForCCLine, lastStop])];
+        const stations = new Stations([firstStation, interchangeStation, lastStation]);
+        const metro = new Metro(lines, stations);
+
+        const route = await this.router.findRouteBetween(firstStation, lastStation, metro);
+
+        expect(route).to.deep.equal([firstStop, interchangeStopForNELine, interchangeStopForCCLine, lastStop]);
+    }
 }

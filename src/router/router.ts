@@ -1,13 +1,26 @@
 import {Line} from '../models/line';
 import {Metro} from '../models/metro';
-import {flatten, minBy} from 'lodash';
 import {Station} from '../models/station';
 import {LineStop} from '../models/line-stop';
+import {clone, difference, flatten, minBy, uniq} from 'lodash';
 import {StopReachabilityData} from '../models/router/stop-reachability-data';
 
 export class Router {
     public async findRouteBetween(source: Station, destination: Station, metro: Metro): Promise<LineStop[]> {
-        const allStops = flatten(metro.lines.map(line => line.stops));
+        const allLines = clone(metro.lines);
+        const allStops = flatten(allLines.map(line => line.stops));
+        const stations = allStops.map(stop => stop.stoppingAt);
+        const duplicateStations = uniq(stations.filter((station: Station, index: number) => {
+            return stations.indexOf(station, index + 1) > 0;
+        }));
+        duplicateStations.forEach(station => {
+            const stopsForStation = allStops.filter(stop => stop.isFor(station));
+            const lines = stopsForStation.map(stop => {
+                return difference(stopsForStation, [stop]).map(otherStop => new Line([stop, otherStop]));
+            });
+            allLines.push(...flatten(lines));
+        });
+
         const sourceStop = allStops.find(stop => stop.isFor(source));
         const destinationStop = allStops.find(stop => stop.isFor(destination));
 
@@ -19,7 +32,7 @@ export class Router {
         stopReachabilityData.set(sourceStop, {timeTaken: 0, previousStop: undefined});
 
         while (unvisitedStops.size !== 0 && currentStop !== undefined) {
-            const neighbouringStops = this.getNeighbouringStops(metro.lines, currentStop);
+            const neighbouringStops = this.getNeighbouringStops(allLines, currentStop);
             neighbouringStops.forEach(neighbour => {
                 const timeTakenFromHere = 1;
                 const timeTakenFromSource = stopReachabilityData.get(currentStop).timeTaken + timeTakenFromHere;
@@ -55,9 +68,12 @@ export class Router {
     }
 
     private getNeighbouringStops(lines: Line[], currentStop: LineStop): LineStop[] {
-        const lineWithStop = lines.find(line => line.stops.includes(currentStop));
-        const previousStop = lineWithStop.stops[lineWithStop.stops.indexOf(currentStop) - 1];
-        const nextStop = lineWithStop.stops[lineWithStop.stops.indexOf(currentStop) + 1];
-        return [previousStop, nextStop].filter(stop => !!stop);
+        const neighbouringStopPairs = lines.filter(line => line.stops.includes(currentStop))
+            .map(line => {
+                const previousStop = line.stops[line.stops.indexOf(currentStop) - 1];
+                const nextStop = line.stops[line.stops.indexOf(currentStop) + 1];
+                return [previousStop, nextStop].filter(stop => !!stop);
+            });
+        return flatten(neighbouringStopPairs);
     }
 }
