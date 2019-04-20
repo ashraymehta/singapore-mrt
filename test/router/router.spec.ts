@@ -21,6 +21,7 @@ class RouterSpec {
         const bukitBatokStation = new Station(`Bukit Batok`);
         const jurongLineStop = new LineStop(`NS1`, jurongEastStation, new Date(`10 March 1990`));
         const bukitBatokLineStop = new LineStop(`NS2`, bukitBatokStation, new Date(`10 March 1990`));
+
         const lines = [new Line([jurongLineStop, bukitBatokLineStop])];
         const stations = new Stations([jurongEastStation, bukitBatokStation]);
         const metro = new Metro(lines, stations);
@@ -36,6 +37,7 @@ class RouterSpec {
         const bukitBatokStation = new Station(`Bukit Batok`);
         const jurongEastLineStop = new LineStop(`NS1`, jurongEastStation, new Date(`10 March 1990`));
         const bukitBatokLineStop = new LineStop(`NS2`, bukitBatokStation, new Date(`10 March 1990`));
+
         const lines = [new Line([jurongEastLineStop, bukitBatokLineStop])];
         const stations = new Stations([jurongEastStation, bukitBatokStation]);
         const metro = new Metro(lines, stations);
@@ -50,9 +52,11 @@ class RouterSpec {
         const firstStation = new Station(`Jurong East`);
         const middleStation = new Station(`Bukit Batok`);
         const lastStation = new Station(`Bukit Gombak`);
+
         const firstStop = new LineStop(`NS1`, firstStation, new Date(`10 March 1990`));
         const middleStop = new LineStop(`NS2`, middleStation, new Date(`10 March 1990`));
         const lastStop = new LineStop(`NS3`, lastStation, new Date(`10 March 1990`));
+
         const lines = [new Line([firstStop, middleStop, lastStop])];
         const stations = new Stations([firstStation, middleStation, lastStation]);
         const metro = new Metro(lines, stations);
@@ -60,5 +64,24 @@ class RouterSpec {
         const route = await this.router.findRouteBetween(firstStation, lastStation, metro);
 
         expect(route).to.deep.equal([firstStop, middleStop, lastStop]);
+    }
+
+    @test
+    public async shouldReturnAnEmptyRouteIfThereIsNoPathBetweenProvidedStations(): Promise<void> {
+        const firstStation = new Station(`Jurong East`);
+        const middleStation = new Station(`Bukit Batok`);
+        const lastStation = new Station(`Bukit Gombak`);
+
+        const firstStop = new LineStop(`NS1`, firstStation, new Date(`10 March 1990`));
+        const middleStop = new LineStop(`NS2`, middleStation, new Date(`10 March 1990`));
+        const lastStop = new LineStop(`NS3`, lastStation, new Date(`10 March 1990`));
+
+        const lines = [new Line([firstStop, middleStop]), new Line([lastStop])];
+        const stations = new Stations([firstStation, middleStation, lastStation]);
+        const metro = new Metro(lines, stations);
+
+        const route = await this.router.findRouteBetween(firstStation, lastStation, metro);
+
+        expect(route).to.deep.equal([]);
     }
 }

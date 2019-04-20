@@ -13,12 +13,12 @@ export class Router {
 
         const unvisitedStops = new Set(allStops);
         const stopReachabilityData = new StopReachabilityData();
-        unvisitedStops.forEach(stop => stopReachabilityData.set(stop, {timeTaken: Number.MAX_VALUE, previousStop: undefined}));
+        allStops.forEach(stop => stopReachabilityData.set(stop, {timeTaken: Number.MAX_VALUE, previousStop: undefined}));
 
         let currentStop = sourceStop;
         stopReachabilityData.set(sourceStop, {timeTaken: 0, previousStop: undefined});
 
-        while (unvisitedStops.size !== 0) {
+        while (unvisitedStops.size !== 0 && currentStop !== undefined) {
             const neighbouringStops = this.getNeighbouringStops(metro.lines, currentStop);
             neighbouringStops.forEach(neighbour => {
                 const timeTakenFromHere = 1;
@@ -34,10 +34,11 @@ export class Router {
         return this.createRoute(sourceStop, destinationStop, stopReachabilityData);
     }
 
-    private getNextUnvisitedStop(stopReachabilityData: StopReachabilityData, unvisitedStops: Set<LineStop>) {
-        return minBy([...stopReachabilityData.entries()], ([stop, datum]) => {
-            return unvisitedStops.has(stop) ? datum.timeTaken : Number.MAX_VALUE;
-        })[0];
+    private getNextUnvisitedStop(stopReachabilityData: StopReachabilityData, unvisitedStops: Set<LineStop>): LineStop | undefined {
+        const reachabilityDataForNextStop = minBy([...stopReachabilityData.entries()], ([stop, datum]) => {
+            return unvisitedStops.has(stop) ? datum.timeTaken : undefined;
+        });
+        return reachabilityDataForNextStop ? reachabilityDataForNextStop[0] : undefined;
     }
 
     private createRoute(sourceStop: LineStop, destinationStop: LineStop, stopReachabilityData: StopReachabilityData): LineStop[] {
@@ -46,6 +47,9 @@ export class Router {
         while (currentStop !== sourceStop) {
             currentStop = stopReachabilityData.get(currentStop).previousStop;
             route.push(currentStop);
+            if (currentStop === undefined) {
+                return [];
+            }
         }
         return route.reverse();
     }
