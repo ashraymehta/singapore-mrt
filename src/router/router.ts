@@ -2,6 +2,7 @@ import {Line} from '../models/line';
 import {Metro} from '../models/metro';
 import {Station} from '../models/station';
 import {LineStop} from '../models/line-stop';
+import {IntersectionLine} from '../models/intersection-line';
 import {clone, difference, flatten, minBy, uniq} from 'lodash';
 import {StopReachabilityData} from '../models/router/stop-reachability-data';
 
@@ -16,7 +17,7 @@ export class Router {
         duplicateStations.forEach(station => {
             const stopsForStation = allStops.filter(stop => stop.isFor(station));
             const lines = stopsForStation.map(stop => {
-                return difference(stopsForStation, [stop]).map(otherStop => new Line([stop, otherStop]));
+                return difference(stopsForStation, [stop]).map(otherStop => IntersectionLine.create(stop, otherStop));
             });
             allLines.push(...flatten(lines));
         });
