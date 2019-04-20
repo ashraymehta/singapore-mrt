@@ -4,7 +4,7 @@ import {Metro} from '../models/metro';
 import {Station} from '../models/station';
 import {LineStop} from '../models/line-stop';
 import {RoutingDataPreparer} from './routing-data-preparer';
-import {GraphTraversalData} from '../models/router/graph-traversal-data';
+import {GraphTraversalState} from '../models/router/graph-traversal-state';
 
 export class Router {
     private readonly dataPreparer: RoutingDataPreparer;
@@ -20,7 +20,7 @@ export class Router {
         const destinationStop = allStops.find(stop => stop.isFor(destination));
 
         const unvisitedStops = new Set(allStops);
-        const stopReachabilityData = new GraphTraversalData();
+        const stopReachabilityData = new GraphTraversalState();
         allStops.forEach(stop => stopReachabilityData.set(stop, {timeTaken: Number.MAX_VALUE, previousStop: undefined}));
 
         let currentStop = sourceStop;
@@ -36,7 +36,7 @@ export class Router {
         return this.createRoute(sourceStop, destinationStop, stopReachabilityData);
     }
 
-    private createRoute(sourceStop: LineStop, destinationStop: LineStop, stopReachabilityData: GraphTraversalData): LineStop[] {
+    private createRoute(sourceStop: LineStop, destinationStop: LineStop, stopReachabilityData: GraphTraversalState): LineStop[] {
         let currentStop = destinationStop;
         const route: LineStop[] = [currentStop];
         while (currentStop !== sourceStop) {
