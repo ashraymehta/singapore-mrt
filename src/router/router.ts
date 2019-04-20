@@ -1,5 +1,3 @@
-import {flatten} from 'lodash';
-import {Line} from '../models/line';
 import {Metro} from '../models/metro';
 import {Station} from '../models/station';
 import {LineStop} from '../models/line-stop';
@@ -23,7 +21,7 @@ export class Router {
         const graphTraversalState = GraphTraversalState.start(allStops, sourceStop);
 
         while (graphTraversalState.unvisitedStops.size !== 0 && currentStop !== undefined) {
-            const neighbouringStops = this.getNeighbouringStops(allLines, currentStop);
+            const neighbouringStops = allLines.getNeighbouringStopsFor(currentStop);
             neighbouringStops.forEach(neighbour => graphTraversalState.updateTimeTaken(neighbour, currentStop, 1));
             graphTraversalState.markStopAsVisited(currentStop);
             currentStop = graphTraversalState.getNearestUnvisitedStop();
@@ -45,13 +43,4 @@ export class Router {
         return route.reverse();
     }
 
-    private getNeighbouringStops(lines: Line[], currentStop: LineStop): LineStop[] {
-        const neighbouringStopPairs = lines.filter(line => line.stops.includes(currentStop))
-            .map(line => {
-                const previousStop = line.stops[line.stops.indexOf(currentStop) - 1];
-                const nextStop = line.stops[line.stops.indexOf(currentStop) + 1];
-                return [previousStop, nextStop].filter(stop => !!stop);
-            });
-        return flatten(neighbouringStopPairs);
-    }
 }

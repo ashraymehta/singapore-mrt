@@ -2,6 +2,7 @@ import {expect} from 'chai';
 import {Line} from '../../src/models/line';
 import {suite, test} from 'mocha-typescript';
 import {Metro} from '../../src/models/metro';
+import {Lines} from '../../src/models/lines';
 import {Station} from '../../src/models/station';
 import {Stations} from '../../src/models/stations';
 import {LineStop} from '../../src/models/line-stop';
@@ -33,7 +34,7 @@ class RoutingDataPreparerSpec {
         const result = await this.routingDataPreparer.provide(metro);
 
         expect(result).to.deep.equal({
-            allLines: [aLine, anotherLine],
+            allLines: new Lines([aLine, anotherLine]),
             allStops: [...aLine.stops, ...anotherLine.stops]
         });
     }
@@ -67,7 +68,7 @@ class RoutingDataPreparerSpec {
             IntersectionLine.create(yetAnotherLine.stops[0], anotherLine.stops[0]),
         ];
         expect(result).to.deep.equal({
-            allLines: [aLine, anotherLine, yetAnotherLine, ...expectedIntersectionLines],
+            allLines: new Lines([aLine, anotherLine, yetAnotherLine, ...expectedIntersectionLines]),
             allStops: [...aLine.stops, ...anotherLine.stops, ...yetAnotherLine.stops]
         });
     }
