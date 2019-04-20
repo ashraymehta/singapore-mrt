@@ -1,14 +1,17 @@
 import {Metro} from '../models/metro';
 import {Station} from '../models/station';
 import {LineStop} from '../models/line-stop';
+import {RouteCreator} from './route-creator';
 import {RoutingDataPreparer} from './routing-data-preparer';
 import {GraphTraversalState} from '../models/router/graph-traversal-state';
 
 export class Router {
+    private readonly routeCreator: RouteCreator;
     private readonly dataPreparer: RoutingDataPreparer;
 
-    constructor(dataProvider: RoutingDataPreparer) {
+    constructor(dataProvider: RoutingDataPreparer, routeCreator: RouteCreator) {
         this.dataPreparer = dataProvider;
+        this.routeCreator = routeCreator;
     }
 
     public async findRouteBetween(source: Station, destination: Station, metro: Metro): Promise<LineStop[]> {
@@ -27,20 +30,6 @@ export class Router {
             currentStop = graphTraversalState.getNearestUnvisitedStop();
         }
 
-        return this.createRoute(sourceStop, destinationStop, graphTraversalState);
+        return this.routeCreator.createFrom(sourceStop, destinationStop, graphTraversalState);
     }
-
-    private createRoute(sourceStop: LineStop, destinationStop: LineStop, traversalState: GraphTraversalState): LineStop[] {
-        let currentStop = destinationStop;
-        const route: LineStop[] = [currentStop];
-        while (currentStop !== sourceStop) {
-            currentStop = traversalState.routeToStop.get(currentStop).previousStop;
-            route.push(currentStop);
-            if (currentStop === undefined) {
-                return [];
-            }
-        }
-        return route.reverse();
-    }
-
 }
