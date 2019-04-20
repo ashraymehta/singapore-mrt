@@ -1,6 +1,6 @@
+import {flatten} from 'lodash';
 import {Line} from '../models/line';
 import {Metro} from '../models/metro';
-import {flatten, minBy} from 'lodash';
 import {Station} from '../models/station';
 import {LineStop} from '../models/line-stop';
 import {RoutingDataPreparer} from './routing-data-preparer';
@@ -30,17 +30,10 @@ export class Router {
             const neighbouringStops = this.getNeighbouringStops(allLines, currentStop);
             neighbouringStops.forEach(neighbour => stopReachabilityData.setTimeTakenForNeighbour(neighbour, currentStop, 1));
             unvisitedStops.delete(currentStop);
-            currentStop = this.getNextUnvisitedStop(stopReachabilityData, unvisitedStops);
+            currentStop = stopReachabilityData.getNearestUnvisitedStop(unvisitedStops);
         }
 
         return this.createRoute(sourceStop, destinationStop, stopReachabilityData);
-    }
-
-    private getNextUnvisitedStop(stopReachabilityData: StopReachabilityData, unvisitedStops: Set<LineStop>): LineStop | undefined {
-        const reachabilityDataForNextStop = minBy([...stopReachabilityData.entries()], ([stop, datum]) => {
-            return unvisitedStops.has(stop) ? datum.timeTaken : undefined;
-        });
-        return reachabilityDataForNextStop ? reachabilityDataForNextStop[0] : undefined;
     }
 
     private createRoute(sourceStop: LineStop, destinationStop: LineStop, stopReachabilityData: StopReachabilityData): LineStop[] {
