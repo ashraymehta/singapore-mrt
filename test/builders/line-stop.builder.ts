@@ -1,3 +1,4 @@
+import {uniqueId} from 'lodash';
 import {Station} from '../../src/models/station';
 import {LineStop} from '../../src/models/line-stop';
 
@@ -11,8 +12,8 @@ export class LineStopBuilder {
 
     public static withDefaults(): LineStopBuilder {
         return new LineStopBuilder()
-            .withCode('CC1')
-            .withStoppingAt(new Station('A Station'))
+            .withCode(`CC${uniqueId()}`)
+            .stoppingAt(new Station(`A Station - ${uniqueId()}`))
             .withOpeningDate(new Date())
     }
 
@@ -21,7 +22,7 @@ export class LineStopBuilder {
         return this;
     }
 
-    public withStoppingAt(station: Station): this {
+    public stoppingAt(station: Station): this {
         this.station = station;
         return this;
     }

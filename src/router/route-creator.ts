@@ -2,7 +2,7 @@ import {LineStop} from '../models/line-stop';
 import {GraphTraversalState} from '../models/router/graph-traversal-state';
 
 export class RouteCreator {
-    public async createFrom(sourceStop: LineStop, destinationStop: LineStop, traversalState: GraphTraversalState): Promise<LineStop[]> {
+    public async createFrom(sourceStop: LineStop, destinationStop: LineStop, traversalState: GraphTraversalState): Promise<LineStop[][]> {
         let currentStop = destinationStop;
         const route: LineStop[] = [currentStop];
         while (currentStop !== sourceStop) {
@@ -12,6 +12,6 @@ export class RouteCreator {
                 return [];
             }
         }
-        return route.reverse();
+        return [route.reverse()];
     }
 }

@@ -3,6 +3,7 @@ import {Line} from '../../src/models/line';
 import {suite, test} from 'mocha-typescript';
 import {Station} from '../../src/models/station';
 import {LineStop} from '../../src/models/line-stop';
+import {LineStopBuilder} from '../builders/line-stop.builder';
 
 @suite
 class LineSpec {
@@ -31,5 +32,22 @@ class LineSpec {
 
         expect(line.stopsAt(bukitBatokStation)).to.be.true;
         expect(line.stopsAt(new Station('Punggol'))).to.be.false;
+    }
+
+    @test
+    public async shouldDetermineIfLineHasStop(): Promise<void> {
+        const oneOfTheLineStops = LineStopBuilder.withDefaults().build();
+        const line = new Line([
+            LineStopBuilder.withDefaults().build(), oneOfTheLineStops, LineStopBuilder.withDefaults().build()
+        ]);
+
+        expect(line.hasStop(oneOfTheLineStops)).to.be.true;
+        const totallyDifferentLineStop = LineStopBuilder.withDefaults().build();
+        expect(line.hasStop(totallyDifferentLineStop)).to.be.false;
+    }
+
+    @test
+    public async shouldHaveTimeBetweenStationsAsOne(): Promise<void> {
+        expect(new Line([]).getTimeTakenBetweenStations()).to.equal(1);
     }
 }

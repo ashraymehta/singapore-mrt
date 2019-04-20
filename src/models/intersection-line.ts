@@ -9,4 +9,8 @@ export class IntersectionLine extends Line {
     public static create(oneStop: LineStop, anotherStop: LineStop) {
         return new IntersectionLine(oneStop, anotherStop);
     }
+
+    public getTimeTakenBetweenStations(): number {
+        return 0;
+    }
 }

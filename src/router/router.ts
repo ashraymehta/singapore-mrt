@@ -14,7 +14,7 @@ export class Router {
         this.routeCreator = routeCreator;
     }
 
-    public async findRouteBetween(source: Station, destination: Station, metro: Metro): Promise<LineStop[]> {
+    public async findRoutesBetween(source: Station, destination: Station, metro: Metro): Promise<LineStop[][]> {
         const {allLines, allStops} = await this.dataPreparer.provide(metro);
 
         const sourceStop = allStops.find(stop => stop.isFor(source));
@@ -25,7 +25,10 @@ export class Router {
 
         while (graphTraversalState.unvisitedStops.size !== 0 && currentStop !== undefined) {
             const neighbouringStops = allLines.getNeighbouringStopsFor(currentStop);
-            neighbouringStops.forEach(neighbour => graphTraversalState.updateTimeTaken(neighbour, currentStop, 1));
+            neighbouringStops.forEach(neighbour => {
+                const line = [...allLines].find(line => line.hasStop(currentStop) && line.hasStop(neighbour));
+                return graphTraversalState.updateTimeTaken(neighbour, currentStop, line.getTimeTakenBetweenStations());
+            });
             graphTraversalState.markStopAsVisited(currentStop);
             currentStop = graphTraversalState.getNearestUnvisitedStop();
         }

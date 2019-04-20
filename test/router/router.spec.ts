@@ -29,9 +29,9 @@ class RouterSpec {
         const stations = new Stations([jurongEastStation, bukitBatokStation]);
         const metro = new Metro(lines, stations);
 
-        const route = await this.router.findRouteBetween(jurongEastStation, bukitBatokStation, metro);
+        const route = await this.router.findRoutesBetween(jurongEastStation, bukitBatokStation, metro);
 
-        expect(route).to.deep.equal([jurongLineStop, bukitBatokLineStop]);
+        expect(route).to.deep.equal([[jurongLineStop, bukitBatokLineStop]]);
     }
 
     @test
@@ -45,9 +45,9 @@ class RouterSpec {
         const stations = new Stations([jurongEastStation, bukitBatokStation]);
         const metro = new Metro(lines, stations);
 
-        const route = await this.router.findRouteBetween(bukitBatokStation, jurongEastStation, metro);
+        const route = await this.router.findRoutesBetween(bukitBatokStation, jurongEastStation, metro);
 
-        expect(route).to.deep.equal([bukitBatokLineStop, jurongEastLineStop]);
+        expect(route).to.deep.equal([[bukitBatokLineStop, jurongEastLineStop]]);
     }
 
     @test
@@ -64,9 +64,9 @@ class RouterSpec {
         const stations = new Stations([firstStation, middleStation, lastStation]);
         const metro = new Metro(lines, stations);
 
-        const route = await this.router.findRouteBetween(firstStation, lastStation, metro);
+        const route = await this.router.findRoutesBetween(firstStation, lastStation, metro);
 
-        expect(route).to.deep.equal([firstStop, middleStop, lastStop]);
+        expect(route).to.deep.equal([[firstStop, middleStop, lastStop]]);
     }
 
     @test
@@ -83,9 +83,9 @@ class RouterSpec {
         const stations = new Stations([firstStation, middleStation, lastStation]);
         const metro = new Metro(lines, stations);
 
-        const route = await this.router.findRouteBetween(firstStation, lastStation, metro);
+        const route = await this.router.findRoutesBetween(firstStation, lastStation, metro);
 
-        expect(route).to.deep.equal([]);
+        expect(route).to.deep.equal([[]]);
     }
 
     @test
@@ -103,26 +103,48 @@ class RouterSpec {
         const stations = new Stations([firstStation, interchangeStation, lastStation]);
         const metro = new Metro(lines, stations);
 
-        const route = await this.router.findRouteBetween(firstStation, lastStation, metro);
+        const route = await this.router.findRoutesBetween(firstStation, lastStation, metro);
 
-        expect(route).to.deep.equal([firstStop, interchangeStopForNELine, interchangeStopForCCLine, lastStop]);
+        expect(route).to.deep.equal([[firstStop, interchangeStopForNELine, interchangeStopForCCLine, lastStop]]);
+    }
+
+    @test
+    public async shouldFindMultipleShortestRoutesWhenAvailable(): Promise<void> {
+        const firstStation = new Station(`Punggol`);
+        const interchangeStation = new Station(`Serangoon`);
+        const lastStation = new Station(`Bartley`);
+
+        const firstStop = new LineStop(`NE17`, firstStation, new Date(`20 June 2003`));
+        const interchangeStopForNELine = new LineStop(`NE12`, interchangeStation, new Date(`28 May 2009`));
+        const interchangeStopForCCLine = new LineStop(`CC13`, interchangeStation, new Date(`28 May 2009`));
+        const lastStop = new LineStop(`CC12`, lastStation, new Date(`28 May 2009`));
+
+        const lines = [new Line([firstStop, interchangeStopForNELine]), new Line([interchangeStopForCCLine, lastStop])];
+        const stations = new Stations([firstStation, interchangeStation, lastStation]);
+        const metro = new Metro(lines, stations);
+
+        const route = await this.router.findRoutesBetween(firstStation, lastStation, metro);
+
+        expect(route).to.deep.equal([[firstStop, interchangeStopForNELine, interchangeStopForCCLine, lastStop]]);
     }
 
     @test
     public async shouldFindShortestRouteWhenMultipleRoutesAreAvailable(): Promise<void> {
+        const interchangeStation = new Station('Common Station');
         const firstStop = LineStopBuilder.withDefaults().build();
-        const secondStop = LineStopBuilder.withDefaults().build();
+        const secondStop = LineStopBuilder.withDefaults().stoppingAt(interchangeStation).build();
         const thirdStop = LineStopBuilder.withDefaults().build();
         const fourthStop = LineStopBuilder.withDefaults().build();
+        const fifthStop = LineStopBuilder.withDefaults().stoppingAt(interchangeStation).build();
 
         const aLine = new Line([firstStop, secondStop, thirdStop, fourthStop]);
-        const anotherLine = new Line([secondStop, fourthStop]);
+        const anotherLine = new Line([fourthStop, fifthStop]);
 
         const lines = [aLine, anotherLine];
         const metro = new Metro(lines, null);
 
-        const route = await this.router.findRouteBetween(firstStop.stoppingAt, fourthStop.stoppingAt, metro);
+        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, fourthStop.stoppingAt, metro);
 
-        expect(route).to.deep.equal([firstStop, secondStop, fourthStop]);
+        expect(route).to.deep.equal([[firstStop, secondStop, fifthStop, fourthStop]]);
     }
 }
