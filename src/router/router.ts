@@ -28,13 +28,7 @@ export class Router {
 
         while (unvisitedStops.size !== 0 && currentStop !== undefined) {
             const neighbouringStops = this.getNeighbouringStops(allLines, currentStop);
-            neighbouringStops.forEach(neighbour => {
-                const timeTakenFromHere = 1;
-                const timeTakenFromSource = stopReachabilityData.get(currentStop).timeTaken + timeTakenFromHere;
-                if (timeTakenFromSource < stopReachabilityData.get(neighbour).timeTaken) {
-                    stopReachabilityData.set(neighbour, {timeTaken: timeTakenFromSource, previousStop: currentStop});
-                }
-            });
+            neighbouringStops.forEach(neighbour => stopReachabilityData.setTimeTakenForNeighbour(neighbour, currentStop, 1));
             unvisitedStops.delete(currentStop);
             currentStop = this.getNextUnvisitedStop(stopReachabilityData, unvisitedStops);
         }
