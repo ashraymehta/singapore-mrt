@@ -19,21 +19,20 @@ export class Router {
         const sourceStop = allStops.find(stop => stop.isFor(source));
         const destinationStop = allStops.find(stop => stop.isFor(destination));
 
-        const unvisitedStops = new Set(allStops);
-        const stopReachabilityData = new GraphTraversalState();
-        allStops.forEach(stop => stopReachabilityData.set(stop, {timeTaken: Number.MAX_VALUE, previousStop: undefined}));
+        const graphTraversalState = new GraphTraversalState(allStops);
+        graphTraversalState.initializeUnvisitedStops();
 
         let currentStop = sourceStop;
-        stopReachabilityData.set(sourceStop, {timeTaken: 0, previousStop: undefined});
+        graphTraversalState.set(sourceStop, {timeTaken: 0, previousStop: undefined});
 
-        while (unvisitedStops.size !== 0 && currentStop !== undefined) {
+        while (graphTraversalState.unvisitedStops.size !== 0 && currentStop !== undefined) {
             const neighbouringStops = this.getNeighbouringStops(allLines, currentStop);
-            neighbouringStops.forEach(neighbour => stopReachabilityData.setTimeTakenForNeighbour(neighbour, currentStop, 1));
-            unvisitedStops.delete(currentStop);
-            currentStop = stopReachabilityData.getNearestUnvisitedStop(unvisitedStops);
+            neighbouringStops.forEach(neighbour => graphTraversalState.setTimeTakenForNeighbour(neighbour, currentStop, 1));
+            graphTraversalState.unvisitedStops.delete(currentStop);
+            currentStop = graphTraversalState.getNearestUnvisitedStop();
         }
 
-        return this.createRoute(sourceStop, destinationStop, stopReachabilityData);
+        return this.createRoute(sourceStop, destinationStop, graphTraversalState);
     }
 
     private createRoute(sourceStop: LineStop, destinationStop: LineStop, stopReachabilityData: GraphTraversalState): LineStop[] {
