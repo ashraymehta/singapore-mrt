@@ -7,7 +7,7 @@ import {Station} from '../../src/models/station';
 import {Stations} from '../../src/models/stations';
 import {LineStop} from '../../src/models/line-stop';
 
-@suite.skip
+@suite
 class RouterSpec {
     private router: Router;
 
@@ -16,7 +16,7 @@ class RouterSpec {
     }
 
     @test
-    public async shouldFindRouteBetweenTwoLineStopsWhenMetroHasASingleLineWithThoseTwoStops(): Promise<void> {
+    public async shouldFindRouteBetweenTwoStopsWhenMetroHasASingleLineWithThoseTwoStops(): Promise<void> {
         const jurongEastStation = new Station(`Jurong East`);
         const bukitBatokStation = new Station(`Bukit Batok`);
         const jurongLineStop = new LineStop(`NS1`, jurongEastStation, new Date(`10 March 1990`));
@@ -31,7 +31,7 @@ class RouterSpec {
     }
 
     @test
-    public async shouldFindReverseRouteBetweenTwoLineStopsWhenMetroHasASingleLineWithThoseTwoStops(): Promise<void> {
+    public async shouldFindReverseRouteBetweenTwoStopsWhenMetroHasASingleLineWithThoseTwoStops(): Promise<void> {
         const jurongEastStation = new Station(`Jurong East`);
         const bukitBatokStation = new Station(`Bukit Batok`);
         const jurongEastLineStop = new LineStop(`NS1`, jurongEastStation, new Date(`10 March 1990`));
