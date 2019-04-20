@@ -25,7 +25,7 @@ export class Router {
         while (graphTraversalState.unvisitedStops.size !== 0 && currentStop !== undefined) {
             const neighbouringStops = this.getNeighbouringStops(allLines, currentStop);
             neighbouringStops.forEach(neighbour => graphTraversalState.updateTimeTaken(neighbour, currentStop, 1));
-            graphTraversalState.unvisitedStops.delete(currentStop);
+            graphTraversalState.markStopAsVisited(currentStop);
             currentStop = graphTraversalState.getNearestUnvisitedStop();
         }
 

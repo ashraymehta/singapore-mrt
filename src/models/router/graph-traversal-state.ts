@@ -7,11 +7,20 @@ export class GraphTraversalState {
 
     private constructor(unvisitedStops: LineStop[]) {
         this.unvisitedStops = new Set<LineStop>(unvisitedStops);
-        this.routeToStop = new Map<LineStop, {timeTaken: number, previousStop: LineStop}>();
+        this.routeToStop = new Map<LineStop, { timeTaken: number, previousStop: LineStop }>();
     }
 
-    public initializeUnvisitedStops(): void {
-        this.unvisitedStops.forEach(stop => this.routeToStop.set(stop, {timeTaken: Number.MAX_VALUE, previousStop: undefined}));
+    public static start(unvisitedStops: LineStop[], startingStop: LineStop): GraphTraversalState {
+        const traversalState = new GraphTraversalState(unvisitedStops);
+        traversalState.unvisitedStops.forEach(stop => traversalState.routeToStop.set(stop, {
+            timeTaken: Number.MAX_VALUE,
+            previousStop: undefined
+        }));
+
+        traversalState.routeToStop.set(startingStop, {timeTaken: 0, previousStop: undefined});
+        traversalState.unvisitedStops.delete(startingStop);
+
+        return traversalState;
     }
 
     public updateTimeTaken(stop: LineStop, viaStop: LineStop, timeTakenFromViaStop: number): void {
@@ -30,10 +39,7 @@ export class GraphTraversalState {
         return reachabilityDataForNextStop ? reachabilityDataForNextStop[0] : undefined;
     }
 
-    public static start(unvisitedStops: LineStop[], startingStop: LineStop): GraphTraversalState {
-        const graphTraversalState = new GraphTraversalState(unvisitedStops);
-        graphTraversalState.initializeUnvisitedStops();
-        graphTraversalState.routeToStop.set(startingStop, {timeTaken: 0, previousStop: undefined});
-        return graphTraversalState;
+    public markStopAsVisited(stop: LineStop): void {
+        this.unvisitedStops.delete(stop);
     }
 }
