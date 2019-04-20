@@ -6,13 +6,14 @@ import {Router} from '../../src/router/router';
 import {Station} from '../../src/models/station';
 import {Stations} from '../../src/models/stations';
 import {LineStop} from '../../src/models/line-stop';
+import {RoutingDataPreparer} from '../../src/router/routing-data-preparer';
 
 @suite
 class RouterSpec {
     private router: Router;
 
     public before(): void {
-        this.router = new Router();
+        this.router = new Router(new RoutingDataPreparer());
     }
 
     @test

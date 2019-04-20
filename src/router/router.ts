@@ -1,26 +1,20 @@
 import {Line} from '../models/line';
 import {Metro} from '../models/metro';
+import {flatten, minBy} from 'lodash';
 import {Station} from '../models/station';
 import {LineStop} from '../models/line-stop';
-import {IntersectionLine} from '../models/intersection-line';
-import {clone, difference, flatten, minBy, uniq} from 'lodash';
+import {RoutingDataPreparer} from './routing-data-preparer';
 import {StopReachabilityData} from '../models/router/stop-reachability-data';
 
 export class Router {
+    private readonly dataPreparer: RoutingDataPreparer;
+
+    constructor(dataProvider: RoutingDataPreparer) {
+        this.dataPreparer = dataProvider;
+    }
+
     public async findRouteBetween(source: Station, destination: Station, metro: Metro): Promise<LineStop[]> {
-        const allLines = clone(metro.lines);
-        const allStops = flatten(allLines.map(line => line.stops));
-        const stations = allStops.map(stop => stop.stoppingAt);
-        const duplicateStations = uniq(stations.filter((station: Station, index: number) => {
-            return stations.indexOf(station, index + 1) > 0;
-        }));
-        duplicateStations.forEach(station => {
-            const stopsForStation = allStops.filter(stop => stop.isFor(station));
-            const lines = stopsForStation.map(stop => {
-                return difference(stopsForStation, [stop]).map(otherStop => IntersectionLine.create(stop, otherStop));
-            });
-            allLines.push(...flatten(lines));
-        });
+        const {allLines, allStops} = await this.dataPreparer.provide(metro);
 
         const sourceStop = allStops.find(stop => stop.isFor(source));
         const destinationStop = allStops.find(stop => stop.isFor(destination));
