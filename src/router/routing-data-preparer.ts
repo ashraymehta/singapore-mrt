@@ -15,10 +15,10 @@ export class RoutingDataPreparer {
         }));
         duplicateStations.forEach(station => {
             const stopsForStation = allStops.filter(stop => stop.isFor(station));
-            const lines = stopsForStation.map(stop => {
+            const lines = flatten(stopsForStation.map(stop => {
                 return difference(stopsForStation, [stop]).map(otherStop => IntersectionLine.create(stop, otherStop));
-            });
-            allLines.push(...flatten(lines));
+            }));
+            allLines.push(...lines);
         });
         return {allLines, allStops};
     }
