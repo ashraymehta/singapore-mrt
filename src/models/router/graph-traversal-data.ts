@@ -1,7 +1,7 @@
 import {minBy} from 'lodash';
 import {LineStop} from '../line-stop';
 
-export class StopReachabilityData extends Map<LineStop, { timeTaken: number; previousStop: LineStop }> {
+export class GraphTraversalData extends Map<LineStop, { timeTaken: number; previousStop: LineStop }> {
     public setTimeTakenForNeighbour(stop: LineStop, viaStop: LineStop, timeTakenFromViaStop: number) {
         const timeTakenFromSource = this.get(viaStop).timeTaken + timeTakenFromViaStop;
         if (!this.has(stop)) {
