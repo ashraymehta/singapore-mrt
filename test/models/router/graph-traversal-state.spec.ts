@@ -10,12 +10,11 @@ class GraphTraversalStateSpec {
     public async shouldSetTimeTakenForStopWhenNoValueIsSet(): Promise<void> {
         const lineStop = new LineStop('CC1', new Station('Dhoby Ghaut'), new Date('17 April 2010'));
         const viaStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
-        const stopReachabilityData = new GraphTraversalState([]);
-        stopReachabilityData.set(viaStop, {timeTaken: 0, previousStop: undefined});
+        const stopReachabilityData = GraphTraversalState.start([], viaStop);
 
-        stopReachabilityData.setTimeTakenForNeighbour(lineStop, viaStop, 5);
+        stopReachabilityData.updateTimeTaken(lineStop, viaStop, 5);
 
-        expect(stopReachabilityData.get(lineStop)).to.deep.equal({
+        expect(stopReachabilityData.routeToStop.get(lineStop)).to.deep.equal({
             timeTaken: 5,
             previousStop: viaStop
         });
@@ -25,13 +24,12 @@ class GraphTraversalStateSpec {
     public async shouldUpdateTimeTakenForStopWhenAHigherValueForTimeTakenIsSet(): Promise<void> {
         const lineStop = new LineStop('CC1', new Station('Dhoby Ghaut'), new Date('17 April 2010'));
         const viaStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
-        const stopReachabilityData = new GraphTraversalState([]);
-        stopReachabilityData.set(viaStop, {timeTaken: 0, previousStop: undefined});
-        stopReachabilityData.set(lineStop, {timeTaken: 100, previousStop: undefined});
+        const stopReachabilityData = GraphTraversalState.start([], viaStop);
+        stopReachabilityData.updateTimeTaken(lineStop, viaStop, 100);
 
-        stopReachabilityData.setTimeTakenForNeighbour(lineStop, viaStop, 5);
+        stopReachabilityData.updateTimeTaken(lineStop, viaStop, 5);
 
-        expect(stopReachabilityData.get(lineStop)).to.deep.equal({
+        expect(stopReachabilityData.routeToStop.get(lineStop)).to.deep.equal({
             timeTaken: 5,
             previousStop: viaStop
         });
@@ -42,13 +40,13 @@ class GraphTraversalStateSpec {
         const lineStop = new LineStop('CC1', new Station('Dhoby Ghaut'), new Date('17 April 2010'));
         const viaStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
         const existingViaStop = new LineStop('Imaginary', new Station('An imaginary stations'), new Date('17 April 2010'));
-        const stopReachabilityData = new GraphTraversalState([]);
-        stopReachabilityData.set(viaStop, {timeTaken: 0, previousStop: undefined});
-        stopReachabilityData.set(lineStop, {timeTaken: 5, previousStop: existingViaStop});
+        const stopReachabilityData = GraphTraversalState.start([], existingViaStop);
+        stopReachabilityData.updateTimeTaken(lineStop, existingViaStop, 5);
+        stopReachabilityData.updateTimeTaken(viaStop, existingViaStop, 95);
 
-        stopReachabilityData.setTimeTakenForNeighbour(lineStop, viaStop, 100);
+        stopReachabilityData.updateTimeTaken(lineStop, viaStop, 100);
 
-        expect(stopReachabilityData.get(lineStop)).to.deep.equal({
+        expect(stopReachabilityData.routeToStop.get(lineStop)).to.deep.equal({
             timeTaken: 5,
             previousStop: existingViaStop
         });
@@ -60,11 +58,10 @@ class GraphTraversalStateSpec {
         const secondStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
         const thirdStop = new LineStop('CC3', new Station('Esplanade'), new Date('17 April 2010'));
         const unvisitedStops = [firstStop, secondStop];
-
-        const stopReachabilityData = new GraphTraversalState(unvisitedStops);
-        stopReachabilityData.set(firstStop, {timeTaken: 10, previousStop: undefined});
-        stopReachabilityData.set(secondStop, {timeTaken: 200, previousStop: undefined});
-        stopReachabilityData.set(thirdStop, {timeTaken: 4, previousStop: undefined});
+        const stopReachabilityData = GraphTraversalState.start(unvisitedStops, undefined);
+        stopReachabilityData.updateTimeTaken(firstStop, undefined, 10);
+        stopReachabilityData.updateTimeTaken(secondStop, undefined, 200);
+        stopReachabilityData.updateTimeTaken(thirdStop, undefined, 4);
 
         const result = stopReachabilityData.getNearestUnvisitedStop();
 
@@ -77,10 +74,10 @@ class GraphTraversalStateSpec {
         const secondStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
         const thirdStop = new LineStop('CC3', new Station('Esplanade'), new Date('17 April 2010'));
 
-        const stopReachabilityData = new GraphTraversalState([]);
-        stopReachabilityData.set(firstStop, {timeTaken: 10, previousStop: undefined});
-        stopReachabilityData.set(secondStop, {timeTaken: 200, previousStop: undefined});
-        stopReachabilityData.set(thirdStop, {timeTaken: 4, previousStop: undefined});
+        const stopReachabilityData = GraphTraversalState.start([], undefined);
+        stopReachabilityData.updateTimeTaken(firstStop, undefined, 10);
+        stopReachabilityData.updateTimeTaken(secondStop, undefined, 200);
+        stopReachabilityData.updateTimeTaken(thirdStop, undefined, 4);
 
         const result = stopReachabilityData.getNearestUnvisitedStop();
 
