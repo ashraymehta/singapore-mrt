@@ -2,7 +2,7 @@ import {Line} from './line';
 import {Stations} from './stations';
 
 export class Metro {
-    private readonly lines: Line[];
+    public readonly lines: Line[];
     private readonly stations: Stations;
 
     constructor(lines: Line[], stations: Stations) {

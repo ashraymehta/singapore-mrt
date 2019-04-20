@@ -43,13 +43,12 @@ class MetroBuilderSpec {
         const metro = await this.metroBuilder.build();
 
         expect(metro).to.be.an.instanceOf(Metro);
-        const jurongLineStop = new LineStop('NS1', new Date('10 March 1990'));
-        const bukitBatokLineStop = new LineStop('NS2', new Date('10 March 1990'));
+        const jurongEastStation = new Station('Jurong East');
+        const bukitBatokStation = new Station('Bukit Batok');
+        const jurongLineStop = new LineStop('NS1', jurongEastStation, new Date('10 March 1990'));
+        const bukitBatokLineStop = new LineStop('NS2', bukitBatokStation, new Date('10 March 1990'));
         const expectedLines = [new Line([jurongLineStop, bukitBatokLineStop])];
-        const expectedStations = new Stations([
-            new Station('Jurong East', [jurongLineStop]),
-            new Station('Bukit Batok', [bukitBatokLineStop])
-        ]);
+        const expectedStations = new Stations([jurongEastStation, bukitBatokStation]);
         const expectedMetro = new Metro(expectedLines, expectedStations);
         expect(metro).to.deep.equal(expectedMetro);
     }
@@ -72,13 +71,12 @@ class MetroBuilderSpec {
         const metro = await this.metroBuilder.build();
 
         expect(metro).to.be.an.instanceOf(Metro);
-        const jurongLineStop = new LineStop('NS1', new Date('10 March 1990'));
-        const pasirRisLineStop = new LineStop('EW1', new Date('16 December 1989'));
+        const pasirRisStation = new Station('Pasir Ris');
+        const jurongEastStation = new Station('Jurong East');
+        const jurongLineStop = new LineStop('NS1', jurongEastStation, new Date('10 March 1990'));
+        const pasirRisLineStop = new LineStop('EW1', pasirRisStation, new Date('16 December 1989'));
         const expectedLines = [new Line([jurongLineStop]), new Line([pasirRisLineStop])];
-        const expectedMetro = new Metro(expectedLines, new Stations([
-            new Station('Jurong East', [jurongLineStop]),
-            new Station('Pasir Ris', [pasirRisLineStop])
-        ]));
+        const expectedMetro = new Metro(expectedLines, new Stations([jurongEastStation, pasirRisStation]));
         expect(metro).to.deep.equal(expectedMetro);
     }
 
@@ -100,12 +98,11 @@ class MetroBuilderSpec {
         const metro = await this.metroBuilder.build();
 
         expect(metro).to.be.an.instanceOf(Metro);
-        const dhobyGhautNELineStop = new LineStop('NE6', new Date('20 June 2003'));
-        const dhobyGhautEWLineStop = new LineStop('CC1', new Date('17 April 2010'));
+        const dhobyGhautStation = new Station('Dhoby Ghaut');
+        const dhobyGhautNELineStop = new LineStop('NE6', dhobyGhautStation, new Date('20 June 2003'));
+        const dhobyGhautEWLineStop = new LineStop('CC1', dhobyGhautStation, new Date('17 April 2010'));
         const expectedLines = [new Line([dhobyGhautNELineStop]), new Line([dhobyGhautEWLineStop])];
-        const expectedMetro = new Metro(expectedLines, new Stations([
-            new Station('Dhoby Ghaut', [dhobyGhautNELineStop, dhobyGhautEWLineStop]),
-        ]));
+        const expectedMetro = new Metro(expectedLines, new Stations([dhobyGhautStation]));
         expect(metro).to.deep.equal(expectedMetro);
     }
 }
