@@ -24,17 +24,14 @@ export class MetroBuilder {
         const uniqueStationNames = uniq(unparsedStationsMap.map(n => n.StationName));
         const allStations = new Stations(uniqueStationNames.map(name => new Station(name)));
 
-        const lines: Line[] = [];
-        for (const lineCode in unparsedStationsByLineCodes) {
+        const lines: Line[] = Object.keys(unparsedStationsByLineCodes).map(lineCode => {
             const unparsedStopsForLine = unparsedStationsByLineCodes[lineCode];
-            const stops: LineStop[] = [];
-            for (const station of unparsedStopsForLine) {
-                const lineStop = new LineStop(station.StationCode, allStations.findStationWithName(station.StationName), new Date(station.OpeningDate));
-                stops.push(lineStop);
-            }
-            lines.push(new Line(stops));
-        }
-
+            const stops = unparsedStopsForLine.map(unparsedStation => {
+                const station = allStations.findStationWithName(unparsedStation.StationName);
+                return new LineStop(unparsedStation.StationCode, station, new Date(unparsedStation.OpeningDate));
+            });
+            return new Line(stops);
+        });
         return new Metro(lines, allStations);
     }
 }
