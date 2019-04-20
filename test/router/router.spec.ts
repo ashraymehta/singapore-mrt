@@ -16,7 +16,7 @@ class RouterSpec {
     }
 
     @test
-    public async shouldFindRouteBetweenTwoStopsWhenMetroHasASingleLineWithThoseTwoStops(): Promise<void> {
+    public async shouldFindRouteBetweenStationsWhenMetroHasASingleLinePassingThroughThem(): Promise<void> {
         const jurongEastStation = new Station(`Jurong East`);
         const bukitBatokStation = new Station(`Bukit Batok`);
         const jurongLineStop = new LineStop(`NS1`, jurongEastStation, new Date(`10 March 1990`));
@@ -31,7 +31,7 @@ class RouterSpec {
     }
 
     @test
-    public async shouldFindReverseRouteBetweenTwoStopsWhenMetroHasASingleLineWithThoseTwoStops(): Promise<void> {
+    public async shouldFindReverseRouteBetweenStationsWhenMetroHasASingleLinePassingThroughThem(): Promise<void> {
         const jurongEastStation = new Station(`Jurong East`);
         const bukitBatokStation = new Station(`Bukit Batok`);
         const jurongEastLineStop = new LineStop(`NS1`, jurongEastStation, new Date(`10 March 1990`));
@@ -43,5 +43,22 @@ class RouterSpec {
         const route = await this.router.findRouteBetween(bukitBatokStation, jurongEastStation, metro);
 
         expect(route).to.deep.equal([bukitBatokLineStop, jurongEastLineStop]);
+    }
+
+    @test
+    public async shouldFindRouteBetweenFirstAndLastStopForALine(): Promise<void> {
+        const firstStation = new Station(`Jurong East`);
+        const middleStation = new Station(`Bukit Batok`);
+        const lastStation = new Station(`Bukit Gombak`);
+        const firstStop = new LineStop(`NS1`, firstStation, new Date(`10 March 1990`));
+        const middleStop = new LineStop(`NS2`, middleStation, new Date(`10 March 1990`));
+        const lastStop = new LineStop(`NS3`, lastStation, new Date(`10 March 1990`));
+        const lines = [new Line([firstStop, middleStop, lastStop])];
+        const stations = new Stations([firstStation, middleStation, lastStation]);
+        const metro = new Metro(lines, stations);
+
+        const route = await this.router.findRouteBetween(firstStation, lastStation, metro);
+
+        expect(route).to.deep.equal([firstStop, middleStop, lastStop]);
     }
 }
