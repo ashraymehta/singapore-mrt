@@ -12,7 +12,7 @@ import {RoutingDataPreparer} from '../../../src/services/routing/routing-data-pr
 import {GraphTraversalManager} from '../../../src/services/routing/graph-traversal-manager';
 
 @suite
-class RouterIntegrationSpec {
+class RoutingServiceIntegrationSpec {
     private router: RoutingService;
     private linesRepository: LinesRepository;
 

@@ -78,6 +78,7 @@ class RoutingServiceSpec {
         when(this.traversalManager.startTraversal(anything(), anything())).thenReturn(instance(traverser));
         when(traverser.hasNext()).thenReturn(true).thenReturn(true).thenReturn(false);
         when(traverser.unvisitedStops).thenReturn(new Set([lineStopForSource, anotherLineStop]));
+        when(traverser.unvisitedStops).thenReturn(new Set([lineStopForSource, anotherLineStop]));
 
         await this.router.findRoutesBetween(source, destination);
 
@@ -135,23 +136,24 @@ class RoutingServiceSpec {
     }
 
     @test
-    public async shouldStopIterationWhenDestinationStopIsReached(): Promise<void> {
+    public async shouldStopIterationWhenDestinationStationIsReached(): Promise<void> {
         const source = new Station('Source Station');
         const destination = new Station('Destination Station');
         const anotherLineStop = LineStopBuilder.withDefaults().build();
         const aLineStop = LineStopBuilder.withDefaults().stoppingAt(destination).build();
+        const yetAnotherLineStop = LineStopBuilder.withDefaults().stoppingAt(destination).build();
         const lineStopForSource = LineStopBuilder.withDefaults().stoppingAt(source).build();
-        const allStops = [lineStopForSource, aLineStop, anotherLineStop];
+        const allStops = [lineStopForSource, yetAnotherLineStop, aLineStop, anotherLineStop];
 
-        const lines = new Lines([new Line([lineStopForSource, aLineStop, anotherLineStop])]);
+        const lines = new Lines([new Line([lineStopForSource, aLineStop, yetAnotherLineStop, anotherLineStop])]);
 
         const traverser = mock(DijkstraGraphTraverser);
         when(this.linesRepository.findAll()).thenReturn(lines);
-        when(this.routingDataPreparer.prepare(lines)).thenResolve({allLines: lines, allStops: allStops});
         when(this.traversalManager.startTraversal(anything(), anything())).thenReturn(instance(traverser));
-        when(traverser.moveToNext()).thenReturn(lineStopForSource, aLineStop, anotherLineStop);
+        when(this.routingDataPreparer.prepare(lines)).thenResolve({allLines: lines, allStops: allStops});
+        when(traverser.moveToNext()).thenReturn(lineStopForSource, aLineStop, yetAnotherLineStop, anotherLineStop);
         when(traverser.unvisitedStops).thenReturn(new Set([anotherLineStop]));
-        when(traverser.getCurrentStop()).thenReturn(lineStopForSource, aLineStop);
+        when(traverser.getCurrentStop()).thenReturn(undefined, lineStopForSource, aLineStop);
         when(traverser.hasNext()).thenReturn(true, true);
 
         await this.router.findRoutesBetween(source, destination);
