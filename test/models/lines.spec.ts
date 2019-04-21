@@ -64,4 +64,20 @@ class LinesSpec {
 
         expect(neighbouringStops).to.deep.equal([firstStop, thirdStop, fifthStop]);
     }
+
+    @test
+    public async shouldFindLineWithStops(): Promise<void> {
+        const firstStop = LineStopBuilder.withDefaults().build();
+        const secondStop = LineStopBuilder.withDefaults().build();
+        const thirdStop = LineStopBuilder.withDefaults().build();
+        const fourthStop = LineStopBuilder.withDefaults().build();
+        const fifthStop = LineStopBuilder.withDefaults().build();
+
+        const firstLine = new Line([firstStop, secondStop, thirdStop, fourthStop]);
+        const secondLine = new Line([firstStop, secondStop, fifthStop]);
+        const lines = new Lines([firstLine, secondLine]);
+
+        expect(lines.findLineWithStops(firstStop, fifthStop)).to.equal(secondLine);
+        expect(lines.findLineWithStops(firstStop, fourthStop)).to.equal(firstLine);
+    }
 }

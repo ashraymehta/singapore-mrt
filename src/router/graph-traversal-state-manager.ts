@@ -13,7 +13,7 @@ export class GraphTraversalStateManager {
         this.routeToStop = new Map<LineStop, { timeTaken: number, previousStops: LineStop[] }>();
     }
 
-    public static start(unvisitedStops: LineStop[], startingStop: LineStop): GraphTraversalStateManager {
+    public static startTraversal(unvisitedStops: LineStop[], startingStop: LineStop): GraphTraversalStateManager {
         const traversalState = new GraphTraversalStateManager(unvisitedStops, startingStop);
         traversalState.unvisitedStops.forEach(stop => traversalState.routeToStop.set(stop, {
             timeTaken: Number.MAX_VALUE,

@@ -4,6 +4,7 @@ import {Stations} from './stations';
 
 export class Metro {
     public readonly lines: Lines;
+    // TODO: Consider if stations are really needed
     private readonly stations: Stations;
 
     constructor(lines: Line[], stations: Stations) {

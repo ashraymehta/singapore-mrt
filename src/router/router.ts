@@ -20,7 +20,7 @@ export class Router {
         const sourceStop = allStops.find(stop => stop.isFor(source));
         const destinationStop = allStops.find(stop => stop.isFor(destination));
 
-        const graphTraversalState = GraphTraversalStateManager.start(allStops, sourceStop);
+        const graphTraversalState = GraphTraversalStateManager.startTraversal(allStops, sourceStop);
 
         while (graphTraversalState.hasNext()) {
             const currentStop = graphTraversalState.moveToNext();
@@ -28,7 +28,7 @@ export class Router {
             allLines.getNeighbouringStopsFor(currentStop)
                 .filter(neighbour => graphTraversalState.unvisitedStops.has(neighbour))
                 .forEach(neighbour => {
-                    const line = [...allLines].find(line => line.hasStop(currentStop) && line.hasStop(neighbour));
+                    const line = allLines.findLineWithStops(currentStop, neighbour);
                     return graphTraversalState.updateTimeTaken(neighbour, currentStop, line.getTimeTakenBetweenStations());
                 });
             graphTraversalState.markStopAsVisited(currentStop);

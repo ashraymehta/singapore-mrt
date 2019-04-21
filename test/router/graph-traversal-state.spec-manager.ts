@@ -11,7 +11,7 @@ class GraphTraversalStateSpecManager {
     public async shouldSetTimeTakenForStopWhenNoValueIsSet(): Promise<void> {
         const lineStop = new LineStop('CC1', new Station('Dhoby Ghaut'), new Date('17 April 2010'));
         const viaStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
-        const traversalState = GraphTraversalStateManager.start([], viaStop);
+        const traversalState = GraphTraversalStateManager.startTraversal([], viaStop);
 
         traversalState.updateTimeTaken(lineStop, viaStop, 5);
 
@@ -25,7 +25,7 @@ class GraphTraversalStateSpecManager {
     public async shouldUpdateTimeTakenForStopWhenAHigherValueForTimeTakenIsSet(): Promise<void> {
         const lineStop = new LineStop('CC1', new Station('Dhoby Ghaut'), new Date('17 April 2010'));
         const viaStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
-        const traversalState = GraphTraversalStateManager.start([], viaStop);
+        const traversalState = GraphTraversalStateManager.startTraversal([], viaStop);
         traversalState.updateTimeTaken(lineStop, viaStop, 100);
 
         traversalState.updateTimeTaken(lineStop, viaStop, 5);
@@ -41,7 +41,7 @@ class GraphTraversalStateSpecManager {
         const lineStop = LineStopBuilder.withDefaults().build();
         const aViaStop = LineStopBuilder.withDefaults().build();
         const anotherViaStop = LineStopBuilder.withDefaults().build();
-        const traversalState = GraphTraversalStateManager.start([], aViaStop);
+        const traversalState = GraphTraversalStateManager.startTraversal([], aViaStop);
         traversalState.updateTimeTaken(lineStop, aViaStop, 5);
         traversalState.updateTimeTaken(anotherViaStop, aViaStop, 0);
 
@@ -58,7 +58,7 @@ class GraphTraversalStateSpecManager {
         const lineStop = new LineStop('CC1', new Station('Dhoby Ghaut'), new Date('17 April 2010'));
         const viaStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
         const existingViaStop = new LineStop('Imaginary', new Station('An imaginary stations'), new Date('17 April 2010'));
-        const traversalState = GraphTraversalStateManager.start([], existingViaStop);
+        const traversalState = GraphTraversalStateManager.startTraversal([], existingViaStop);
         traversalState.updateTimeTaken(lineStop, existingViaStop, 5);
         traversalState.updateTimeTaken(viaStop, existingViaStop, 95);
 
@@ -76,7 +76,7 @@ class GraphTraversalStateSpecManager {
         const secondStop = LineStopBuilder.withDefaults().build();
         const thirdStop = LineStopBuilder.withDefaults().build();
         const unvisitedStops = [secondStop, thirdStop];
-        const traversalState = GraphTraversalStateManager.start(unvisitedStops, firstStop);
+        const traversalState = GraphTraversalStateManager.startTraversal(unvisitedStops, firstStop);
 
         const result = traversalState.getNextStop();
 
@@ -89,7 +89,7 @@ class GraphTraversalStateSpecManager {
         const secondStop = LineStopBuilder.withDefaults().build();
         const thirdStop = LineStopBuilder.withDefaults().build();
         const unvisitedStops = [secondStop, thirdStop];
-        const traversalState = GraphTraversalStateManager.start(unvisitedStops, firstStop);
+        const traversalState = GraphTraversalStateManager.startTraversal(unvisitedStops, firstStop);
 
         const result = traversalState.moveToNext();
 
@@ -102,7 +102,7 @@ class GraphTraversalStateSpecManager {
         const secondStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
         const thirdStop = new LineStop('CC3', new Station('Esplanade'), new Date('17 April 2010'));
         const unvisitedStops = [firstStop, secondStop];
-        const traversalState = GraphTraversalStateManager.start(unvisitedStops, firstStop);
+        const traversalState = GraphTraversalStateManager.startTraversal(unvisitedStops, firstStop);
         traversalState.updateTimeTaken(secondStop, firstStop, 200);
         traversalState.updateTimeTaken(thirdStop, secondStop, 4);
 
@@ -116,7 +116,7 @@ class GraphTraversalStateSpecManager {
         const firstStop = new LineStop('CC1', new Station('Dhoby Ghaut'), new Date('17 April 2010'));
         const secondStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
         const unvisitedStops = [firstStop, secondStop];
-        const traversalState = GraphTraversalStateManager.start(unvisitedStops, firstStop);
+        const traversalState = GraphTraversalStateManager.startTraversal(unvisitedStops, firstStop);
         traversalState.moveToNext();
 
         const result = traversalState.getNextStop();
@@ -130,7 +130,7 @@ class GraphTraversalStateSpecManager {
         const secondStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
         const thirdStop = new LineStop('CC3', new Station('Esplanade'), new Date('17 April 2010'));
 
-        const traversalState = GraphTraversalStateManager.start([], undefined);
+        const traversalState = GraphTraversalStateManager.startTraversal([], undefined);
         traversalState.updateTimeTaken(firstStop, undefined, 10);
         traversalState.updateTimeTaken(secondStop, undefined, 200);
         traversalState.updateTimeTaken(thirdStop, undefined, 4);
@@ -145,7 +145,7 @@ class GraphTraversalStateSpecManager {
         const firstStop = new LineStop('CC1', new Station('Dhoby Ghaut'), new Date('17 April 2010'));
         const secondStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
 
-        const traversalState = GraphTraversalStateManager.start([firstStop, secondStop], undefined);
+        const traversalState = GraphTraversalStateManager.startTraversal([firstStop, secondStop], undefined);
 
         traversalState.markStopAsVisited(firstStop);
 
@@ -159,7 +159,7 @@ class GraphTraversalStateSpecManager {
         const secondStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
         const thirdStop = new LineStop('CC3', new Station('Esplanade'), new Date('17 April 2010'));
 
-        const traversalState = GraphTraversalStateManager.start([firstStop, secondStop, thirdStop], firstStop);
+        const traversalState = GraphTraversalStateManager.startTraversal([firstStop, secondStop, thirdStop], firstStop);
 
         expect(traversalState.unvisitedStops).to.have.lengthOf(2);
         expect([...traversalState.unvisitedStops.values()]).to.deep.equal([secondStop, thirdStop]);
@@ -183,7 +183,7 @@ class GraphTraversalStateSpecManager {
     public async shouldDetermineIfThereAreNextStopsToVisitWhenThereAreNoUnvisitedStops(): Promise<void> {
         const unvisitedStop = LineStopBuilder.withDefaults().build();
         const sourceStop = LineStopBuilder.withDefaults().build();
-        const traversalState = GraphTraversalStateManager.start([unvisitedStop], sourceStop);
+        const traversalState = GraphTraversalStateManager.startTraversal([unvisitedStop], sourceStop);
         expect(traversalState.hasNext()).to.be.true;
 
         const stop = traversalState.moveToNext();
@@ -196,7 +196,7 @@ class GraphTraversalStateSpecManager {
     public async shouldDetermineIfThereAreNextStopsToVisitWhenUnvisitedStopsHaveAMaximumTimeTaken(): Promise<void> {
         const anUnvisitedStop = LineStopBuilder.withDefaults().build();
         const sourceStop = LineStopBuilder.withDefaults().build();
-        const traversalState = GraphTraversalStateManager.start([anUnvisitedStop], sourceStop);
+        const traversalState = GraphTraversalStateManager.startTraversal([anUnvisitedStop], sourceStop);
         traversalState.moveToNext();
 
         expect(traversalState.hasNext()).to.be.false;

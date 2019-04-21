@@ -16,4 +16,8 @@ export class Lines extends Set<Line> {
             });
         return uniq(flatten(neighbouringStopPairs));
     }
+
+    public findLineWithStops(oneStop: LineStop, anotherStop: LineStop): Line {
+        return [...this].find(line => line.hasStop(oneStop) && line.hasStop(anotherStop));
+    }
 }
