@@ -1,10 +1,15 @@
 import {Line} from './line';
+import {Stations} from './stations';
 import {flatten, uniq} from 'lodash';
 import {LineStop} from './line-stop';
 
 export class Lines extends Set<Line> {
     public getAllStops(): LineStop[] {
         return flatten([...this].map(line => line.stops));
+    }
+
+    public getAllStations(): Stations {
+        return new Stations(this.getAllStops().map(stop => stop.stoppingAt));
     }
 
     public getNeighbouringStopsFor(stop: LineStop): LineStop[] {

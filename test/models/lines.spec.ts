@@ -3,6 +3,7 @@ import {Line} from '../../src/models/line';
 import {suite, test} from 'mocha-typescript';
 import {Lines} from '../../src/models/lines';
 import {Station} from '../../src/models/station';
+import {Stations} from '../../src/models/stations';
 import {LineStop} from '../../src/models/line-stop';
 import {LineStopBuilder} from '../builders/line-stop.builder';
 
@@ -79,5 +80,23 @@ class LinesSpec {
 
         expect(lines.findLineWithStops(firstStop, fifthStop)).to.equal(secondLine);
         expect(lines.findLineWithStops(firstStop, fourthStop)).to.equal(firstLine);
+    }
+
+    @test
+    public async shouldGetAllUniqueStations(): Promise<void> {
+        const aStation = new Station('A Station');
+        const anotherStation = new Station('Another Station');
+        const yetAnotherStation = new Station('Yet Another Station');
+        const firstStop = LineStopBuilder.withDefaults().stoppingAt(aStation).build();
+        const secondStop = LineStopBuilder.withDefaults().stoppingAt(anotherStation).build();
+        const thirdStop = LineStopBuilder.withDefaults().stoppingAt(yetAnotherStation).build();
+        const fourthStop = LineStopBuilder.withDefaults().stoppingAt(aStation).build();
+
+        const firstLine = new Line([firstStop, secondStop, thirdStop]);
+        const secondLine = new Line([firstStop, secondStop, fourthStop]);
+        const lines = new Lines([firstLine, secondLine]);
+
+        expect(lines.getAllStations()).to.be.an.instanceOf(Stations);
+        expect(lines.getAllStations()).to.deep.equal(new Stations([aStation, anotherStation, yetAnotherStation]));
     }
 }
