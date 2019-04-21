@@ -36,12 +36,15 @@ class FindRouteCommandSpec {
             LineStopBuilder.withDefaults().stoppingAt(destinationStation).build(),
             LineStopBuilder.withDefaults().build(),
         ]);
-        const routes = [new Route(LineStopBuilder.withDefaults().build())];
+        const routes = [new Route(LineStopBuilder.withDefaults().withCode('CC1').build(),
+            LineStopBuilder.withDefaults().withCode('DT1').build())];
         when(this.linesRepository.findAll()).thenReturn(new Lines([firstLine, secondLine]));
         when(this.routingService.findRoutesBetween(sourceStation, destinationStation)).thenResolve(routes);
 
         const results = await this.command.execute('Source Station', 'Destination Station');
 
-        expect(results).to.deep.equal(routes[0].describe());
+        const expectedResult = [`Found [1] routes from [Source Station] to [Destination Station].`,
+            '', routes[0].toString()];
+        expect(results).to.deep.equal(expectedResult);
     }
 }

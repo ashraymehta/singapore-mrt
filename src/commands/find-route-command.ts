@@ -1,4 +1,5 @@
 import {inject} from 'inversify';
+import {Route} from '../models/route';
 import {Logger} from '../utils/Logger';
 import {provide} from 'inversify-binding-decorators';
 import {RoutingService} from '../services/routing.service';
@@ -17,14 +18,17 @@ export class FindRouteCommand {
     }
 
     public async execute(source: string, destination: string): Promise<string[]> {
+        const routes = await this.findRoutes(source, destination);
+        return [`Found [${routes.length}] routes from [${source}] to [${destination}].`, '', ...routes.map(r => r.toString())];
+    }
+
+    private async findRoutes(source: string, destination: string): Promise<Route[]> {
         const lines = await this.linesRepository.findAll();
         this.logger.log(`Found [${lines.size}] lines from repository.`);
         const allStations = lines.getAllStations();
         const sourceStation = allStations.findStationWithName(source);
         const destinationStation = allStations.findStationWithName(destination);
 
-        const routes = await this.routingService.findRoutesBetween(sourceStation, destinationStation);
-
-        return routes[0].describe();
+        return await this.routingService.findRoutesBetween(sourceStation, destinationStation);
     }
 }
