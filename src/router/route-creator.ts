@@ -1,19 +1,19 @@
 import {flatten} from 'lodash';
 import {LineStop} from '../models/line-stop';
-import {GraphTraversalStateManager} from './graph-traversal-state-manager';
+import {DijkstraGraphTraverser} from './dijkstra-graph-traverser';
 
 export class RouteCreator {
-    public createFrom(sourceStop: LineStop, destinationStop: LineStop, traversalState: GraphTraversalStateManager): LineStop[][] {
+    public createFrom(sourceStop: LineStop, destinationStop: LineStop, traversalState: DijkstraGraphTraverser): LineStop[][] {
         return this.findRoutes(destinationStop, sourceStop, traversalState).map(route => route.reverse());
     }
 
-    private findRoutes(destinationStop: LineStop, sourceStop: LineStop, traversalState: GraphTraversalStateManager): LineStop[][] {
+    private findRoutes(destinationStop: LineStop, sourceStop: LineStop, traversalState: DijkstraGraphTraverser): LineStop[][] {
         let currentStop = destinationStop;
         const route: LineStop[] = [];
         const routes = [];
         while (currentStop !== sourceStop) {
             route.push(currentStop);
-            const previous = traversalState.routeToStop.get(currentStop).previousStops;
+            const previous = traversalState.routeToLineStop.get(currentStop).previousStops;
             if (previous.length === 1) {
                 currentStop = previous[0];
             } else {

@@ -8,10 +8,12 @@ import {GraphTraversalStateManager} from './graph-traversal-state-manager';
 export class Router {
     private readonly routeCreator: RouteCreator;
     private readonly dataPreparer: RoutingDataPreparer;
+    private readonly graphTraversalStateManager: GraphTraversalStateManager;
 
-    constructor(dataProvider: RoutingDataPreparer, routeCreator: RouteCreator) {
+    constructor(dataProvider: RoutingDataPreparer, routeCreator: RouteCreator, graphTraversalStateManager: GraphTraversalStateManager) {
         this.dataPreparer = dataProvider;
         this.routeCreator = routeCreator;
+        this.graphTraversalStateManager = graphTraversalStateManager;
     }
 
     public async findRoutesBetween(source: Station, destination: Station, metro: Metro): Promise<LineStop[][]> {
@@ -20,23 +22,22 @@ export class Router {
         const sourceStop = allStops.find(stop => stop.isFor(source));
         const destinationStop = allStops.find(stop => stop.isFor(destination));
 
-        const graphTraversalState = GraphTraversalStateManager.startTraversal(allStops, sourceStop);
+        const graphIterator = this.graphTraversalStateManager.startTraversal(allStops, sourceStop);
 
-        while (graphTraversalState.hasNext()) {
-            const currentStop = graphTraversalState.moveToNext();
+        while (graphIterator.hasNext()) {
+            const currentStop = graphIterator.moveToNext();
 
             allLines.getNeighbouringStopsFor(currentStop)
-                .filter(neighbour => graphTraversalState.unvisitedStops.has(neighbour))
+                .filter(neighbour => graphIterator.unvisitedStops.has(neighbour))
                 .forEach(neighbour => {
                     const line = allLines.findLineWithStops(currentStop, neighbour);
-                    return graphTraversalState.updateTimeTaken(neighbour, currentStop, line.getTimeTakenBetweenStations());
+                    return graphIterator.optionallySaveTimeToLineStop(neighbour, currentStop, line.getTimeTakenBetweenStations());
                 });
-            graphTraversalState.markStopAsVisited(currentStop);
             if (currentStop === destinationStop) {
                 break;
             }
         }
 
-        return this.routeCreator.createFrom(sourceStop, destinationStop, graphTraversalState);
+        return this.routeCreator.createFrom(sourceStop, destinationStop, graphIterator);
     }
 }
