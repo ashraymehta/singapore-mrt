@@ -7,14 +7,14 @@ import {Station} from '../../src/models/station';
 import {RouteCreator} from '../../src/router/route-creator';
 import {LineStopBuilder} from '../builders/line-stop.builder';
 import {RoutingDataPreparer} from '../../src/router/routing-data-preparer';
-import {GraphTraversalStateManager} from '../../src/router/graph-traversal-state-manager';
+import {GraphTraversalManager} from '../../src/router/graph-traversal-manager';
 
 @suite
 class RouterSpec {
     private router: Router;
 
     public before(): void {
-        this.router = new Router(new RoutingDataPreparer(), new RouteCreator(), new GraphTraversalStateManager());
+        this.router = new Router(new RoutingDataPreparer(), new RouteCreator(), new GraphTraversalManager());
     }
 
     @test

@@ -3,14 +3,14 @@ import {Station} from '../models/station';
 import {LineStop} from '../models/line-stop';
 import {RouteCreator} from './route-creator';
 import {RoutingDataPreparer} from './routing-data-preparer';
-import {GraphTraversalStateManager} from './graph-traversal-state-manager';
+import {GraphTraversalManager} from './graph-traversal-manager';
 
 export class Router {
     private readonly routeCreator: RouteCreator;
     private readonly dataPreparer: RoutingDataPreparer;
-    private readonly graphTraversalStateManager: GraphTraversalStateManager;
+    private readonly graphTraversalStateManager: GraphTraversalManager;
 
-    constructor(dataProvider: RoutingDataPreparer, routeCreator: RouteCreator, graphTraversalStateManager: GraphTraversalStateManager) {
+    constructor(dataProvider: RoutingDataPreparer, routeCreator: RouteCreator, graphTraversalStateManager: GraphTraversalManager) {
         this.dataPreparer = dataProvider;
         this.routeCreator = routeCreator;
         this.graphTraversalStateManager = graphTraversalStateManager;

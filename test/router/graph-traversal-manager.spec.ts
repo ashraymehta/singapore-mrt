@@ -1,14 +1,14 @@
 import {expect} from 'chai';
 import {suite, test} from 'mocha-typescript';
 import {LineStopBuilder} from '../builders/line-stop.builder';
-import {GraphTraversalStateManager} from '../../src/router/graph-traversal-state-manager';
+import {GraphTraversalManager} from '../../src/router/graph-traversal-manager';
 
 @suite
-class GraphTraversalStateManagerSpec {
-    private graphTraversalStateManager: GraphTraversalStateManager;
+class GraphTraversalManagerSpec {
+    private graphTraversalStateManager: GraphTraversalManager;
 
     public before(): void {
-        this.graphTraversalStateManager = new GraphTraversalStateManager();
+        this.graphTraversalStateManager = new GraphTraversalManager();
     }
 
     @test
