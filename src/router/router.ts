@@ -3,7 +3,7 @@ import {Station} from '../models/station';
 import {LineStop} from '../models/line-stop';
 import {RouteCreator} from './route-creator';
 import {RoutingDataPreparer} from './routing-data-preparer';
-import {GraphTraversalState} from '../models/router/graph-traversal-state';
+import {GraphTraversalStateManager} from './graph-traversal-state-manager';
 
 export class Router {
     private readonly routeCreator: RouteCreator;
@@ -20,7 +20,7 @@ export class Router {
         const sourceStop = allStops.find(stop => stop.isFor(source));
         const destinationStop = allStops.find(stop => stop.isFor(destination));
 
-        const graphTraversalState = GraphTraversalState.start(allStops, sourceStop);
+        const graphTraversalState = GraphTraversalStateManager.start(allStops, sourceStop);
 
         while (graphTraversalState.hasNext()) {
             const currentStop = graphTraversalState.moveToNext();

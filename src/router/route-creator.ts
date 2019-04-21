@@ -1,13 +1,13 @@
 import {flatten} from 'lodash';
 import {LineStop} from '../models/line-stop';
-import {GraphTraversalState} from '../models/router/graph-traversal-state';
+import {GraphTraversalStateManager} from './graph-traversal-state-manager';
 
 export class RouteCreator {
-    public createFrom(sourceStop: LineStop, destinationStop: LineStop, traversalState: GraphTraversalState): LineStop[][] {
+    public createFrom(sourceStop: LineStop, destinationStop: LineStop, traversalState: GraphTraversalStateManager): LineStop[][] {
         return this.findRoutes(destinationStop, sourceStop, traversalState).map(route => route.reverse());
     }
 
-    private findRoutes(destinationStop: LineStop, sourceStop: LineStop, traversalState: GraphTraversalState): LineStop[][] {
+    private findRoutes(destinationStop: LineStop, sourceStop: LineStop, traversalState: GraphTraversalStateManager): LineStop[][] {
         let currentStop = destinationStop;
         const route: LineStop[] = [];
         const routes = [];

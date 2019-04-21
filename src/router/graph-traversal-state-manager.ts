@@ -1,7 +1,7 @@
 import {minBy} from 'lodash';
-import {LineStop} from '../line-stop';
+import {LineStop} from '../models/line-stop';
 
-export class GraphTraversalState {
+export class GraphTraversalStateManager {
     public readonly unvisitedStops: Set<LineStop>;
     public readonly routeToStop: Map<LineStop, { timeTaken: number; previousStops: LineStop[] }>;
     private readonly sourceStop: LineStop;
@@ -13,8 +13,8 @@ export class GraphTraversalState {
         this.routeToStop = new Map<LineStop, { timeTaken: number, previousStops: LineStop[] }>();
     }
 
-    public static start(unvisitedStops: LineStop[], startingStop: LineStop): GraphTraversalState {
-        const traversalState = new GraphTraversalState(unvisitedStops, startingStop);
+    public static start(unvisitedStops: LineStop[], startingStop: LineStop): GraphTraversalStateManager {
+        const traversalState = new GraphTraversalStateManager(unvisitedStops, startingStop);
         traversalState.unvisitedStops.forEach(stop => traversalState.routeToStop.set(stop, {
             timeTaken: Number.MAX_VALUE,
             previousStops: []
