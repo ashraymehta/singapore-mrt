@@ -42,6 +42,6 @@ class FindRouteCommandSpec {
 
         const results = await this.command.execute('Source Station', 'Destination Station');
 
-        expect(results).to.equal(routes);
+        expect(results).to.deep.equal(routes[0].describe());
     }
 }
