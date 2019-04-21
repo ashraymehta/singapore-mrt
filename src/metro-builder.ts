@@ -1,6 +1,7 @@
 import {Line} from './models/line';
 import {groupBy, uniq} from 'lodash';
 import {Metro} from './models/metro';
+import {Lines} from './models/lines';
 import {Station} from './models/station';
 import {Stations} from './models/stations';
 import {LineStop} from './models/line-stop';
@@ -24,7 +25,7 @@ export class MetroBuilder {
         const uniqueStationNames = uniq(unparsedStationsMap.map(n => n.StationName));
         const allStations = new Stations(uniqueStationNames.map(name => new Station(name)));
 
-        const lines: Line[] = Object.keys(unparsedStationsByLineCodes).map(lineCode => {
+        const lines = Object.keys(unparsedStationsByLineCodes).map(lineCode => {
             const unparsedStopsForLine = unparsedStationsByLineCodes[lineCode];
             const stops = unparsedStopsForLine.map(unparsedStation => {
                 const station = allStations.findStationWithName(unparsedStation.StationName);
@@ -32,6 +33,6 @@ export class MetroBuilder {
             });
             return new Line(stops);
         });
-        return new Metro(lines);
+        return new Metro(new Lines(lines));
     }
 }

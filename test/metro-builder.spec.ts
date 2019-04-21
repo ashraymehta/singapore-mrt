@@ -1,6 +1,7 @@
 import {expect} from 'chai';
 import {Line} from '../src/models/line';
 import {Metro} from '../src/models/metro';
+import {Lines} from '../src/models/lines';
 import {suite, test} from 'mocha-typescript';
 import {Station} from '../src/models/station';
 import {instance, mock, when} from 'ts-mockito';
@@ -46,7 +47,7 @@ class MetroBuilderSpec {
         const bukitBatokStation = new Station('Bukit Batok');
         const jurongLineStop = new LineStop('NS1', jurongEastStation, new Date('10 March 1990'));
         const bukitBatokLineStop = new LineStop('NS2', bukitBatokStation, new Date('10 March 1990'));
-        const expectedLines = [new Line([jurongLineStop, bukitBatokLineStop])];
+        const expectedLines = new Lines([new Line([jurongLineStop, bukitBatokLineStop])]);
         const expectedMetro = new Metro(expectedLines);
         expect(metro).to.deep.equal(expectedMetro);
     }
@@ -73,7 +74,7 @@ class MetroBuilderSpec {
         const jurongEastStation = new Station('Jurong East');
         const jurongLineStop = new LineStop('NS1', jurongEastStation, new Date('10 March 1990'));
         const pasirRisLineStop = new LineStop('EW1', pasirRisStation, new Date('16 December 1989'));
-        const expectedLines = [new Line([jurongLineStop]), new Line([pasirRisLineStop])];
+        const expectedLines = new Lines([new Line([jurongLineStop]), new Line([pasirRisLineStop])]);
         const expectedMetro = new Metro(expectedLines);
         expect(metro).to.deep.equal(expectedMetro);
     }
@@ -99,7 +100,7 @@ class MetroBuilderSpec {
         const dhobyGhautStation = new Station('Dhoby Ghaut');
         const dhobyGhautNELineStop = new LineStop('NE6', dhobyGhautStation, new Date('20 June 2003'));
         const dhobyGhautEWLineStop = new LineStop('CC1', dhobyGhautStation, new Date('17 April 2010'));
-        const expectedLines = [new Line([dhobyGhautNELineStop]), new Line([dhobyGhautEWLineStop])];
+        const expectedLines = new Lines([new Line([dhobyGhautNELineStop]), new Line([dhobyGhautEWLineStop])]);
         const expectedMetro = new Metro(expectedLines);
         expect(metro).to.deep.equal(expectedMetro);
     }
