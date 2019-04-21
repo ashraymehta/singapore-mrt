@@ -36,6 +36,6 @@ export class Router {
             });
         }
 
-        return this.routeCreator.createFrom(sourceStop, destinationStop, traverser);
+        return this.routeCreator.createFrom(destinationStop, sourceStop, traverser);
     }
 }

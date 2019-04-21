@@ -13,14 +13,14 @@ export class DijkstraGraphTraverser {
         this.routeToLineStop = new Map<LineStop, { timeTaken: number, previousStops: LineStop[] }>();
     }
 
-    public static traverseWith(allStops: LineStop[], startingStop: LineStop): DijkstraGraphTraverser {
-        const graphTraversor = new DijkstraGraphTraverser(allStops, startingStop);
+    public static traverseWith(allStops: LineStop[], sourceStop: LineStop): DijkstraGraphTraverser {
+        const graphTraversor = new DijkstraGraphTraverser(allStops, sourceStop);
         graphTraversor.unvisitedStops.forEach(stop => graphTraversor.routeToLineStop.set(stop, {
             timeTaken: Number.POSITIVE_INFINITY,
             previousStops: []
         }));
 
-        graphTraversor.routeToLineStop.set(startingStop, {timeTaken: 0, previousStops: []});
+        graphTraversor.routeToLineStop.set(sourceStop, {timeTaken: 0, previousStops: []});
         return graphTraversor;
     }
 
