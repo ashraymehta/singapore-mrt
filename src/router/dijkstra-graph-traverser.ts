@@ -44,6 +44,10 @@ export class DijkstraGraphTraverser {
         return this.currentStop;
     }
 
+    public getCurrentStop(): LineStop {
+        return this.currentStop;
+    }
+
     private markStopAsVisited(stop: LineStop): void {
         this.unvisitedStops.delete(stop);
     }

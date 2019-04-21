@@ -1,129 +1,159 @@
-import {expect} from 'chai';
 import {Line} from '../../src/models/line';
 import {suite, test} from 'mocha-typescript';
 import {Metro} from '../../src/models/metro';
+import {Lines} from '../../src/models/lines';
 import {Router} from '../../src/router/router';
 import {Station} from '../../src/models/station';
 import {RouteCreator} from '../../src/router/route-creator';
 import {LineStopBuilder} from '../builders/line-stop.builder';
+import {anything, instance, mock, verify, when} from 'ts-mockito';
 import {RoutingDataPreparer} from '../../src/router/routing-data-preparer';
 import {GraphTraversalManager} from '../../src/router/graph-traversal-manager';
+import {DijkstraGraphTraverser} from '../../src/router/dijkstra-graph-traverser';
 
 @suite
 class RouterSpec {
     private router: Router;
+    private routeCreator: RouteCreator;
+    private traversalManager: GraphTraversalManager;
+    private routingDataPreparer: RoutingDataPreparer;
 
     public before(): void {
-        this.router = new Router(new RoutingDataPreparer(), new RouteCreator(), new GraphTraversalManager());
+        this.routeCreator = mock(RouteCreator);
+        this.traversalManager = mock(GraphTraversalManager);
+        this.routingDataPreparer = mock(RoutingDataPreparer);
+        this.router = new Router(instance(this.routingDataPreparer), instance(this.routeCreator), instance(this.traversalManager));
     }
 
     @test
-    public async shouldFindRouteBetweenStationsWhenMetroHasASingleLinePassingThroughThem(): Promise<void> {
-        const firstStop = LineStopBuilder.withDefaults().build();
-        const lastStop = LineStopBuilder.withDefaults().build();
-
-        const lines = [new Line([firstStop, lastStop])];
+    public async shouldInvokeDataPreparerToPrepareData(): Promise<void> {
+        const source = new Station('Source Station');
+        const destination = new Station('Destination Station');
+        const lines = new Lines([new Line([LineStopBuilder.withDefaults().build()])]);
         const metro = new Metro(lines, null);
+        when(this.routingDataPreparer.prepare(metro)).thenResolve({allLines: lines, allStops: []});
+        when(this.traversalManager.startTraversal(anything(), anything())).thenReturn(DijkstraGraphTraverser.traverseWith([], null));
 
-        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, lastStop.stoppingAt, metro);
+        await this.router.findRoutesBetween(source, destination, metro);
 
-        expect(route).to.deep.equal([[firstStop, lastStop]]);
+        verify(this.routingDataPreparer.prepare(metro)).once();
     }
 
     @test
-    public async shouldFindReverseRouteBetweenStationsWhenMetroHasASingleLinePassingThroughThem(): Promise<void> {
-        const firstStop = LineStopBuilder.withDefaults().build();
-        const lastStop = LineStopBuilder.withDefaults().build();
+    public async shouldInitializeGraphTraversal(): Promise<void> {
+        const source = new Station('Source Station');
+        const destination = new Station('Destination Station');
+        const anotherLineStop = LineStopBuilder.withDefaults().build();
+        const lineStopForSource = LineStopBuilder.withDefaults().stoppingAt(source).build();
+        const allStops = [lineStopForSource, anotherLineStop];
 
-        const lines = [new Line([firstStop, lastStop])];
+        const lines = new Lines([new Line([lineStopForSource, anotherLineStop])]);
         const metro = new Metro(lines, null);
 
-        const route = await this.router.findRoutesBetween(lastStop.stoppingAt, firstStop.stoppingAt, metro);
+        const traverser = mock(DijkstraGraphTraverser);
+        when(this.routingDataPreparer.prepare(metro)).thenResolve({allLines: lines, allStops: allStops});
+        when(this.traversalManager.startTraversal(anything(), anything())).thenReturn(instance(traverser));
 
-        expect(route).to.deep.equal([[lastStop, firstStop]]);
+        await this.router.findRoutesBetween(source, destination, metro);
+
+        verify(this.traversalManager.startTraversal(allStops, lineStopForSource)).once();
     }
 
     @test
-    public async shouldFindRouteBetweenFirstAndLastStopForALine(): Promise<void> {
-        const firstStop = LineStopBuilder.withDefaults().build();
-        const middleStop = LineStopBuilder.withDefaults().build();
-        const lastStop = LineStopBuilder.withDefaults().build();
+    public async shouldIterateThroughTheGraphOnlyWhileThereIsANextStopAvailable(): Promise<void> {
+        const source = new Station('Source Station');
+        const destination = new Station('Destination Station');
+        const anotherLineStop = LineStopBuilder.withDefaults().build();
+        const lineStopForSource = LineStopBuilder.withDefaults().stoppingAt(source).build();
+        const allStops = [lineStopForSource, anotherLineStop];
 
-        const lines = [new Line([firstStop, middleStop, lastStop])];
+        const lines = new Lines([new Line([lineStopForSource, anotherLineStop])]);
         const metro = new Metro(lines, null);
 
-        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, lastStop.stoppingAt, metro);
+        const traverser = mock(DijkstraGraphTraverser);
+        when(this.routingDataPreparer.prepare(metro)).thenResolve({allLines: lines, allStops: allStops});
+        when(this.traversalManager.startTraversal(anything(), anything())).thenReturn(instance(traverser));
+        when(traverser.hasNext()).thenReturn(true).thenReturn(true).thenReturn(false);
+        when(traverser.unvisitedStops).thenReturn(new Set([lineStopForSource, anotherLineStop]));
 
-        expect(route).to.deep.equal([[firstStop, middleStop, lastStop]]);
+        await this.router.findRoutesBetween(source, destination, metro);
+
+        verify(traverser.moveToNext()).twice();
     }
 
     @test
-    public async shouldReturnAnEmptyRouteIfThereIsNoPathBetweenProvidedStations(): Promise<void> {
-        const firstStop = LineStopBuilder.withDefaults().build();
-        const secondStop = LineStopBuilder.withDefaults().build();
-        const thirdStop = LineStopBuilder.withDefaults().build();
-        const fourthStop = LineStopBuilder.withDefaults().build();
+    public async shouldUpdateTimeTakenForNeighbouringStopsDuringAnIteration(): Promise<void> {
+        const source = new Station('Source Station');
+        const destination = new Station('Destination Station');
+        const aLineStop = LineStopBuilder.withDefaults().build();
+        const anotherLineStop = LineStopBuilder.withDefaults().build();
+        const lineStopForSource = LineStopBuilder.withDefaults().stoppingAt(source).build();
+        const allStops = [lineStopForSource, aLineStop, anotherLineStop];
 
-        const lines = [new Line([firstStop, secondStop]), new Line([thirdStop, fourthStop])];
+        const lines = new Lines([new Line([lineStopForSource, aLineStop, anotherLineStop])]);
         const metro = new Metro(lines, null);
 
-        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, fourthStop.stoppingAt, metro);
+        const traverser = mock(DijkstraGraphTraverser);
+        when(this.routingDataPreparer.prepare(metro)).thenResolve({allLines: lines, allStops: allStops});
+        when(this.traversalManager.startTraversal(anything(), anything())).thenReturn(instance(traverser));
+        when(traverser.hasNext()).thenReturn(true, true, false);
+        when(traverser.moveToNext()).thenReturn(lineStopForSource, aLineStop, anotherLineStop);
+        when(traverser.unvisitedStops).thenReturn(new Set([aLineStop, anotherLineStop]));
 
-        expect(route).to.deep.equal([]);
+        await this.router.findRoutesBetween(source, destination, metro);
+
+        verify(traverser.optionallySaveTimeToLineStop(aLineStop, lineStopForSource, 1)).once();
+        verify(traverser.optionallySaveTimeToLineStop(anotherLineStop, aLineStop, 1)).once();
     }
 
     @test
-    public async shouldFindRoutesWhichRequireALineChange(): Promise<void> {
-        const interchangeStation = new Station(`Interchange Station`);
+    public async shouldUpdateTimeTakenOnlyForNeighbouringStopsWhichAreUnvisitedDuringAnIteration(): Promise<void> {
+        const source = new Station('Source Station');
+        const destination = new Station('Destination Station');
+        const aLineStop = LineStopBuilder.withDefaults().build();
+        const anotherLineStop = LineStopBuilder.withDefaults().build();
+        const lineStopForSource = LineStopBuilder.withDefaults().stoppingAt(source).build();
+        const allStops = [lineStopForSource, aLineStop, anotherLineStop];
 
-        const firstStop = LineStopBuilder.withDefaults().withCode('CC1').build();
-        const secondStop = LineStopBuilder.withDefaults().stoppingAt(interchangeStation).withCode('CC2').build();
-        const thirdStop = LineStopBuilder.withDefaults().stoppingAt(interchangeStation).withCode('CL1').build();
-        const lastStop = LineStopBuilder.withDefaults().withCode('CL2').build();
-
-        const lines = [new Line([firstStop, secondStop]), new Line([thirdStop, lastStop])];
+        const lines = new Lines([new Line([lineStopForSource, aLineStop, anotherLineStop])]);
         const metro = new Metro(lines, null);
 
-        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, lastStop.stoppingAt, metro);
+        const traverser = mock(DijkstraGraphTraverser);
+        when(this.routingDataPreparer.prepare(metro)).thenResolve({allLines: lines, allStops: allStops});
+        when(this.traversalManager.startTraversal(anything(), anything())).thenReturn(instance(traverser));
+        when(traverser.moveToNext()).thenReturn(lineStopForSource, aLineStop, anotherLineStop);
+        when(traverser.unvisitedStops).thenReturn(new Set([anotherLineStop]));
+        when(traverser.hasNext()).thenReturn(true, true, false);
 
-        expect(route).to.deep.equal([[firstStop, secondStop, thirdStop, lastStop]]);
+        await this.router.findRoutesBetween(source, destination, metro);
+
+        verify(traverser.optionallySaveTimeToLineStop(aLineStop, lineStopForSource, 1)).never();
+        verify(traverser.optionallySaveTimeToLineStop(anotherLineStop, aLineStop, 1)).once();
     }
 
     @test
-    public async shouldFindShortestRouteWhenMultipleRoutesAreAvailable(): Promise<void> {
-        const interchangeStation = new Station('Common Station');
-        const firstStop = LineStopBuilder.withDefaults().build();
-        const secondStop = LineStopBuilder.withDefaults().stoppingAt(interchangeStation).build();
-        const thirdStop = LineStopBuilder.withDefaults().build();
-        const fourthStop = LineStopBuilder.withDefaults().build();
-        const fifthStop = LineStopBuilder.withDefaults().stoppingAt(interchangeStation).build();
+    public async shouldStopIterationWhenDestinationStopIsReached(): Promise<void> {
+        const source = new Station('Source Station');
+        const destination = new Station('Destination Station');
+        const anotherLineStop = LineStopBuilder.withDefaults().build();
+        const aLineStop = LineStopBuilder.withDefaults().stoppingAt(destination).build();
+        const lineStopForSource = LineStopBuilder.withDefaults().stoppingAt(source).build();
+        const allStops = [lineStopForSource, aLineStop, anotherLineStop];
 
-        const aLine = new Line([firstStop, secondStop, thirdStop, fourthStop]);
-        const anotherLine = new Line([fourthStop, fifthStop]);
-
-        const lines = [aLine, anotherLine];
+        const lines = new Lines([new Line([lineStopForSource, aLineStop, anotherLineStop])]);
         const metro = new Metro(lines, null);
 
-        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, fourthStop.stoppingAt, metro);
+        const traverser = mock(DijkstraGraphTraverser);
+        when(this.routingDataPreparer.prepare(metro)).thenResolve({allLines: lines, allStops: allStops});
+        when(this.traversalManager.startTraversal(anything(), anything())).thenReturn(instance(traverser));
+        when(traverser.moveToNext()).thenReturn(lineStopForSource, aLineStop, anotherLineStop);
+        when(traverser.unvisitedStops).thenReturn(new Set([anotherLineStop]));
+        when(traverser.getCurrentStop()).thenReturn(lineStopForSource, aLineStop);
+        when(traverser.hasNext()).thenReturn(true, true);
 
-        expect(route).to.deep.equal([[firstStop, secondStop, fifthStop, fourthStop]]);
-    }
+        await this.router.findRoutesBetween(source, destination, metro);
 
-    @test
-    public async shouldFindMultipleShortestRoutesWhenAvailable(): Promise<void> {
-        const firstStop = LineStopBuilder.withDefaults().withCode('AA1').build();
-        const secondStop = LineStopBuilder.withDefaults().withCode('AA2').build();
-        const thirdStop = LineStopBuilder.withDefaults().withCode('AA3').build();
-        const fourthStop = LineStopBuilder.withDefaults().withCode('AA4').build();
-        const fifthStop = LineStopBuilder.withDefaults().withCode('AA5').build();
-
-        const lines = [new Line([firstStop, secondStop, thirdStop, fourthStop]),
-            new Line([firstStop, secondStop, fifthStop, fourthStop])];
-        const metro = new Metro(lines, null);
-
-        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, fourthStop.stoppingAt, metro);
-
-        expect(route).to.deep.equal([[firstStop, secondStop, thirdStop, fourthStop],
-            [firstStop, secondStop, fifthStop, fourthStop]]);
+        verify(traverser.hasNext()).twice();
+        verify(traverser.moveToNext()).once();
     }
 }

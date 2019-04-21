@@ -31,7 +31,7 @@ class RoutingDataPreparerSpec {
         ]);
         const metro = new Metro([aLine, anotherLine], new Stations([jurongEast, bukitBatok, harbourFront]));
 
-        const result = await this.routingDataPreparer.provide(metro);
+        const result = await this.routingDataPreparer.prepare(metro);
 
         expect(result).to.deep.equal({
             allLines: new Lines([aLine, anotherLine]),
@@ -57,7 +57,7 @@ class RoutingDataPreparerSpec {
         ]);
         const metro = new Metro([aLine, anotherLine, yetAnotherLine], new Stations([dhobyGhaut, brasBasah, clarkeQuay]));
 
-        const result = await this.routingDataPreparer.provide(metro);
+        const result = await this.routingDataPreparer.prepare(metro);
 
         const expectedIntersectionLines = [
             IntersectionLine.create(aLine.stops[0], anotherLine.stops[0]),

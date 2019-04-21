@@ -6,7 +6,7 @@ import {clone, difference, flatten, uniq} from 'lodash';
 import {IntersectionLine} from '../models/intersection-line';
 
 export class RoutingDataPreparer {
-    public async provide(metro: Metro): Promise<{ allLines: Lines; allStops: LineStop[] }> {
+    public async prepare(metro: Metro): Promise<{ allLines: Lines; allStops: LineStop[] }> {
         const allLines = clone(metro.lines);
         const allStops = allLines.getAllStops();
         const stations = allStops.map(stop => stop.stoppingAt);

@@ -7,7 +7,7 @@ export class Metro {
     // TODO: Consider if stations are really needed
     private readonly stations: Stations;
 
-    constructor(lines: Line[], stations: Stations) {
+    constructor(lines: Line[] | Lines, stations: Stations) {
         this.lines = new Lines(lines);
         this.stations = stations;
     }
