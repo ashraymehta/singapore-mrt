@@ -2,6 +2,7 @@ import {expect} from 'chai';
 import {suite, test} from 'mocha-typescript';
 import {Station} from '../../../src/models/station';
 import {LineStop} from '../../../src/models/line-stop';
+import {LineStopBuilder} from '../../builders/line-stop.builder';
 import {GraphTraversalState} from '../../../src/models/router/graph-traversal-state';
 
 @suite
@@ -16,7 +17,7 @@ class GraphTraversalStateSpec {
 
         expect(traversalState.routeToStop.get(lineStop)).to.deep.equal({
             timeTaken: 5,
-            previousStop: viaStop
+            previousStops: [viaStop]
         });
     }
 
@@ -31,7 +32,24 @@ class GraphTraversalStateSpec {
 
         expect(traversalState.routeToStop.get(lineStop)).to.deep.equal({
             timeTaken: 5,
-            previousStop: viaStop
+            previousStops: [viaStop]
+        });
+    }
+
+    @test
+    public async shouldAddToTheExistingPreviousLineStopsWhenAnEqualValueForTimeTakenIsSet(): Promise<void> {
+        const lineStop = LineStopBuilder.withDefaults().build();
+        const aViaStop = LineStopBuilder.withDefaults().build();
+        const anotherViaStop = LineStopBuilder.withDefaults().build();
+        const traversalState = GraphTraversalState.start([], aViaStop);
+        traversalState.updateTimeTaken(lineStop, aViaStop, 5);
+        traversalState.updateTimeTaken(anotherViaStop, aViaStop, 0);
+
+        traversalState.updateTimeTaken(lineStop, anotherViaStop, 5);
+
+        expect(traversalState.routeToStop.get(lineStop)).to.deep.equal({
+            timeTaken: 5,
+            previousStops: [aViaStop, anotherViaStop]
         });
     }
 
@@ -48,12 +66,12 @@ class GraphTraversalStateSpec {
 
         expect(traversalState.routeToStop.get(lineStop)).to.deep.equal({
             timeTaken: 5,
-            previousStop: existingViaStop
+            previousStops: [existingViaStop]
         });
     }
 
     @test
-    public async shouldGetNearestUnvisitedStop(): Promise<void> {
+    public async shouldGetNextStopAsTheNearestUnvisitedStop(): Promise<void> {
         const firstStop = new LineStop('CC1', new Station('Dhoby Ghaut'), new Date('17 April 2010'));
         const secondStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
         const thirdStop = new LineStop('CC3', new Station('Esplanade'), new Date('17 April 2010'));
@@ -63,9 +81,21 @@ class GraphTraversalStateSpec {
         traversalState.updateTimeTaken(secondStop, undefined, 200);
         traversalState.updateTimeTaken(thirdStop, undefined, 4);
 
-        const result = traversalState.getNearestUnvisitedStop();
+        const result = traversalState.getNextStop();
 
         expect(result).to.equal(firstStop);
+    }
+
+    @test
+    public async shouldGetNextStopAsUndefinedIfTheNearestUnvisitedStopHasTheMaximumTimeTakenValue(): Promise<void> {
+        const firstStop = new LineStop('CC1', new Station('Dhoby Ghaut'), new Date('17 April 2010'));
+        const secondStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
+        const unvisitedStops = [firstStop, secondStop];
+        const traversalState = GraphTraversalState.start(unvisitedStops, firstStop);
+
+        const result = traversalState.getNextStop();
+
+        expect(result).to.be.undefined;
     }
 
     @test
@@ -79,7 +109,7 @@ class GraphTraversalStateSpec {
         traversalState.updateTimeTaken(secondStop, undefined, 200);
         traversalState.updateTimeTaken(thirdStop, undefined, 4);
 
-        const result = traversalState.getNearestUnvisitedStop();
+        const result = traversalState.getNextStop();
 
         expect(result).to.be.undefined;
     }
@@ -111,15 +141,15 @@ class GraphTraversalStateSpec {
         expect(traversalState.routeToStop).to.have.lengthOf(3);
         expect(traversalState.routeToStop.get(firstStop)).to.deep.equal({
             timeTaken: 0,
-            previousStop: undefined
+            previousStops: []
         });
         expect(traversalState.routeToStop.get(secondStop)).to.deep.equal({
             timeTaken: Number.MAX_VALUE,
-            previousStop: undefined
+            previousStops: []
         });
         expect(traversalState.routeToStop.get(thirdStop)).to.deep.equal({
             timeTaken: Number.MAX_VALUE,
-            previousStop: undefined
+            previousStops: []
         });
     }
 }

@@ -18,7 +18,17 @@ export class RoutingDataPreparer {
             const lines = flatten(stopsForStation.map(stop => {
                 return difference(stopsForStation, [stop]).map(otherStop => IntersectionLine.create(stop, otherStop));
             }));
-            lines.forEach(line => allLines.add(line));
+
+            const uniqueIntersectionLines = lines.filter((line: IntersectionLine, index: number) => {
+                const firstStop = line.stops[0];
+                const secondStop = line.stops[1];
+                const isThereADuplicateIntersectionLineBeforeThisInTheArray = lines.slice(0, index)
+                    .find(aLine => aLine.hasStop(firstStop) && aLine.hasStop(secondStop));
+
+                return !isThereADuplicateIntersectionLineBeforeThisInTheArray;
+            });
+
+            uniqueIntersectionLines.forEach(line => allLines.add(line));
         });
         return {allLines, allStops};
     }

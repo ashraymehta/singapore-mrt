@@ -4,6 +4,7 @@ import {suite, test} from 'mocha-typescript';
 import {Lines} from '../../src/models/lines';
 import {Station} from '../../src/models/station';
 import {LineStop} from '../../src/models/line-stop';
+import {LineStopBuilder} from '../builders/line-stop.builder';
 
 @suite
 class LinesSpec {
@@ -46,5 +47,21 @@ class LinesSpec {
         const result = lines.getNeighbouringStopsFor(imaginaryLineStop);
 
         expect(result).to.deep.equal([firstNeighbourOfImaginaryStation, stopsForSecondLine.stops[1], stopsForSecondLine.stops[3]]);
+    }
+
+    @test
+    public async shouldGetUniqueNeighbouringStops(): Promise<void> {
+        const firstStop = LineStopBuilder.withDefaults().build();
+        const secondStop = LineStopBuilder.withDefaults().build();
+        const thirdStop = LineStopBuilder.withDefaults().build();
+        const fourthStop = LineStopBuilder.withDefaults().build();
+        const fifthStop = LineStopBuilder.withDefaults().build();
+
+        const lines = new Lines([new Line([firstStop, secondStop, thirdStop, fourthStop, fifthStop]),
+            new Line([firstStop, secondStop, fifthStop])]);
+
+        const neighbouringStops = lines.getNeighbouringStopsFor(secondStop);
+
+        expect(neighbouringStops).to.deep.equal([firstStop, thirdStop, fifthStop]);
     }
 }

@@ -1,5 +1,5 @@
 import {Line} from './line';
-import {flatten} from 'lodash';
+import {flatten, uniq} from 'lodash';
 import {LineStop} from './line-stop';
 
 export class Lines extends Set<Line> {
@@ -14,6 +14,6 @@ export class Lines extends Set<Line> {
                 const nextStop = line.stops[line.stops.indexOf(stop) + 1];
                 return [previousStop, nextStop].filter(stop => !!stop);
             });
-        return flatten(neighbouringStopPairs);
+        return uniq(flatten(neighbouringStopPairs));
     }
 }

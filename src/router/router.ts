@@ -24,13 +24,17 @@ export class Router {
         const graphTraversalState = GraphTraversalState.start(allStops, sourceStop);
 
         while (graphTraversalState.unvisitedStops.size !== 0 && currentStop !== undefined) {
-            const neighbouringStops = allLines.getNeighbouringStopsFor(currentStop);
-            neighbouringStops.forEach(neighbour => {
-                const line = [...allLines].find(line => line.hasStop(currentStop) && line.hasStop(neighbour));
-                return graphTraversalState.updateTimeTaken(neighbour, currentStop, line.getTimeTakenBetweenStations());
-            });
+            allLines.getNeighbouringStopsFor(currentStop)
+                .filter(neighbour => graphTraversalState.unvisitedStops.has(neighbour))
+                .forEach(neighbour => {
+                    const line = [...allLines].find(line => line.hasStop(currentStop) && line.hasStop(neighbour));
+                    return graphTraversalState.updateTimeTaken(neighbour, currentStop, line.getTimeTakenBetweenStations());
+                });
             graphTraversalState.markStopAsVisited(currentStop);
-            currentStop = graphTraversalState.getNearestUnvisitedStop();
+            if (currentStop === destinationStop) {
+                break;
+            }
+            currentStop = graphTraversalState.getNextStop();
         }
 
         return this.routeCreator.createFrom(sourceStop, destinationStop, graphTraversalState);

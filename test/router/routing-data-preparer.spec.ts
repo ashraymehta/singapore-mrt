@@ -62,14 +62,8 @@ class RoutingDataPreparerSpec {
         const expectedIntersectionLines = [
             IntersectionLine.create(aLine.stops[0], anotherLine.stops[0]),
             IntersectionLine.create(aLine.stops[0], yetAnotherLine.stops[0]),
-            IntersectionLine.create(anotherLine.stops[0], aLine.stops[0]),
-            IntersectionLine.create(anotherLine.stops[0], yetAnotherLine.stops[0]),
-            IntersectionLine.create(yetAnotherLine.stops[0], aLine.stops[0]),
-            IntersectionLine.create(yetAnotherLine.stops[0], anotherLine.stops[0]),
+            IntersectionLine.create(anotherLine.stops[0], yetAnotherLine.stops[0])
         ];
-        expect(result).to.deep.equal({
-            allLines: new Lines([aLine, anotherLine, yetAnotherLine, ...expectedIntersectionLines]),
-            allStops: [...aLine.stops, ...anotherLine.stops, ...yetAnotherLine.stops]
-        });
+        expect(result.allLines).to.deep.equal(new Lines([aLine, anotherLine, yetAnotherLine, ...expectedIntersectionLines]));
     }
 }
