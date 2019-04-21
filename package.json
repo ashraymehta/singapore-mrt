@@ -35,6 +35,9 @@
   "homepage": "https://github.com/ashraymehta/singapore-mrt#readme",
   "dependencies": {
     "commander": "2.20.0",
+    "inversify": "5.0.1",
+    "inversify-binding-decorators": "4.0.0",
+    "reflect-metadata": "0.1.13",
     "ts-node": "8.1.0",
     "typescript": "3.4.3"
   },

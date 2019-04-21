@@ -1,5 +1,7 @@
+import {injectable} from 'inversify';
 import {Lines} from '../models/lines';
 
+@injectable()
 export class LinesRepository {
     private lines: Lines;
 

@@ -1,3 +1,4 @@
+import {inject} from 'inversify';
 import {Line} from './models/line';
 import {groupBy, uniq} from 'lodash';
 import {Metro} from './models/metro';
@@ -5,15 +6,18 @@ import {Lines} from './models/lines';
 import {Station} from './models/station';
 import {Stations} from './models/stations';
 import {LineStop} from './models/line-stop';
+import {provide} from 'inversify-binding-decorators';
 import {JSONFileReader} from './utils/json-file-reader';
 import {UnparsedStationMap} from './models/unparsed-station-map';
 import {ConfigurationProvider} from './providers/configuration-provider';
 
+@provide(MetroBuilder)
 export class MetroBuilder {
     private readonly jsonFileReader: JSONFileReader;
     private readonly configurationProvider: ConfigurationProvider;
 
-    constructor(jsonFileReader: JSONFileReader, configurationProvider: ConfigurationProvider) {
+    constructor(@inject(JSONFileReader) jsonFileReader: JSONFileReader,
+                @inject(ConfigurationProvider) configurationProvider: ConfigurationProvider) {
         this.jsonFileReader = jsonFileReader;
         this.configurationProvider = configurationProvider;
     }

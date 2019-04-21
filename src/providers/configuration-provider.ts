@@ -1,3 +1,6 @@
+import {provide} from 'inversify-binding-decorators';
+
+@provide(ConfigurationProvider)
 export class ConfigurationProvider {
     private static readonly AssetsPath = `src/assets/`;
 
