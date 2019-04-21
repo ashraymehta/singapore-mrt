@@ -4,14 +4,17 @@ import {LineStop} from '../line-stop';
 export class GraphTraversalState {
     public readonly unvisitedStops: Set<LineStop>;
     public readonly routeToStop: Map<LineStop, { timeTaken: number; previousStops: LineStop[] }>;
+    private readonly sourceStop: LineStop;
+    private currentStop: LineStop;
 
-    private constructor(unvisitedStops: LineStop[]) {
+    private constructor(unvisitedStops: LineStop[], sourceStop: LineStop) {
+        this.sourceStop = sourceStop;
         this.unvisitedStops = new Set<LineStop>(unvisitedStops);
         this.routeToStop = new Map<LineStop, { timeTaken: number, previousStops: LineStop[] }>();
     }
 
     public static start(unvisitedStops: LineStop[], startingStop: LineStop): GraphTraversalState {
-        const traversalState = new GraphTraversalState(unvisitedStops);
+        const traversalState = new GraphTraversalState(unvisitedStops, startingStop);
         traversalState.unvisitedStops.forEach(stop => traversalState.routeToStop.set(stop, {
             timeTaken: Number.MAX_VALUE,
             previousStops: []
@@ -38,6 +41,9 @@ export class GraphTraversalState {
     }
 
     public getNextStop(): LineStop | undefined {
+        if (this.currentStop === undefined) {
+            return this.sourceStop;
+        }
         const reachabilityDataForNextStop = minBy([...this.routeToStop.entries()], ([stop, datum]) => {
             return this.unvisitedStops.has(stop) ? datum.timeTaken : undefined;
         });
@@ -51,5 +57,14 @@ export class GraphTraversalState {
 
     public markStopAsVisited(stop: LineStop): void {
         this.unvisitedStops.delete(stop);
+    }
+
+    public hasNext(): boolean {
+        return !!this.getNextStop();
+    }
+
+    public moveToNext(): LineStop {
+        this.currentStop = this.getNextStop();
+        return this.currentStop;
     }
 }

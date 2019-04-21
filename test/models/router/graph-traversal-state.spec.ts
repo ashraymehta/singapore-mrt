@@ -71,15 +71,40 @@ class GraphTraversalStateSpec {
     }
 
     @test
+    public async shouldGetNextStopAsTheSourceStopForTheFirstTime(): Promise<void> {
+        const firstStop = LineStopBuilder.withDefaults().build();
+        const secondStop = LineStopBuilder.withDefaults().build();
+        const thirdStop = LineStopBuilder.withDefaults().build();
+        const unvisitedStops = [secondStop, thirdStop];
+        const traversalState = GraphTraversalState.start(unvisitedStops, firstStop);
+
+        const result = traversalState.getNextStop();
+
+        expect(result).to.equal(firstStop);
+    }
+
+    @test
+    public async shouldMoveToNextStop(): Promise<void> {
+        const firstStop = LineStopBuilder.withDefaults().build();
+        const secondStop = LineStopBuilder.withDefaults().build();
+        const thirdStop = LineStopBuilder.withDefaults().build();
+        const unvisitedStops = [secondStop, thirdStop];
+        const traversalState = GraphTraversalState.start(unvisitedStops, firstStop);
+
+        const result = traversalState.moveToNext();
+
+        expect(result).to.equal(firstStop);
+    }
+
+    @test
     public async shouldGetNextStopAsTheNearestUnvisitedStop(): Promise<void> {
         const firstStop = new LineStop('CC1', new Station('Dhoby Ghaut'), new Date('17 April 2010'));
         const secondStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
         const thirdStop = new LineStop('CC3', new Station('Esplanade'), new Date('17 April 2010'));
         const unvisitedStops = [firstStop, secondStop];
-        const traversalState = GraphTraversalState.start(unvisitedStops, undefined);
-        traversalState.updateTimeTaken(firstStop, undefined, 10);
-        traversalState.updateTimeTaken(secondStop, undefined, 200);
-        traversalState.updateTimeTaken(thirdStop, undefined, 4);
+        const traversalState = GraphTraversalState.start(unvisitedStops, firstStop);
+        traversalState.updateTimeTaken(secondStop, firstStop, 200);
+        traversalState.updateTimeTaken(thirdStop, secondStop, 4);
 
         const result = traversalState.getNextStop();
 
@@ -92,6 +117,7 @@ class GraphTraversalStateSpec {
         const secondStop = new LineStop('CC2', new Station('Bras Basah'), new Date('17 April 2010'));
         const unvisitedStops = [firstStop, secondStop];
         const traversalState = GraphTraversalState.start(unvisitedStops, firstStop);
+        traversalState.moveToNext();
 
         const result = traversalState.getNextStop();
 
@@ -151,5 +177,28 @@ class GraphTraversalStateSpec {
             timeTaken: Number.MAX_VALUE,
             previousStops: []
         });
+    }
+
+    @test
+    public async shouldDetermineIfThereAreNextStopsToVisitWhenThereAreNoUnvisitedStops(): Promise<void> {
+        const unvisitedStop = LineStopBuilder.withDefaults().build();
+        const sourceStop = LineStopBuilder.withDefaults().build();
+        const traversalState = GraphTraversalState.start([unvisitedStop], sourceStop);
+        expect(traversalState.hasNext()).to.be.true;
+
+        const stop = traversalState.moveToNext();
+        traversalState.markStopAsVisited(stop);
+
+        expect(traversalState.hasNext()).to.be.false;
+    }
+
+    @test
+    public async shouldDetermineIfThereAreNextStopsToVisitWhenUnvisitedStopsHaveAMaximumTimeTaken(): Promise<void> {
+        const anUnvisitedStop = LineStopBuilder.withDefaults().build();
+        const sourceStop = LineStopBuilder.withDefaults().build();
+        const traversalState = GraphTraversalState.start([anUnvisitedStop], sourceStop);
+        traversalState.moveToNext();
+
+        expect(traversalState.hasNext()).to.be.false;
     }
 }

@@ -20,10 +20,11 @@ export class Router {
         const sourceStop = allStops.find(stop => stop.isFor(source));
         const destinationStop = allStops.find(stop => stop.isFor(destination));
 
-        let currentStop = sourceStop;
         const graphTraversalState = GraphTraversalState.start(allStops, sourceStop);
 
-        while (graphTraversalState.unvisitedStops.size !== 0 && currentStop !== undefined) {
+        while (graphTraversalState.hasNext()) {
+            const currentStop = graphTraversalState.moveToNext();
+
             allLines.getNeighbouringStopsFor(currentStop)
                 .filter(neighbour => graphTraversalState.unvisitedStops.has(neighbour))
                 .forEach(neighbour => {
@@ -34,7 +35,6 @@ export class Router {
             if (currentStop === destinationStop) {
                 break;
             }
-            currentStop = graphTraversalState.getNextStop();
         }
 
         return this.routeCreator.createFrom(sourceStop, destinationStop, graphTraversalState);
