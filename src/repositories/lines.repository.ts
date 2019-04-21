@@ -1,11 +1,13 @@
 import {Lines} from '../models/lines';
 
 export class LinesRepository {
+    private lines: Lines;
+
     public findAll(): Lines {
-        return undefined;
+        return this.lines;
     }
 
     public save(lines: Lines): void {
-        return undefined;
+        this.lines = lines;
     }
 }
