@@ -1,10 +1,11 @@
 import {flatten} from 'lodash';
+import {Route} from '../../models/route';
 import {LineStop} from '../../models/line-stop';
 import {DijkstraGraphTraverser} from './dijkstra-graph-traverser';
 
 export class RouteCreator {
-    public createFrom(from: LineStop, to: LineStop, traversalState: DijkstraGraphTraverser): LineStop[][] {
-        return this.findRoutes(from, to, traversalState).map(route => route.reverse());
+    public createFrom(from: LineStop, to: LineStop, traversalState: DijkstraGraphTraverser): Route[] {
+        return this.findRoutes(from, to, traversalState).map(route => new Route(...route.reverse()));
     }
 
     private findRoutes(from: LineStop, to: LineStop, traversalState: DijkstraGraphTraverser): LineStop[][] {

@@ -1,7 +1,8 @@
 import {expect} from 'chai';
 import {suite, test} from 'mocha-typescript';
-import {RouteCreator} from '../../../src/services/routing/route-creator';
+import {Route} from '../../../src/models/route';
 import {LineStopBuilder} from '../../builders/line-stop.builder';
+import {RouteCreator} from '../../../src/services/routing/route-creator';
 import {DijkstraGraphTraverser} from '../../../src/services/routing/dijkstra-graph-traverser';
 
 @suite
@@ -27,9 +28,10 @@ class RouteCreatorSpec {
         traverser.optionallySaveTimeToLineStop(yetAnotherLineStop, anotherLineStop, 1);
         traverser.optionallySaveTimeToLineStop(destinationLineStop, yetAnotherLineStop, 1);
 
-        const route = this.routeCreator.createFrom(destinationLineStop, sourceLineStop, traverser);
+        const routes = this.routeCreator.createFrom(destinationLineStop, sourceLineStop, traverser);
 
-        expect(route).to.deep.equal([[sourceLineStop, aLineStop, anotherLineStop, yetAnotherLineStop, destinationLineStop]]);
+        expect(routes[0]).to.be.an.instanceOf(Route);
+        expect(routes).to.deep.equal([new Route(sourceLineStop, aLineStop, anotherLineStop, yetAnotherLineStop, destinationLineStop)]);
     }
 
     @test

@@ -1,6 +1,6 @@
 import {intersection} from 'lodash';
+import {Route} from '../models/route';
 import {Station} from '../models/station';
-import {LineStop} from '../models/line-stop';
 import {RouteCreator} from './routing/route-creator';
 import {LinesRepository} from '../repositories/lines.repository';
 import {RoutingDataPreparer} from './routing/routing-data-preparer';
@@ -19,7 +19,7 @@ export class RoutingService {
         this.graphTraversalStateManager = graphTraversalStateManager;
     }
 
-    public async findRoutesBetween(source: Station, destination: Station): Promise<LineStop[][]> {
+    public async findRoutesBetween(source: Station, destination: Station): Promise<Route[]> {
         const lines = this.linesRepository.findAll();
         const {allLines, allStops} = await this.dataPreparer.prepare(lines);
 
