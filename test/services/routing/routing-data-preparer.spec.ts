@@ -29,9 +29,9 @@ class RoutingDataPreparerSpec {
         const anotherLine = new Line([
             new LineStop('NE1', harbourFront, new Date('20 June 2003')),
         ]);
-        const metro = new Metro([aLine, anotherLine], new Stations([jurongEast, bukitBatok, harbourFront]));
+        const lines = new Lines([aLine, anotherLine]);
 
-        const result = await this.routingDataPreparer.prepare(metro);
+        const result = await this.routingDataPreparer.prepare(lines);
 
         expect(result).to.deep.equal({
             allLines: new Lines([aLine, anotherLine]),
@@ -55,9 +55,9 @@ class RoutingDataPreparerSpec {
         const yetAnotherLine = new Line([
             new LineStop('NS24', dhobyGhaut, new Date('12 December 1987'))
         ]);
-        const metro = new Metro([aLine, anotherLine, yetAnotherLine], new Stations([dhobyGhaut, brasBasah, clarkeQuay]));
+        const lines = new Lines([aLine, anotherLine, yetAnotherLine]);
 
-        const result = await this.routingDataPreparer.prepare(metro);
+        const result = await this.routingDataPreparer.prepare(lines);
 
         const expectedIntersectionLines = [
             IntersectionLine.create(aLine.stops[0], anotherLine.stops[0]),

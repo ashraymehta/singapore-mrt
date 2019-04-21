@@ -1,4 +1,3 @@
-import {Metro} from '../../models/metro';
 import {Lines} from '../../models/lines';
 import {Station} from '../../models/station';
 import {LineStop} from '../../models/line-stop';
@@ -6,8 +5,8 @@ import {clone, difference, flatten, uniq} from 'lodash';
 import {IntersectionLine} from '../../models/intersection-line';
 
 export class RoutingDataPreparer {
-    public async prepare(metro: Metro): Promise<{ allLines: Lines; allStops: LineStop[] }> {
-        const allLines = clone(metro.lines);
+    public async prepare(lines: Lines): Promise<{ allLines: Lines; allStops: LineStop[] }> {
+        const allLines = clone(lines);
         const allStops = allLines.getAllStops();
         const stations = allStops.map(stop => stop.stoppingAt);
         const duplicateStations = uniq(stations.filter((station: Station, index: number) => {

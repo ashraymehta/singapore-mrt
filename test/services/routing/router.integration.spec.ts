@@ -1,20 +1,24 @@
 import {expect} from 'chai';
-import {Line} from '../../../src/models/line';
+import {instance, mock, when} from 'ts-mockito';
 import {suite, test} from 'mocha-typescript';
-import {Metro} from '../../../src/models/metro';
-import {RoutingService} from '../../../src/services/routing.service';
+import {Line} from '../../../src/models/line';
+import {Lines} from '../../../src/models/lines';
 import {Station} from '../../../src/models/station';
-import {RouteCreator} from '../../../src/services/routing/route-creator';
 import {LineStopBuilder} from '../../builders/line-stop.builder';
+import {RoutingService} from '../../../src/services/routing.service';
+import {RouteCreator} from '../../../src/services/routing/route-creator';
+import {LinesRepository} from '../../../src/repositories/lines.repository';
 import {RoutingDataPreparer} from '../../../src/services/routing/routing-data-preparer';
 import {GraphTraversalManager} from '../../../src/services/routing/graph-traversal-manager';
 
 @suite
 class RouterIntegrationSpec {
     private router: RoutingService;
+    private linesRepository: LinesRepository;
 
     public before(): void {
-        this.router = new RoutingService(new RoutingDataPreparer(), new RouteCreator(), new GraphTraversalManager());
+        this.linesRepository = mock(LinesRepository);
+        this.router = new RoutingService(new RoutingDataPreparer(), new RouteCreator(), new GraphTraversalManager(), instance(this.linesRepository));
     }
 
     @test
@@ -22,10 +26,10 @@ class RouterIntegrationSpec {
         const firstStop = LineStopBuilder.withDefaults().build();
         const lastStop = LineStopBuilder.withDefaults().build();
 
-        const lines = [new Line([firstStop, lastStop])];
-        const metro = new Metro(lines, null);
+        const lines = new Lines([new Line([firstStop, lastStop])]);
+        when(this.linesRepository.findAll()).thenReturn(lines);
 
-        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, lastStop.stoppingAt, metro);
+        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, lastStop.stoppingAt);
 
         expect(route).to.deep.equal([[firstStop, lastStop]]);
     }
@@ -34,11 +38,10 @@ class RouterIntegrationSpec {
     public async shouldFindReverseRouteBetweenStationsWhenMetroHasASingleLinePassingThroughThem(): Promise<void> {
         const firstStop = LineStopBuilder.withDefaults().build();
         const lastStop = LineStopBuilder.withDefaults().build();
+        const lines = new Lines([new Line([firstStop, lastStop])]);
+        when(this.linesRepository.findAll()).thenReturn(lines);
 
-        const lines = [new Line([firstStop, lastStop])];
-        const metro = new Metro(lines, null);
-
-        const route = await this.router.findRoutesBetween(lastStop.stoppingAt, firstStop.stoppingAt, metro);
+        const route = await this.router.findRoutesBetween(lastStop.stoppingAt, firstStop.stoppingAt);
 
         expect(route).to.deep.equal([[lastStop, firstStop]]);
     }
@@ -48,11 +51,10 @@ class RouterIntegrationSpec {
         const firstStop = LineStopBuilder.withDefaults().build();
         const middleStop = LineStopBuilder.withDefaults().build();
         const lastStop = LineStopBuilder.withDefaults().build();
+        const lines = new Lines([new Line([firstStop, middleStop, lastStop])]);
+        when(this.linesRepository.findAll()).thenReturn(lines);
 
-        const lines = [new Line([firstStop, middleStop, lastStop])];
-        const metro = new Metro(lines, null);
-
-        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, lastStop.stoppingAt, metro);
+        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, lastStop.stoppingAt);
 
         expect(route).to.deep.equal([[firstStop, middleStop, lastStop]]);
     }
@@ -63,11 +65,10 @@ class RouterIntegrationSpec {
         const secondStop = LineStopBuilder.withDefaults().build();
         const thirdStop = LineStopBuilder.withDefaults().build();
         const fourthStop = LineStopBuilder.withDefaults().build();
+        const lines = new Lines([new Line([firstStop, secondStop]), new Line([thirdStop, fourthStop])]);
+        when(this.linesRepository.findAll()).thenReturn(lines);
 
-        const lines = [new Line([firstStop, secondStop]), new Line([thirdStop, fourthStop])];
-        const metro = new Metro(lines, null);
-
-        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, fourthStop.stoppingAt, metro);
+        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, fourthStop.stoppingAt);
 
         expect(route).to.deep.equal([]);
     }
@@ -81,10 +82,10 @@ class RouterIntegrationSpec {
         const thirdStop = LineStopBuilder.withDefaults().stoppingAt(interchangeStation).withCode('CL1').build();
         const lastStop = LineStopBuilder.withDefaults().withCode('CL2').build();
 
-        const lines = [new Line([firstStop, secondStop]), new Line([thirdStop, lastStop])];
-        const metro = new Metro(lines, null);
+        const lines = new Lines([new Line([firstStop, secondStop]), new Line([thirdStop, lastStop])]);
+        when(this.linesRepository.findAll()).thenReturn(lines);
 
-        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, lastStop.stoppingAt, metro);
+        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, lastStop.stoppingAt);
 
         expect(route).to.deep.equal([[firstStop, secondStop, thirdStop, lastStop]]);
     }
@@ -101,10 +102,10 @@ class RouterIntegrationSpec {
         const aLine = new Line([firstStop, secondStop, thirdStop, fourthStop]);
         const anotherLine = new Line([fourthStop, fifthStop]);
 
-        const lines = [aLine, anotherLine];
-        const metro = new Metro(lines, null);
+        const lines = new Lines([aLine, anotherLine]);
+        when(this.linesRepository.findAll()).thenReturn(lines);
 
-        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, fourthStop.stoppingAt, metro);
+        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, fourthStop.stoppingAt);
 
         expect(route).to.deep.equal([[firstStop, secondStop, fifthStop, fourthStop]]);
     }
@@ -117,11 +118,11 @@ class RouterIntegrationSpec {
         const fourthStop = LineStopBuilder.withDefaults().withCode('AA4').build();
         const fifthStop = LineStopBuilder.withDefaults().withCode('AA5').build();
 
-        const lines = [new Line([firstStop, secondStop, thirdStop, fourthStop]),
-            new Line([firstStop, secondStop, fifthStop, fourthStop])];
-        const metro = new Metro(lines, null);
+        const lines = new Lines([new Line([firstStop, secondStop, thirdStop, fourthStop]),
+            new Line([firstStop, secondStop, fifthStop, fourthStop])]);
+        when(this.linesRepository.findAll()).thenReturn(lines);
 
-        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, fourthStop.stoppingAt, metro);
+        const route = await this.router.findRoutesBetween(firstStop.stoppingAt, fourthStop.stoppingAt);
 
         expect(route).to.deep.equal([[firstStop, secondStop, thirdStop, fourthStop],
             [firstStop, secondStop, fifthStop, fourthStop]]);
