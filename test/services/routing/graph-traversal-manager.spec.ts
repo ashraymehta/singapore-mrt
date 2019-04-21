@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {suite, test} from 'mocha-typescript';
-import {LineStopBuilder} from '../builders/line-stop.builder';
-import {GraphTraversalManager} from '../../src/router/graph-traversal-manager';
+import {LineStopBuilder} from '../../builders/line-stop.builder';
+import {GraphTraversalManager} from '../../../src/services/routing/graph-traversal-manager';
 
 @suite
 class GraphTraversalManagerSpec {

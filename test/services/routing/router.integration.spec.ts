@@ -1,20 +1,20 @@
 import {expect} from 'chai';
-import {Line} from '../../src/models/line';
+import {Line} from '../../../src/models/line';
 import {suite, test} from 'mocha-typescript';
-import {Metro} from '../../src/models/metro';
-import {Router} from '../../src/router/router';
-import {Station} from '../../src/models/station';
-import {RouteCreator} from '../../src/router/route-creator';
-import {LineStopBuilder} from '../builders/line-stop.builder';
-import {RoutingDataPreparer} from '../../src/router/routing-data-preparer';
-import {GraphTraversalManager} from '../../src/router/graph-traversal-manager';
+import {Metro} from '../../../src/models/metro';
+import {RoutingService} from '../../../src/services/routing.service';
+import {Station} from '../../../src/models/station';
+import {RouteCreator} from '../../../src/services/routing/route-creator';
+import {LineStopBuilder} from '../../builders/line-stop.builder';
+import {RoutingDataPreparer} from '../../../src/services/routing/routing-data-preparer';
+import {GraphTraversalManager} from '../../../src/services/routing/graph-traversal-manager';
 
 @suite
 class RouterIntegrationSpec {
-    private router: Router;
+    private router: RoutingService;
 
     public before(): void {
-        this.router = new Router(new RoutingDataPreparer(), new RouteCreator(), new GraphTraversalManager());
+        this.router = new RoutingService(new RoutingDataPreparer(), new RouteCreator(), new GraphTraversalManager());
     }
 
     @test

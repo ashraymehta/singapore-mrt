@@ -2,18 +2,18 @@ import {Line} from '../../src/models/line';
 import {suite, test} from 'mocha-typescript';
 import {Metro} from '../../src/models/metro';
 import {Lines} from '../../src/models/lines';
-import {Router} from '../../src/router/router';
 import {Station} from '../../src/models/station';
-import {RouteCreator} from '../../src/router/route-creator';
 import {LineStopBuilder} from '../builders/line-stop.builder';
+import {RoutingService} from '../../src/services/routing.service';
 import {anything, instance, mock, verify, when} from 'ts-mockito';
-import {RoutingDataPreparer} from '../../src/router/routing-data-preparer';
-import {GraphTraversalManager} from '../../src/router/graph-traversal-manager';
-import {DijkstraGraphTraverser} from '../../src/router/dijkstra-graph-traverser';
+import {RouteCreator} from '../../src/services/routing/route-creator';
+import {RoutingDataPreparer} from '../../src/services/routing/routing-data-preparer';
+import {GraphTraversalManager} from '../../src/services/routing/graph-traversal-manager';
+import {DijkstraGraphTraverser} from '../../src/services/routing/dijkstra-graph-traverser';
 
 @suite
-class RouterSpec {
-    private router: Router;
+class RoutingServiceSpec {
+    private router: RoutingService;
     private routeCreator: RouteCreator;
     private traversalManager: GraphTraversalManager;
     private routingDataPreparer: RoutingDataPreparer;
@@ -22,7 +22,7 @@ class RouterSpec {
         this.routeCreator = mock(RouteCreator);
         this.traversalManager = mock(GraphTraversalManager);
         this.routingDataPreparer = mock(RoutingDataPreparer);
-        this.router = new Router(instance(this.routingDataPreparer), instance(this.routeCreator), instance(this.traversalManager));
+        this.router = new RoutingService(instance(this.routingDataPreparer), instance(this.routeCreator), instance(this.traversalManager));
     }
 
     @test

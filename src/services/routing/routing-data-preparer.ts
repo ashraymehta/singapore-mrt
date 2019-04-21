@@ -1,9 +1,9 @@
-import {Metro} from '../models/metro';
-import {Lines} from '../models/lines';
-import {Station} from '../models/station';
-import {LineStop} from '../models/line-stop';
+import {Metro} from '../../models/metro';
+import {Lines} from '../../models/lines';
+import {Station} from '../../models/station';
+import {LineStop} from '../../models/line-stop';
 import {clone, difference, flatten, uniq} from 'lodash';
-import {IntersectionLine} from '../models/intersection-line';
+import {IntersectionLine} from '../../models/intersection-line';
 
 export class RoutingDataPreparer {
     public async prepare(metro: Metro): Promise<{ allLines: Lines; allStops: LineStop[] }> {

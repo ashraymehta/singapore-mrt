@@ -1,5 +1,5 @@
 import {flatten} from 'lodash';
-import {LineStop} from '../models/line-stop';
+import {LineStop} from '../../models/line-stop';
 import {DijkstraGraphTraverser} from './dijkstra-graph-traverser';
 
 export class RouteCreator {

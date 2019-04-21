@@ -2,11 +2,11 @@ import {intersection} from 'lodash';
 import {Metro} from '../models/metro';
 import {Station} from '../models/station';
 import {LineStop} from '../models/line-stop';
-import {RouteCreator} from './route-creator';
-import {RoutingDataPreparer} from './routing-data-preparer';
-import {GraphTraversalManager} from './graph-traversal-manager';
+import {RouteCreator} from './routing/route-creator';
+import {RoutingDataPreparer} from './routing/routing-data-preparer';
+import {GraphTraversalManager} from './routing/graph-traversal-manager';
 
-export class Router {
+export class RoutingService {
     private readonly routeCreator: RouteCreator;
     private readonly dataPreparer: RoutingDataPreparer;
     private readonly graphTraversalStateManager: GraphTraversalManager;

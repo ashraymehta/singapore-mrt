@@ -1,8 +1,8 @@
 import {expect} from 'chai';
 import {suite, test} from 'mocha-typescript';
-import {LineStop} from '../../src/models/line-stop';
-import {LineStopBuilder} from '../builders/line-stop.builder';
-import {DijkstraGraphTraverser} from '../../src/router/dijkstra-graph-traverser';
+import {LineStop} from '../../../src/models/line-stop';
+import {LineStopBuilder} from '../../builders/line-stop.builder';
+import {DijkstraGraphTraverser} from '../../../src/services/routing/dijkstra-graph-traverser';
 
 @suite
 class DijkstraGraphTraverserSpec {

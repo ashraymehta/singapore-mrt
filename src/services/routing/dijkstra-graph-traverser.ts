@@ -1,5 +1,5 @@
 import {minBy} from 'lodash';
-import {LineStop} from '../models/line-stop';
+import {LineStop} from '../../models/line-stop';
 
 export class DijkstraGraphTraverser {
     public readonly unvisitedStops: Set<LineStop>;

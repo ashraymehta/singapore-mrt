@@ -1,8 +1,8 @@
 import {expect} from 'chai';
 import {suite, test} from 'mocha-typescript';
-import {RouteCreator} from '../../src/router/route-creator';
-import {LineStopBuilder} from '../builders/line-stop.builder';
-import {DijkstraGraphTraverser} from '../../src/router/dijkstra-graph-traverser';
+import {RouteCreator} from '../../../src/services/routing/route-creator';
+import {LineStopBuilder} from '../../builders/line-stop.builder';
+import {DijkstraGraphTraverser} from '../../../src/services/routing/dijkstra-graph-traverser';
 
 @suite
 class RouteCreatorSpec {
