@@ -5,7 +5,14 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "test": "mocha"
+    "test": "nyc mocha"
+  },
+  "nyc": {
+    "include": ["src/**/*.ts"],
+    "extension": [".ts"],
+    "exclude": ["**/*.d.ts"],
+    "reporter": ["html", "lcov"],
+    "all": true
   },
   "repository": {
     "type": "git",
@@ -27,6 +34,7 @@
     "@types/node": "11.13.5",
     "chai": "4.2.0",
     "lodash": "4.17.11",
+    "nyc": "14.0.0",
     "mocha": "6.1.4",
     "mocha-typescript": "1.1.17",
     "ts-mockito": "2.3.0"
