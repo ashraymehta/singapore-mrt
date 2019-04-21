@@ -4,6 +4,13 @@ import {uniq} from 'lodash';
 import {LineStop} from './line-stop';
 
 export class Route extends Array<LineStop> {
+    public timeTaken: number;
+
+    constructor(timeTaken: number, ...items: LineStop[]) {
+        super(...items);
+        this.timeTaken = timeTaken;
+    }
+
     public describe(): string[] {
         const stopPairs = this.slice(0, this.length - 1).map((stop, index) => [stop, this[index + 1]]);
         return stopPairs.map(([oneStop, anotherStop]) => {
@@ -18,7 +25,7 @@ export class Route extends Array<LineStop> {
 
     public toString(): string {
         const numberOfStations = uniq(this.map(stop => stop.stoppingAt)).length;
-        return [`Stations travelled: ${numberOfStations}`,
+        return [`Stations travelled: ${numberOfStations}`, `Time: ${this.timeTaken} minutes`,
             `Route: (${this.map(s => `'${s.code}'`).join(', ')})`, '',
             ...this.describe()].join(EOL)
     }

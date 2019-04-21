@@ -36,7 +36,7 @@ class FindRouteCommandSpec {
             LineStopBuilder.withDefaults().stoppingAt(destinationStation).build(),
             LineStopBuilder.withDefaults().build(),
         ]);
-        const routes = [new Route(LineStopBuilder.withDefaults().withCode('CC1').build(),
+        const routes = [new Route(1, LineStopBuilder.withDefaults().withCode('CC1').build(),
             LineStopBuilder.withDefaults().withCode('DT1').build())];
         when(this.linesRepository.findAll()).thenReturn(new Lines([firstLine, secondLine]));
         when(this.routingService.findRoutesBetween(sourceStation, destinationStation)).thenResolve(routes);

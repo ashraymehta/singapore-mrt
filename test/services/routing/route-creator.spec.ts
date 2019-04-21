@@ -31,7 +31,8 @@ class RouteCreatorSpec {
         const routes = this.routeCreator.createFrom(destinationLineStop, sourceLineStop, traverser);
 
         expect(routes[0]).to.be.an.instanceOf(Route);
-        expect(routes).to.deep.equal([new Route(sourceLineStop, aLineStop, anotherLineStop, yetAnotherLineStop, destinationLineStop)]);
+        expect(routes[0].timeTaken).to.equal(4);
+        expect(routes).to.deep.equal([new Route(4, sourceLineStop, aLineStop, anotherLineStop, yetAnotherLineStop, destinationLineStop)]);
     }
 
     @test
