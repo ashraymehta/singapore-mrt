@@ -4,7 +4,6 @@ import {Metro} from '../src/models/metro';
 import {suite, test} from 'mocha-typescript';
 import {Station} from '../src/models/station';
 import {instance, mock, when} from 'ts-mockito';
-import {Stations} from '../src/models/stations';
 import {LineStop} from '../src/models/line-stop';
 import {MetroBuilder} from '../src/metro-builder';
 import {JSONFileReader} from '../src/utils/json-file-reader';
@@ -12,10 +11,10 @@ import {ConfigurationProvider} from '../src/providers/configuration-provider';
 
 @suite
 class MetroBuilderSpec {
+    private static readonly StationsMapFilePath = '/a/good/file/path/stations-map.json';
     private reader: JSONFileReader;
     private metroBuilder: MetroBuilder;
     private configurationProvider: ConfigurationProvider;
-    private static readonly StationsMapFilePath = '/a/good/file/path/stations-map.json';
 
     public before(): void {
         this.reader = mock(JSONFileReader);
@@ -48,8 +47,7 @@ class MetroBuilderSpec {
         const jurongLineStop = new LineStop('NS1', jurongEastStation, new Date('10 March 1990'));
         const bukitBatokLineStop = new LineStop('NS2', bukitBatokStation, new Date('10 March 1990'));
         const expectedLines = [new Line([jurongLineStop, bukitBatokLineStop])];
-        const expectedStations = new Stations([jurongEastStation, bukitBatokStation]);
-        const expectedMetro = new Metro(expectedLines, expectedStations);
+        const expectedMetro = new Metro(expectedLines);
         expect(metro).to.deep.equal(expectedMetro);
     }
 
@@ -76,7 +74,7 @@ class MetroBuilderSpec {
         const jurongLineStop = new LineStop('NS1', jurongEastStation, new Date('10 March 1990'));
         const pasirRisLineStop = new LineStop('EW1', pasirRisStation, new Date('16 December 1989'));
         const expectedLines = [new Line([jurongLineStop]), new Line([pasirRisLineStop])];
-        const expectedMetro = new Metro(expectedLines, new Stations([jurongEastStation, pasirRisStation]));
+        const expectedMetro = new Metro(expectedLines);
         expect(metro).to.deep.equal(expectedMetro);
     }
 
@@ -102,7 +100,7 @@ class MetroBuilderSpec {
         const dhobyGhautNELineStop = new LineStop('NE6', dhobyGhautStation, new Date('20 June 2003'));
         const dhobyGhautEWLineStop = new LineStop('CC1', dhobyGhautStation, new Date('17 April 2010'));
         const expectedLines = [new Line([dhobyGhautNELineStop]), new Line([dhobyGhautEWLineStop])];
-        const expectedMetro = new Metro(expectedLines, new Stations([dhobyGhautStation]));
+        const expectedMetro = new Metro(expectedLines);
         expect(metro).to.deep.equal(expectedMetro);
     }
 }

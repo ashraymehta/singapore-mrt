@@ -32,6 +32,6 @@ export class MetroBuilder {
             });
             return new Line(stops);
         });
-        return new Metro(lines, allStations);
+        return new Metro(lines);
     }
 }

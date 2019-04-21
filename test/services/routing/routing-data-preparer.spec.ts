@@ -1,10 +1,8 @@
 import {expect} from 'chai';
 import {Line} from '../../../src/models/line';
 import {suite, test} from 'mocha-typescript';
-import {Metro} from '../../../src/models/metro';
 import {Lines} from '../../../src/models/lines';
 import {Station} from '../../../src/models/station';
-import {Stations} from '../../../src/models/stations';
 import {LineStop} from '../../../src/models/line-stop';
 import {IntersectionLine} from '../../../src/models/intersection-line';
 import {RoutingDataPreparer} from '../../../src/services/routing/routing-data-preparer';
