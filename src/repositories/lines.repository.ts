@@ -1,7 +1,7 @@
-import {injectable} from 'inversify';
 import {Lines} from '../models/lines';
+import {provide} from 'inversify-binding-decorators';
 
-@injectable()
+@provide(LinesRepository)
 export class LinesRepository {
     private lines: Lines;
 

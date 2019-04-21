@@ -1,22 +1,26 @@
+import {inject} from 'inversify';
 import {intersection} from 'lodash';
 import {Route} from '../models/route';
 import {Station} from '../models/station';
 import {RouteCreator} from './routing/route-creator';
+import {provide} from 'inversify-binding-decorators';
 import {LinesRepository} from '../repositories/lines.repository';
 import {RoutingDataPreparer} from './routing/routing-data-preparer';
 import {GraphTraversalManager} from './routing/graph-traversal-manager';
 
+@provide(RoutingService)
 export class RoutingService {
     private readonly routeCreator: RouteCreator;
     private readonly linesRepository: LinesRepository;
     private readonly dataPreparer: RoutingDataPreparer;
     private readonly graphTraversalStateManager: GraphTraversalManager;
 
-    constructor(dataProvider: RoutingDataPreparer, routeCreator: RouteCreator, graphTraversalStateManager: GraphTraversalManager, linesRepository: LinesRepository) {
-        this.dataPreparer = dataProvider;
+    constructor(@inject(RoutingDataPreparer) dataPreparer: RoutingDataPreparer, @inject(RouteCreator) routeCreator: RouteCreator,
+                @inject(GraphTraversalManager) traversalManager: GraphTraversalManager, @inject(LinesRepository) linesRepository: LinesRepository) {
+        this.dataPreparer = dataPreparer;
         this.routeCreator = routeCreator;
         this.linesRepository = linesRepository;
-        this.graphTraversalStateManager = graphTraversalStateManager;
+        this.graphTraversalStateManager = traversalManager;
     }
 
     public async findRoutesBetween(source: Station, destination: Station): Promise<Route[]> {

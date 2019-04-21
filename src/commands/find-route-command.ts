@@ -1,3 +1,4 @@
+import {inject} from 'inversify';
 import {Route} from '../models/route';
 import {provide} from 'inversify-binding-decorators';
 import {RoutingService} from '../services/routing.service';
@@ -8,7 +9,8 @@ export class FindRouteCommand {
     private readonly routingService: RoutingService;
     private readonly linesRepository: LinesRepository;
 
-    constructor(routingService: RoutingService, linesRepository: LinesRepository) {
+    constructor(@inject(RoutingService) routingService: RoutingService,
+                @inject(LinesRepository) linesRepository: LinesRepository) {
         this.routingService = routingService;
         this.linesRepository = linesRepository;
     }

@@ -1,9 +1,11 @@
 import {Lines} from '../../models/lines';
 import {Station} from '../../models/station';
 import {LineStop} from '../../models/line-stop';
+import {provide} from 'inversify-binding-decorators';
 import {clone, difference, flatten, uniq} from 'lodash';
 import {IntersectionLine} from '../../models/intersection-line';
 
+@provide(RoutingDataPreparer)
 export class RoutingDataPreparer {
     public async prepare(lines: Lines): Promise<{ allLines: Lines; allStops: LineStop[] }> {
         const allLines = clone(lines);
