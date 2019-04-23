@@ -1,3 +1,4 @@
+import {inject} from 'inversify';
 import {Line} from '../../models/line';
 import {Lines} from '../../models/lines';
 import {Station} from '../../models/station';
@@ -11,7 +12,7 @@ import {ConfigurationProvider} from '../../providers/configuration-provider';
 export class RoutingDataPreparer {
     private readonly configurationProvider: ConfigurationProvider;
 
-    constructor(configurationProvider: ConfigurationProvider) {
+    constructor(@inject(ConfigurationProvider) configurationProvider: ConfigurationProvider) {
         this.configurationProvider = configurationProvider;
     }
 
