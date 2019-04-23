@@ -101,4 +101,23 @@ class RoutingDataPreparerSpec {
 
         expect(result.allLines).to.deep.equal(new Lines([aLine, anotherLine]));
     }
+
+    @test.skip
+    public async shouldSetTimeTakenPerStationForLinesIfTravelTimeFallsUnderPeakHours(): Promise<void> {
+        const congestedLine = new Line([
+            LineStopBuilder.withDefaults().withCode('NS').build(),
+            LineStopBuilder.withDefaults().withCode('NS').build()
+        ]);
+        const relativelyUncongestedLine = new Line([
+            LineStopBuilder.withDefaults().build(),
+            LineStopBuilder.withDefaults().build()
+        ]);
+        const lines = new Lines([congestedLine, relativelyUncongestedLine]);
+        const timeOfTravel = new Date(2019, 1, 1, 6, 30, 0);
+
+        const {allLines} = await this.routingDataPreparer.prepare(lines, timeOfTravel);
+
+        expect([...allLines][0].getTimeTakenBetweenStations()).to.deep.equal(12);
+        expect([...allLines][1].getTimeTakenBetweenStations()).to.deep.equal(10);
+    }
 }
