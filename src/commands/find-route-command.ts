@@ -22,7 +22,7 @@ export class FindRouteCommand {
         this.logger.log(`Finding routes from [${source}] to [${destination}].`);
         const timeOfTravel = timeOfTravelAsString ? moment.tz(timeOfTravelAsString, 'YYYY-MM-DDThh:mm', 'Asia/Singapore').toDate() : undefined;
         const routes = await this.findRoutes(source, destination, timeOfTravel);
-        return [`Found [${routes.length}] routes from [${source}] to [${destination}].`, '', ...routes.map(r => r.toString())];
+        return [`Found [${routes.length}] routes from [${source}] to [${destination}].`, '', routes.toString()];
     }
 
     private async findRoutes(source: string, destination: string, timeOfTravel?: Date): Promise<Route[]> {

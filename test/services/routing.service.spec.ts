@@ -4,7 +4,7 @@ import {Lines} from '../../src/models/lines';
 import {Station} from '../../src/models/station';
 import {LineStopBuilder} from '../builders/line-stop.builder';
 import {RoutingService} from '../../src/services/routing.service';
-import {RouteCreator} from '../../src/services/routing/route-creator';
+import {RoutesCreator} from '../../src/services/routing/routes-creator';
 import {LinesRepository} from '../../src/repositories/lines.repository';
 import {anything, deepEqual, instance, mock, verify, when} from 'ts-mockito';
 import {RoutingDataPreparer} from '../../src/services/routing/routing-data-preparer';
@@ -14,13 +14,13 @@ import {DijkstraGraphTraverser} from '../../src/services/routing/dijkstra-graph-
 @suite
 class RoutingServiceSpec {
     private router: RoutingService;
-    private routeCreator: RouteCreator;
+    private routeCreator: RoutesCreator;
     private linesRepository: LinesRepository;
     private traversalManager: GraphTraversalManager;
     private routingDataPreparer: RoutingDataPreparer;
 
     public before(): void {
-        this.routeCreator = mock(RouteCreator);
+        this.routeCreator = mock(RoutesCreator);
         this.linesRepository = mock(LinesRepository);
         this.traversalManager = mock(GraphTraversalManager);
         this.routingDataPreparer = mock(RoutingDataPreparer);

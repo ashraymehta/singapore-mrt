@@ -3,15 +3,15 @@ import {suite, test} from 'mocha-typescript';
 import {Route} from '../../../src/models/route';
 import {Station} from '../../../src/models/station';
 import {LineStopBuilder} from '../../builders/line-stop.builder';
-import {RouteCreator} from '../../../src/services/routing/route-creator';
+import {RoutesCreator} from '../../../src/services/routing/routes-creator';
 import {DijkstraGraphTraverser} from '../../../src/services/routing/dijkstra-graph-traverser';
 
 @suite
-class RouteCreatorSpec {
-    private routeCreator: RouteCreator;
+class RoutesCreatorSpec {
+    private routeCreator: RoutesCreator;
 
     public before(): void {
-        this.routeCreator = new RouteCreator();
+        this.routeCreator = new RoutesCreator();
     }
 
     @test

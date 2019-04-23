@@ -3,6 +3,7 @@ import {Line} from '../../src/models/line';
 import {suite, test} from 'mocha-typescript';
 import {Lines} from '../../src/models/lines';
 import {Route} from '../../src/models/route';
+import {Routes} from '../../src/models/routes';
 import {Station} from '../../src/models/station';
 import {deepEqual, instance, mock, when} from 'ts-mockito';
 import {LineStopBuilder} from '../builders/line-stop.builder';
@@ -36,15 +37,15 @@ class FindRouteCommandSpec {
             LineStopBuilder.withDefaults().stoppingAt(destinationStation).build(),
             LineStopBuilder.withDefaults().build(),
         ]);
-        const routes = [new Route(1, LineStopBuilder.withDefaults().withCode('CC1').build(),
-            LineStopBuilder.withDefaults().withCode('DT1').build())];
+        const routes = new Routes(new Route(1, LineStopBuilder.withDefaults().withCode('CC1').build(),
+            LineStopBuilder.withDefaults().withCode('DT1').build()));
         when(this.linesRepository.findAll()).thenReturn(new Lines([firstLine, secondLine]));
         when(this.routingService.findRoutesBetween(sourceStation, destinationStation, undefined)).thenResolve(routes);
 
         const results = await this.command.execute('Source Station', 'Destination Station');
 
         const expectedResult = [`Found [1] routes from [Source Station] to [Destination Station].`,
-            '', routes[0].toString()];
+            '', routes.toString()];
         expect(results).to.deep.equal(expectedResult);
     }
 
@@ -63,15 +64,15 @@ class FindRouteCommandSpec {
             LineStopBuilder.withDefaults().stoppingAt(destinationStation).build(),
             LineStopBuilder.withDefaults().build(),
         ]);
-        const routes = [new Route(1, LineStopBuilder.withDefaults().withCode('CC1').build(),
-            LineStopBuilder.withDefaults().withCode('DT1').build())];
+        const routes = new Routes(new Route(1, LineStopBuilder.withDefaults().withCode('CC1').build(),
+            LineStopBuilder.withDefaults().withCode('DT1').build()));
         when(this.linesRepository.findAll()).thenReturn(new Lines([firstLine, secondLine]));
         when(this.routingService.findRoutesBetween(sourceStation, destinationStation, deepEqual(timeOfTravel))).thenResolve(routes);
 
         const results = await this.command.execute('Source Station', 'Destination Station', '2019-01-01T16:00');
 
         const expectedResult = [`Found [1] routes from [Source Station] to [Destination Station].`,
-            '', routes[0].toString()];
+            '', routes.toString()];
         expect(results).to.deep.equal(expectedResult);
     }
 }

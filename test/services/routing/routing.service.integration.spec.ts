@@ -7,7 +7,7 @@ import {Route} from '../../../src/models/route';
 import {Station} from '../../../src/models/station';
 import {LineStopBuilder} from '../../builders/line-stop.builder';
 import {RoutingService} from '../../../src/services/routing.service';
-import {RouteCreator} from '../../../src/services/routing/route-creator';
+import {RoutesCreator} from '../../../src/services/routing/routes-creator';
 import {LinesRepository} from '../../../src/repositories/lines.repository';
 import {ConfigurationProvider} from '../../../src/providers/configuration-provider';
 import {RoutingDataPreparer} from '../../../src/services/routing/routing-data-preparer';
@@ -20,7 +20,7 @@ class RoutingServiceIntegrationSpec {
 
     public before(): void {
         this.linesRepository = mock(LinesRepository);
-        this.router = new RoutingService(new RoutingDataPreparer(new ConfigurationProvider()), new RouteCreator(),
+        this.router = new RoutingService(new RoutingDataPreparer(new ConfigurationProvider()), new RoutesCreator(),
             new GraphTraversalManager(), instance(this.linesRepository));
     }
 

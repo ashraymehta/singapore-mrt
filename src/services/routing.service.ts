@@ -1,21 +1,21 @@
 import {inject} from 'inversify';
 import {intersection} from 'lodash';
-import {Route} from '../models/route';
+import {Routes} from '../models/routes';
 import {Station} from '../models/station';
-import {RouteCreator} from './routing/route-creator';
 import {provide} from 'inversify-binding-decorators';
+import {RoutesCreator} from './routing/routes-creator';
 import {LinesRepository} from '../repositories/lines.repository';
 import {RoutingDataPreparer} from './routing/routing-data-preparer';
 import {GraphTraversalManager} from './routing/graph-traversal-manager';
 
 @provide(RoutingService)
 export class RoutingService {
-    private readonly routeCreator: RouteCreator;
+    private readonly routeCreator: RoutesCreator;
     private readonly linesRepository: LinesRepository;
     private readonly dataPreparer: RoutingDataPreparer;
     private readonly graphTraversalStateManager: GraphTraversalManager;
 
-    constructor(@inject(RoutingDataPreparer) dataPreparer: RoutingDataPreparer, @inject(RouteCreator) routeCreator: RouteCreator,
+    constructor(@inject(RoutingDataPreparer) dataPreparer: RoutingDataPreparer, @inject(RoutesCreator) routeCreator: RoutesCreator,
                 @inject(GraphTraversalManager) traversalManager: GraphTraversalManager, @inject(LinesRepository) linesRepository: LinesRepository) {
         this.dataPreparer = dataPreparer;
         this.routeCreator = routeCreator;
@@ -23,7 +23,7 @@ export class RoutingService {
         this.graphTraversalStateManager = traversalManager;
     }
 
-    public async findRoutesBetween(source: Station, destination: Station, timeOfTravel?: Date): Promise<Route[]> {
+    public async findRoutesBetween(source: Station, destination: Station, timeOfTravel?: Date): Promise<Routes> {
         const lines = this.linesRepository.findAll();
         const {allLines, allStops} = await this.dataPreparer.prepare(lines, timeOfTravel);
         const sourceStops = allStops.filter(stop => stop.isFor(source));
