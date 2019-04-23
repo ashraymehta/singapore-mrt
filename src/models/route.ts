@@ -2,6 +2,7 @@ import {EOL} from 'os';
 import {Line} from './line';
 import {uniq} from 'lodash';
 import {LineStop} from './line-stop';
+import {Stations} from './stations';
 
 export class Route extends Array<LineStop> {
     public timeTaken: number;
@@ -9,6 +10,10 @@ export class Route extends Array<LineStop> {
     constructor(timeTaken: number, ...items: LineStop[]) {
         super(...items);
         this.timeTaken = timeTaken;
+    }
+
+    public getStations(): Stations {
+        return new Stations(this.map(s => s.stoppingAt));
     }
 
     public describe(): string[] {

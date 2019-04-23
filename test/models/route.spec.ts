@@ -3,6 +3,7 @@ import {expect} from 'chai';
 import {suite, test} from 'mocha-typescript';
 import {Route} from '../../src/models/route';
 import {Station} from '../../src/models/station';
+import {Stations} from '../../src/models/stations';
 import {LineStopBuilder} from '../builders/line-stop.builder';
 
 @suite
@@ -49,5 +50,17 @@ class RouteSpec {
             'Change from CC line to DT line',
             'Take DT line from Botanic Gardens to Stevens'
         ].join(EOL));
+    }
+
+    @test
+    public async shouldGetStationsForStops(): Promise<void> {
+        const intersection = new Station('Intersection');
+        const anotherStation = new Station('Not an intersection');
+        const route = new Route(10, LineStopBuilder.withDefaults().stoppingAt(intersection).build(),
+            LineStopBuilder.withDefaults().stoppingAt(anotherStation).build(),
+            LineStopBuilder.withDefaults().stoppingAt(intersection).build());
+
+        expect(route.getStations()).to.have.lengthOf(2);
+        expect(route.getStations()).to.deep.equal(new Stations([intersection, anotherStation]));
     }
 }
