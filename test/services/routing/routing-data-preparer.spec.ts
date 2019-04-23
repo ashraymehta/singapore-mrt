@@ -1,9 +1,10 @@
 import {expect} from 'chai';
-import {Line} from '../../../src/models/line';
 import {suite, test} from 'mocha-typescript';
+import {Line} from '../../../src/models/line';
 import {Lines} from '../../../src/models/lines';
 import {Station} from '../../../src/models/station';
 import {LineStop} from '../../../src/models/line-stop';
+import {LineStopBuilder} from '../../builders/line-stop.builder';
 import {IntersectionLine} from '../../../src/models/intersection-line';
 import {RoutingDataPreparer} from '../../../src/services/routing/routing-data-preparer';
 
@@ -63,5 +64,41 @@ class RoutingDataPreparerSpec {
             IntersectionLine.create(anotherLine.stops[0], yetAnotherLine.stops[0])
         ];
         expect(result.allLines).to.deep.equal(new Lines([aLine, anotherLine, yetAnotherLine, ...expectedIntersectionLines]));
+    }
+
+    @test
+    public async shouldFilterOutStopsWhichHaveNotBeenOpenedAtTheTimeProvided(): Promise<void> {
+        const stopOpenedLastYear = LineStopBuilder.withDefaults().withOpeningDate(new Date(2018, 1, 1)).build();
+        const stopOpeningNextYear = LineStopBuilder.withDefaults().withOpeningDate(new Date(2020, 1, 1)).build();
+        const stopOpeningNextMonth = LineStopBuilder.withDefaults().withOpeningDate(new Date(2019, 2, 1)).build();
+        const anotherStopOpeningNextMonth = LineStopBuilder.withDefaults().withOpeningDate(new Date(2020, 2, 1)).build();
+
+        const aLine = new Line([stopOpenedLastYear, stopOpeningNextYear, stopOpeningNextMonth]);
+        const anotherLine = new Line([anotherStopOpeningNextMonth]);
+        const lines = new Lines([aLine, anotherLine]);
+        const timeOfJourney = new Date(2019, 1, 1);
+
+        const result = await this.routingDataPreparer.prepare(lines, timeOfJourney);
+
+        expect(result.allStops).to.deep.equal([stopOpenedLastYear]);
+    }
+
+    @test
+    public async shouldNotAddIntersectionLinesForStopsWhichHaveNotOpenedYet(): Promise<void> {
+        const intersectionStation = new Station('Dhoby Ghaut');
+        const aLine = new Line([
+            LineStopBuilder.withDefaults().stoppingAt(intersectionStation).withOpeningDate(new Date(2019, 2, 1)).build(),
+            LineStopBuilder.withDefaults().build()
+        ]);
+        const anotherLine = new Line([
+            LineStopBuilder.withDefaults().stoppingAt(intersectionStation).withOpeningDate(new Date(2018, 1, 1)).build(),
+            LineStopBuilder.withDefaults().build()
+        ]);
+        const lines = new Lines([aLine, anotherLine]);
+        const timeOfJourney = new Date(2019, 1, 1);
+
+        const result = await this.routingDataPreparer.prepare(lines, timeOfJourney);
+
+        expect(result.allLines).to.deep.equal(new Lines([aLine, anotherLine]));
     }
 }

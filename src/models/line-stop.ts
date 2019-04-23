@@ -2,8 +2,8 @@ import {Station} from './station';
 
 export class LineStop {
     public readonly code: string;
-    private readonly openingDate: Date;
     public readonly stoppingAt: Station;
+    private readonly openingDate: Date;
 
     constructor(code: string, stoppingAt: Station, openingDate: Date) {
         this.code = code;
@@ -13,5 +13,9 @@ export class LineStop {
 
     public isFor(station: Station): boolean {
         return this.stoppingAt === station;
+    }
+
+    public wasOpenedOnOrBefore(queryDate: Date): boolean {
+        return this.openingDate <= queryDate;
     }
 }
