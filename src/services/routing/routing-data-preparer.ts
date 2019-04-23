@@ -12,11 +12,17 @@ export class RoutingDataPreparer {
         const allStops = allLines.getAllStops();
         const filteredStops = timeOfJourney ? allStops.filter(stop => stop.wasOpenedOnOrBefore(timeOfJourney)) : allStops;
         const stations = filteredStops.map(stop => stop.stoppingAt);
+        const intersectionLines = this.createIntersectionLines(stations, filteredStops);
+        intersectionLines.forEach(line => allLines.add(line));
+        return {allLines, allStops: filteredStops};
+    }
+
+    private createIntersectionLines(stations: Station[], stops: LineStop[]) {
         const duplicateStations = uniq(stations.filter((station: Station, index: number) => {
             return stations.indexOf(station, index + 1) > 0;
         }));
-        duplicateStations.forEach(station => {
-            const stopsForStation = filteredStops.filter(stop => stop.isFor(station));
+        return flatten(duplicateStations.map(station => {
+            const stopsForStation = stops.filter(stop => stop.isFor(station));
             const lines = flatten(stopsForStation.map(stop => {
                 return difference(stopsForStation, [stop]).map(otherStop => IntersectionLine.create(stop, otherStop));
             }));
@@ -30,8 +36,7 @@ export class RoutingDataPreparer {
                 return !isThereADuplicateIntersectionLineBeforeThisInTheArray;
             });
 
-            uniqueIntersectionLines.forEach(line => allLines.add(line));
-        });
-        return {allLines, allStops: filteredStops};
+            return uniqueIntersectionLines;
+        }));
     }
 }
