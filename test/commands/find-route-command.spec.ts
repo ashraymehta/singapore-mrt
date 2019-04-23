@@ -50,7 +50,7 @@ class FindRouteCommandSpec {
 
     @test
     public async shouldInvokeRoutingServiceToFindRouteWithTimeOfTravel(): Promise<void> {
-        const timeOfTravel = new Date('2019-01-01T16:00:00.000');
+        const timeOfTravel = new Date('2019-01-01T16:00:00.000+08:00');
         const sourceStation = new Station('Source Station');
         const destinationStation = new Station('Destination Station');
         const firstLine = new Line([

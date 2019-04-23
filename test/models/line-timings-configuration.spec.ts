@@ -9,12 +9,12 @@ class LineTimingsConfigurationSpec {
     public async shouldGetConfigurationForNSLineInPeakHours(): Promise<void> {
         const lineCode = 'NS';
         const configuration = LineTimingsConfiguration.from(Config);
-        const beginningOfMorningPeakHour = new Date("2019-01-23T06:00:00.000Z");
-        const middleOfMorningPeakHour = new Date("2019-01-23T08:30:00.000Z");
-        const endOfMorningPeakHour = new Date("2019-01-23T08:59:59.000Z");
-        const beginningOfEveningPeakHour = new Date("2019-01-23T18:00:00.000Z");
-        const middleOfEveningPeakHour = new Date("2019-01-23T20:30:00.000Z");
-        const endOfEveningPeakHour = new Date("2019-01-23T20:59:59.000Z");
+        const beginningOfMorningPeakHour = new Date("2019-01-23T06:00:00.000+08:00");
+        const middleOfMorningPeakHour = new Date("2019-01-23T08:30:00.000+08:00");
+        const endOfMorningPeakHour = new Date("2019-01-23T08:59:59.000+08:00");
+        const beginningOfEveningPeakHour = new Date("2019-01-23T18:00:00.000+08:00");
+        const middleOfEveningPeakHour = new Date("2019-01-23T20:30:00.000+08:00");
+        const endOfEveningPeakHour = new Date("2019-01-23T20:59:59.000+08:00");
 
         const expectedConfiguration = {
             isOperational: true,
@@ -33,8 +33,8 @@ class LineTimingsConfigurationSpec {
     public async shouldGetConfigurationForNSLineInPeakHoursOnWeekends(): Promise<void> {
         const lineCode = 'NS';
         const configuration = LineTimingsConfiguration.from(Config);
-        const saturdayPeakHour = new Date("2019-01-05T06:00:00.000Z");
-        const sundayPeakHour = new Date("2019-01-06T06:00:00.000Z");
+        const saturdayPeakHour = new Date("2019-01-05T06:00:00.000+08:00");
+        const sundayPeakHour = new Date("2019-01-06T06:00:00.000+08:00");
 
         const expectedConfiguration = {
             isOperational: true,
@@ -49,12 +49,12 @@ class LineTimingsConfigurationSpec {
     public async shouldGetConfigurationForNELineInPeakHours(): Promise<void> {
         const lineCode = 'NE';
         const configuration = LineTimingsConfiguration.from(Config);
-        const beginningOfMorningPeakHour = new Date("2019-01-23T06:00:00.000Z");
-        const middleOfMorningPeakHour = new Date("2019-01-23T08:30:00.000Z");
-        const endOfMorningPeakHour = new Date("2019-01-23T08:59:59.000Z");
-        const beginningOfEveningPeakHour = new Date("2019-01-23T18:00:00.000Z");
-        const middleOfEveningPeakHour = new Date("2019-01-23T20:30:00.000Z");
-        const endOfEveningPeakHour = new Date("2019-01-23T20:59:59.000Z");
+        const beginningOfMorningPeakHour = new Date("2019-01-23T06:00:00.000+08:00");
+        const middleOfMorningPeakHour = new Date("2019-01-23T08:30:00.000+08:00");
+        const endOfMorningPeakHour = new Date("2019-01-23T08:59:59.000+08:00");
+        const beginningOfEveningPeakHour = new Date("2019-01-23T18:00:00.000+08:00");
+        const middleOfEveningPeakHour = new Date("2019-01-23T20:30:00.000+08:00");
+        const endOfEveningPeakHour = new Date("2019-01-23T20:59:59.000+08:00");
 
         const expectedConfiguration = {
             isOperational: true,
@@ -73,12 +73,12 @@ class LineTimingsConfigurationSpec {
     public async shouldGetConfigurationForAnotherLineInPeakHours(): Promise<void> {
         const lineCode = 'CC';
         const configuration = LineTimingsConfiguration.from(Config);
-        const beginningOfMorningPeakHour = new Date("2019-01-23T06:00:00.000Z");
-        const middleOfMorningPeakHour = new Date("2019-01-23T08:30:00.000Z");
-        const endOfMorningPeakHour = new Date("2019-01-23T08:59:59.000Z");
-        const beginningOfEveningPeakHour = new Date("2019-01-23T18:00:00.000Z");
-        const middleOfEveningPeakHour = new Date("2019-01-23T20:30:00.000Z");
-        const endOfEveningPeakHour = new Date("2019-01-23T20:59:59.000Z");
+        const beginningOfMorningPeakHour = new Date("2019-01-23T06:00:00.000+08:00");
+        const middleOfMorningPeakHour = new Date("2019-01-23T08:30:00.000+08:00");
+        const endOfMorningPeakHour = new Date("2019-01-23T08:59:59.000+08:00");
+        const beginningOfEveningPeakHour = new Date("2019-01-23T18:00:00.000+08:00");
+        const middleOfEveningPeakHour = new Date("2019-01-23T20:30:00.000+08:00");
+        const endOfEveningPeakHour = new Date("2019-01-23T20:59:59.000+08:00");
 
         const expectedConfiguration = {
             isOperational: true,
@@ -97,9 +97,9 @@ class LineTimingsConfigurationSpec {
     public async shouldGetConfigurationForDTLineInNightHours(): Promise<void> {
         const lineCode = 'DT';
         const configuration = LineTimingsConfiguration.from(Config);
-        const beginningOfNightHour = new Date("2019-01-23T22:00:00.000Z");
-        const middleOfNightHour = new Date("2019-01-23T01:30:00.000Z");
-        const endOfNightHour = new Date("2019-01-23T05:59:59.000Z");
+        const beginningOfNightHour = new Date("2019-01-23T22:00:00.000+08:00");
+        const middleOfNightHour = new Date("2019-01-23T01:30:00.000+08:00");
+        const endOfNightHour = new Date("2019-01-23T05:59:59.000+08:00");
 
         const expectedConfiguration = {
             isOperational: false,
@@ -115,9 +115,9 @@ class LineTimingsConfigurationSpec {
     public async shouldGetConfigurationForTELineInNightHours(): Promise<void> {
         const lineCode = 'TE';
         const configuration = LineTimingsConfiguration.from(Config);
-        const beginningOfNightHour = new Date("2019-01-23T22:00:00.000Z");
-        const middleOfNightHour = new Date("2019-01-23T01:30:00.000Z");
-        const endOfNightHour = new Date("2019-01-23T05:59:59.000Z");
+        const beginningOfNightHour = new Date("2019-01-23T22:00:00.000+08:00");
+        const middleOfNightHour = new Date("2019-01-23T01:30:00.000+08:00");
+        const endOfNightHour = new Date("2019-01-23T05:59:59.000+08:00");
 
         const expectedConfiguration = {
             isOperational: true,
@@ -134,7 +134,7 @@ class LineTimingsConfigurationSpec {
         const lineCode = 'EW';
         const configuration = LineTimingsConfiguration.from(Config);
 
-        expect(configuration.getLineConfiguration(lineCode, new Date('2019-01-01T14:00:00.000Z'))).to.deep.equal({
+        expect(configuration.getLineConfiguration(lineCode, new Date('2019-01-01T14:00:00.000+08:00'))).to.deep.equal({
             isOperational: true,
             timeTakenPerStationInMinutes: 10,
             timeTakenPerLineChangeInMinutes: 10

@@ -1,4 +1,5 @@
-import moment = require('moment');
+import moment = require('moment-timezone');
+import {Moment} from 'moment-timezone/moment-timezone';
 
 export class LineTimingsConfiguration {
     private readonly peakHours: { start: string; days: string[]; end: string }[];
@@ -43,9 +44,14 @@ export class LineTimingsConfiguration {
     }
 
     private isBetween(start: string, end: string, time: Date): boolean {
-        const startTime = moment(start, 'H:m');
-        const endTime = moment(end, 'H:m');
-        const queriedTime = moment(`${time.getUTCHours()}:${time.getUTCMinutes()}`, 'H:m');
-        return queriedTime.isBetween(startTime, endTime, 'minutes', "[]");
+        const startTime = moment.tz(start, 'H:m', 'Asia/Singapore');
+        const endTime = moment.tz(end, 'H:m', 'Asia/Singapore');
+        const timeInSGTimezone = moment(time).tz('Asia/Singapore');
+        return this.minutesOfDay(timeInSGTimezone) >= this.minutesOfDay(startTime) &&
+            this.minutesOfDay(timeInSGTimezone) <= this.minutesOfDay(endTime);
+    }
+
+    private minutesOfDay(m: Moment): number {
+        return m.minutes() + m.hours() * 60;
     }
 }

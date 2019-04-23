@@ -4,6 +4,7 @@ import {Logger} from '../utils/Logger';
 import {provide} from 'inversify-binding-decorators';
 import {RoutingService} from '../services/routing.service';
 import {LinesRepository} from '../repositories/lines.repository';
+import moment = require('moment-timezone');
 
 @provide(FindRouteCommand)
 export class FindRouteCommand {
@@ -19,7 +20,7 @@ export class FindRouteCommand {
 
     public async execute(source: string, destination: string, timeOfTravelAsString?: string): Promise<string[]> {
         this.logger.log(`Finding routes from [${source}] to [${destination}].`);
-        const timeOfTravel = timeOfTravelAsString ? new Date(timeOfTravelAsString) : undefined;
+        const timeOfTravel = timeOfTravelAsString ? moment.tz(timeOfTravelAsString, 'YYYY-MM-DDThh:mm', 'Asia/Singapore').toDate() : undefined;
         const routes = await this.findRoutes(source, destination, timeOfTravel);
         return [`Found [${routes.length}] routes from [${source}] to [${destination}].`, '', ...routes.map(r => r.toString())];
     }

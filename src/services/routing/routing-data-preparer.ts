@@ -1,6 +1,7 @@
 import {inject} from 'inversify';
 import {Line} from '../../models/line';
 import {Lines} from '../../models/lines';
+import {Logger} from '../../utils/Logger';
 import {Station} from '../../models/station';
 import {LineStop} from '../../models/line-stop';
 import {provide} from 'inversify-binding-decorators';
@@ -11,6 +12,7 @@ import {ConfigurationProvider} from '../../providers/configuration-provider';
 @provide(RoutingDataPreparer)
 export class RoutingDataPreparer {
     private readonly configurationProvider: ConfigurationProvider;
+    private readonly logger = Logger.for(RoutingDataPreparer.name);
 
     constructor(@inject(ConfigurationProvider) configurationProvider: ConfigurationProvider) {
         this.configurationProvider = configurationProvider;
@@ -34,6 +36,7 @@ export class RoutingDataPreparer {
             });
 
             linesToBeRemoved.forEach(line => {
+                this.logger.log(`Removing line [${line.code()}] as it is non-operational at [${timeOfTravel}].`);
                 remove(filteredStops, stop => line.hasStop(stop));
                 return allLines.delete(line);
             });
