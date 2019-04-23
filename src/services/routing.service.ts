@@ -27,6 +27,7 @@ export class RoutingService {
         const lines = this.linesRepository.findAll();
         const {allLines, allStops} = await this.dataPreparer.prepare(lines, timeOfTravel);
         const sourceStops = allStops.filter(stop => stop.isFor(source));
+        const destinationStops = allStops.filter(stop => stop.isFor(destination));
 
         const traverser = this.graphTraversalStateManager.startTraversal(allStops, sourceStops);
 
@@ -41,6 +42,6 @@ export class RoutingService {
             });
         }
 
-        return this.routeCreator.createFrom(traverser.getCurrentStop(), sourceStops, traverser);
+        return this.routeCreator.createFrom(destinationStops, sourceStops, traverser);
     }
 }

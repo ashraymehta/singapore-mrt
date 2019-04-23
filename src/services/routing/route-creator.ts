@@ -1,4 +1,4 @@
-import {flatten} from 'lodash';
+import {flatten, min} from 'lodash';
 import {Route} from '../../models/route';
 import {LineStop} from '../../models/line-stop';
 import {provide} from 'inversify-binding-decorators';
@@ -6,10 +6,15 @@ import {DijkstraGraphTraverser} from './dijkstra-graph-traverser';
 
 @provide(RouteCreator)
 export class RouteCreator {
-    public createFrom(from: LineStop, to: LineStop[], traversalState: DijkstraGraphTraverser): Route[] {
-        return this.findRoutes(from, to, traversalState).map(route => {
-            return new Route(traversalState.routeToLineStop.get(from).timeTaken, ...route.reverse());
+    public createFrom(from: LineStop[], to: LineStop[], traversalState: DijkstraGraphTraverser): Route[] {
+        const allRoutesFromStops = from.map(fromStop => {
+            return this.findRoutes(fromStop, to, traversalState).map(route => {
+                const timeTaken = traversalState.routeToLineStop.get(fromStop).timeTaken;
+                return new Route(timeTaken, ...route.reverse());
+            });
         });
+        const minTimeTaken = min(from.map(stop => traversalState.routeToLineStop.get(stop).timeTaken));
+        return flatten(allRoutesFromStops).filter(route => route.timeTaken === minTimeTaken);
     }
 
     private findRoutes(from: LineStop, to: LineStop[], traversalState: DijkstraGraphTraverser): LineStop[][] {

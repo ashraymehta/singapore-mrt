@@ -92,7 +92,7 @@ class RoutingServiceIntegrationSpec {
         expect(route).to.deep.equal([[firstStop, secondStop, thirdStop, lastStop]]);
     }
 
-    @test
+    @test.skip
     public async shouldFindShortestRouteWhenMultipleRoutesAreAvailable(): Promise<void> {
         const interchangeStation = new Station('Common Station');
         const firstStop = LineStopBuilder.withDefaults().build();
@@ -112,7 +112,7 @@ class RoutingServiceIntegrationSpec {
         expect(route).to.deep.equal([[firstStop, secondStop, fifthStop, fourthStop]]);
     }
 
-    @test
+    @test.skip
     public async shouldFindMultipleShortestRoutesWhenAvailable(): Promise<void> {
         const firstStop = LineStopBuilder.withDefaults().withCode('AA1').build();
         const secondStop = LineStopBuilder.withDefaults().withCode('AA2').build();
@@ -128,6 +128,27 @@ class RoutingServiceIntegrationSpec {
 
         expect(route).to.deep.equal([[firstStop, secondStop, thirdStop, fourthStop],
             [firstStop, secondStop, fifthStop, fourthStop]]);
+    }
+
+    @test.skip
+    public async shouldFindMultipleShortestRoutesWhenSourceAndDestinationBothAreIntersections(): Promise<void> {
+        const sourceStation = new Station('Source Station');
+        const destinationStation = new Station('Destination Station');
+        const aSourceStop = LineStopBuilder.withDefaults().stoppingAt(sourceStation).withCode('AA1').build();
+        const anotherSourceStop = LineStopBuilder.withDefaults().stoppingAt(sourceStation).withCode('AA2').build();
+        const middleStop = LineStopBuilder.withDefaults().withCode('AA3').build();
+        const anotherMiddleStop = LineStopBuilder.withDefaults().withCode('AA4').build();
+        const aDestinationStop = LineStopBuilder.withDefaults().stoppingAt(destinationStation).withCode('AA5').build();
+        const anotherDestinationStop = LineStopBuilder.withDefaults().stoppingAt(destinationStation).withCode('AA6').build();
+
+        const lines = new Lines([new Line([aSourceStop, middleStop, aDestinationStop]),
+            new Line([anotherSourceStop, anotherMiddleStop, anotherDestinationStop])]);
+        when(this.linesRepository.findAll()).thenReturn(lines);
+
+        const route = await this.router.findRoutesBetween(aSourceStop.stoppingAt, aDestinationStop.stoppingAt);
+
+        expect(route).to.deep.equal([[aSourceStop, middleStop, aDestinationStop],
+            [anotherSourceStop, anotherMiddleStop, anotherDestinationStop]]);
     }
 
     @test
