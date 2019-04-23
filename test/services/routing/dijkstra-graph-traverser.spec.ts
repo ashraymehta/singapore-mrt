@@ -12,7 +12,7 @@ class DijkstraGraphTraverserSpec {
         const firstStop = LineStopBuilder.withDefaults().build();
         const secondStop = LineStopBuilder.withDefaults().build();
 
-        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, sourceStop], sourceStop);
+        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, sourceStop], [sourceStop]);
 
         const defaultRouteInformation = {
             timeTaken: Number.POSITIVE_INFINITY,
@@ -29,7 +29,7 @@ class DijkstraGraphTraverserSpec {
         const firstStop = LineStopBuilder.withDefaults().build();
         const secondStop = LineStopBuilder.withDefaults().build();
 
-        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, sourceStop], sourceStop);
+        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, sourceStop], [sourceStop]);
 
         expect(traversor.unvisitedStops).to.have.lengthOf(3);
         expect([...traversor.unvisitedStops]).to.deep.equal([firstStop, secondStop, sourceStop]);
@@ -40,7 +40,7 @@ class DijkstraGraphTraverserSpec {
         const sourceStop = LineStopBuilder.withDefaults().build();
         const firstStop = LineStopBuilder.withDefaults().build();
         const secondStop = LineStopBuilder.withDefaults().build();
-        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, sourceStop], sourceStop);
+        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, sourceStop], [sourceStop]);
 
         const nextStop = traversor.moveToNext();
 
@@ -48,11 +48,32 @@ class DijkstraGraphTraverserSpec {
     }
 
     @test
+    public async shouldAcceptMultipleStopsAsSourceStopsMarkingTheDistanceToAllOfThemAsZero(): Promise<void> {
+        const aSourceStop = LineStopBuilder.withDefaults().build();
+        const anotherSourceStop = LineStopBuilder.withDefaults().build();
+        const firstStop = LineStopBuilder.withDefaults().build();
+        const secondStop = LineStopBuilder.withDefaults().build();
+        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, aSourceStop], [aSourceStop, anotherSourceStop]);
+
+        const nextStop = traversor.moveToNext();
+
+        expect(nextStop).to.equal(aSourceStop);
+        expect(traversor.routeToLineStop.get(aSourceStop)).to.deep.equal({
+            timeTaken: 0,
+            previousStops: []
+        });
+        expect(traversor.routeToLineStop.get(anotherSourceStop)).to.deep.equal({
+            timeTaken: 0,
+            previousStops: []
+        });
+    }
+
+    @test
     public async shouldTraverseUnvisitedNodes(): Promise<void> {
         const sourceStop = LineStopBuilder.withDefaults().build();
         const firstStop = LineStopBuilder.withDefaults().build();
         const secondStop = LineStopBuilder.withDefaults().build();
-        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, sourceStop], sourceStop);
+        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, sourceStop], [sourceStop]);
         traversor.moveToNext();
 
         const nextStop = traversor.moveToNext();
@@ -65,7 +86,7 @@ class DijkstraGraphTraverserSpec {
         const sourceStop = LineStopBuilder.withDefaults().build();
         const firstStop = LineStopBuilder.withDefaults().build();
         const secondStop = LineStopBuilder.withDefaults().build();
-        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, sourceStop], sourceStop);
+        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, sourceStop], [sourceStop]);
         traversor.moveToNext();
         traversor.optionallySaveTimeToLineStop(secondStop, sourceStop, 2);
 
@@ -79,7 +100,7 @@ class DijkstraGraphTraverserSpec {
         const sourceStop = LineStopBuilder.withDefaults().build();
         const firstStop = LineStopBuilder.withDefaults().build();
         const secondStop = LineStopBuilder.withDefaults().build();
-        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, sourceStop], sourceStop);
+        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, sourceStop], [sourceStop]);
         traversor.optionallySaveTimeToLineStop(secondStop, sourceStop, 5);
         traversor.optionallySaveTimeToLineStop(firstStop, sourceStop, 2);
 
@@ -94,7 +115,7 @@ class DijkstraGraphTraverserSpec {
         const sourceStop = LineStopBuilder.withDefaults().build();
         const firstStop = LineStopBuilder.withDefaults().build();
         const secondStop = LineStopBuilder.withDefaults().build();
-        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, sourceStop], sourceStop);
+        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, sourceStop], [sourceStop]);
         traversor.optionallySaveTimeToLineStop(secondStop, sourceStop, 5);
         traversor.optionallySaveTimeToLineStop(firstStop, sourceStop, 2);
 
@@ -109,7 +130,7 @@ class DijkstraGraphTraverserSpec {
         const sourceStop = LineStopBuilder.withDefaults().build();
         const firstStop = LineStopBuilder.withDefaults().build();
         const secondStop = LineStopBuilder.withDefaults().build();
-        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, sourceStop], sourceStop);
+        const traversor = DijkstraGraphTraverser.traverseWith([firstStop, secondStop, sourceStop], [sourceStop]);
         traversor.optionallySaveTimeToLineStop(secondStop, sourceStop, 5);
         traversor.optionallySaveTimeToLineStop(firstStop, sourceStop, 2);
 

@@ -4,7 +4,7 @@ import {DijkstraGraphTraverser} from './dijkstra-graph-traverser';
 
 @provide(GraphTraversalManager)
 export class GraphTraversalManager {
-    public startTraversal(allStops: LineStop[], source: LineStop): DijkstraGraphTraverser {
-        return DijkstraGraphTraverser.traverseWith(allStops, source);
+    public startTraversal(allStops: LineStop[], sources: LineStop[]): DijkstraGraphTraverser {
+        return DijkstraGraphTraverser.traverseWith(allStops, sources);
     }
 }

@@ -26,10 +26,9 @@ export class RoutingService {
     public async findRoutesBetween(source: Station, destination: Station, timeOfTravel?: Date): Promise<Route[]> {
         const lines = this.linesRepository.findAll();
         const {allLines, allStops} = await this.dataPreparer.prepare(lines, timeOfTravel);
-        const sourceStop = allStops.find(stop => stop.isFor(source));
+        const sourceStops = allStops.filter(stop => stop.isFor(source));
 
-        allStops.find(stop => stop.isFor(destination));
-        const traverser = this.graphTraversalStateManager.startTraversal(allStops, sourceStop);
+        const traverser = this.graphTraversalStateManager.startTraversal(allStops, sourceStops);
 
         while (traverser.hasNext() && (traverser.getCurrentStop() ? traverser.getCurrentStop().stoppingAt !== destination : true)) {
             const currentStop = traverser.moveToNext();
@@ -42,6 +41,6 @@ export class RoutingService {
             });
         }
 
-        return this.routeCreator.createFrom(traverser.getCurrentStop(), sourceStop, traverser);
+        return this.routeCreator.createFrom(traverser.getCurrentStop(), sourceStops, traverser);
     }
 }

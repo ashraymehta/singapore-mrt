@@ -6,17 +6,17 @@ import {DijkstraGraphTraverser} from './dijkstra-graph-traverser';
 
 @provide(RouteCreator)
 export class RouteCreator {
-    public createFrom(from: LineStop, to: LineStop, traversalState: DijkstraGraphTraverser): Route[] {
+    public createFrom(from: LineStop, to: LineStop[], traversalState: DijkstraGraphTraverser): Route[] {
         return this.findRoutes(from, to, traversalState).map(route => {
             return new Route(traversalState.routeToLineStop.get(from).timeTaken, ...route.reverse());
         });
     }
 
-    private findRoutes(from: LineStop, to: LineStop, traversalState: DijkstraGraphTraverser): LineStop[][] {
+    private findRoutes(from: LineStop, to: LineStop[], traversalState: DijkstraGraphTraverser): LineStop[][] {
         let currentStop = from;
         const route: LineStop[] = [];
         const routes = [];
-        while (currentStop !== to) {
+        while (!to.includes(currentStop)) {
             route.push(currentStop);
             const previous = traversalState.routeToLineStop.get(currentStop).previousStops;
             if (previous.length === 1) {
@@ -29,7 +29,7 @@ export class RouteCreator {
             }
         }
         if (route) {
-            route.push(to);
+            route.push(currentStop);
         }
         routes.push(route);
         return routes;

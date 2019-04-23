@@ -16,7 +16,7 @@ class GraphTraversalManagerSpec {
         const source = LineStopBuilder.withDefaults().build();
         const allStops = [source, LineStopBuilder.withDefaults().build(), LineStopBuilder.withDefaults().build()];
 
-        const traversor = this.graphTraversalStateManager.startTraversal(allStops, source);
+        const traversor = this.graphTraversalStateManager.startTraversal(allStops, [source]);
 
         expect(traversor.unvisitedStops).to.have.lengthOf(3);
         expect(traversor.moveToNext()).to.equal(source);

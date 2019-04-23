@@ -129,4 +129,20 @@ class RoutingServiceIntegrationSpec {
         expect(route).to.deep.equal([[firstStop, secondStop, thirdStop, fourthStop],
             [firstStop, secondStop, fifthStop, fourthStop]]);
     }
+
+    @test
+    public async shouldFindTheShortestRouteWhenSourceIsAtAnIntersection(): Promise<void> {
+        const intersection = new Station('Intersection Station');
+        const aStopAtIntersection = LineStopBuilder.withDefaults().stoppingAt(intersection).build();
+        const anotherStopAtIntersection = LineStopBuilder.withDefaults().stoppingAt(intersection).build();
+        const destinationStop = LineStopBuilder.withDefaults().build();
+
+        const lines = new Lines([new Line([aStopAtIntersection, LineStopBuilder.withDefaults().build()]),
+            new Line([aStopAtIntersection, anotherStopAtIntersection, destinationStop])]);
+        when(this.linesRepository.findAll()).thenReturn(lines);
+
+        const routes = await this.router.findRoutesBetween(intersection, destinationStop.stoppingAt);
+
+        expect(routes).to.deep.equal([[anotherStopAtIntersection, destinationStop]]);
+    }
 }

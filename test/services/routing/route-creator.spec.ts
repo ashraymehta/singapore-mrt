@@ -22,13 +22,13 @@ class RouteCreatorSpec {
         const destinationLineStop = LineStopBuilder.withDefaults().build();
         const allStops = [aLineStop, anotherLineStop, yetAnotherLineStop, sourceLineStop, destinationLineStop];
 
-        const traverser = DijkstraGraphTraverser.traverseWith(allStops, sourceLineStop);
+        const traverser = DijkstraGraphTraverser.traverseWith(allStops, [sourceLineStop]);
         traverser.optionallySaveTimeToLineStop(aLineStop, sourceLineStop, 1);
         traverser.optionallySaveTimeToLineStop(anotherLineStop, aLineStop, 1);
         traverser.optionallySaveTimeToLineStop(yetAnotherLineStop, anotherLineStop, 1);
         traverser.optionallySaveTimeToLineStop(destinationLineStop, yetAnotherLineStop, 1);
 
-        const routes = this.routeCreator.createFrom(destinationLineStop, sourceLineStop, traverser);
+        const routes = this.routeCreator.createFrom(destinationLineStop, [sourceLineStop], traverser);
 
         expect(routes[0]).to.be.an.instanceOf(Route);
         expect(routes[0].timeTaken).to.equal(4);
@@ -44,14 +44,14 @@ class RouteCreatorSpec {
         const destinationLineStop = LineStopBuilder.withDefaults().build();
         const allStops = [aLineStop, anotherLineStop, yetAnotherLineStop, sourceLineStop, destinationLineStop];
 
-        const traverser = DijkstraGraphTraverser.traverseWith(allStops, sourceLineStop);
+        const traverser = DijkstraGraphTraverser.traverseWith(allStops, [sourceLineStop]);
         traverser.optionallySaveTimeToLineStop(aLineStop, sourceLineStop, 1);
         traverser.optionallySaveTimeToLineStop(anotherLineStop, aLineStop, 1);
         traverser.optionallySaveTimeToLineStop(yetAnotherLineStop, anotherLineStop, 1);
         traverser.optionallySaveTimeToLineStop(destinationLineStop, yetAnotherLineStop, 1);
         traverser.optionallySaveTimeToLineStop(destinationLineStop, anotherLineStop, 2);
 
-        const route = this.routeCreator.createFrom(destinationLineStop, sourceLineStop, traverser);
+        const route = this.routeCreator.createFrom(destinationLineStop, [sourceLineStop], traverser);
 
         expect(route).to.deep.equal([
             [sourceLineStop, aLineStop, anotherLineStop, yetAnotherLineStop, destinationLineStop],
@@ -68,7 +68,7 @@ class RouteCreatorSpec {
         const destinationLineStop = LineStopBuilder.withDefaults().build();
         const allStops = [aLineStop, anotherLineStop, yetAnotherLineStop, sourceLineStop, destinationLineStop];
 
-        const traverser = DijkstraGraphTraverser.traverseWith(allStops, sourceLineStop);
+        const traverser = DijkstraGraphTraverser.traverseWith(allStops, [sourceLineStop]);
         traverser.optionallySaveTimeToLineStop(aLineStop, sourceLineStop, 1);
         traverser.optionallySaveTimeToLineStop(anotherLineStop, aLineStop, 1);
         traverser.optionallySaveTimeToLineStop(yetAnotherLineStop, anotherLineStop, 1);
@@ -76,12 +76,35 @@ class RouteCreatorSpec {
         traverser.optionallySaveTimeToLineStop(destinationLineStop, anotherLineStop, 2);
         traverser.optionallySaveTimeToLineStop(destinationLineStop, sourceLineStop, 4);
 
-        const route = this.routeCreator.createFrom(destinationLineStop, sourceLineStop, traverser);
+        const route = this.routeCreator.createFrom(destinationLineStop, [sourceLineStop], traverser);
 
         expect(route).to.deep.equal([
             [sourceLineStop, aLineStop, anotherLineStop, yetAnotherLineStop, destinationLineStop],
             [sourceLineStop, aLineStop, anotherLineStop, destinationLineStop],
             [sourceLineStop, destinationLineStop],
         ]);
+    }
+
+    @test
+    public async shouldCreateRouteWithMultipleSourceStops(): Promise<void> {
+        const aLineStop = LineStopBuilder.withDefaults().build();
+        const sourceLineStop = LineStopBuilder.withDefaults().build();
+        const anotherSourceLineStop = LineStopBuilder.withDefaults().build();
+        const anotherLineStop = LineStopBuilder.withDefaults().build();
+        const yetAnotherLineStop = LineStopBuilder.withDefaults().build();
+        const destinationLineStop = LineStopBuilder.withDefaults().build();
+        const allStops = [aLineStop, anotherLineStop, yetAnotherLineStop, sourceLineStop, anotherSourceLineStop, destinationLineStop];
+
+        const traverser = DijkstraGraphTraverser.traverseWith(allStops, [sourceLineStop, anotherSourceLineStop]);
+        traverser.optionallySaveTimeToLineStop(anotherSourceLineStop, sourceLineStop, 1);
+        traverser.optionallySaveTimeToLineStop(aLineStop, anotherSourceLineStop, 1);
+        traverser.optionallySaveTimeToLineStop(anotherLineStop, aLineStop, 1);
+        traverser.optionallySaveTimeToLineStop(yetAnotherLineStop, anotherLineStop, 1);
+        traverser.optionallySaveTimeToLineStop(destinationLineStop, yetAnotherLineStop, 1);
+
+        const routes = this.routeCreator.createFrom(destinationLineStop, [sourceLineStop, anotherSourceLineStop], traverser);
+
+        expect(routes[0].timeTaken).to.equal(4);
+        expect(routes).to.deep.equal([new Route(4, anotherSourceLineStop, aLineStop, anotherLineStop, yetAnotherLineStop, destinationLineStop)]);
     }
 }
