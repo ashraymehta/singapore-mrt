@@ -4,17 +4,15 @@ import {LineStop} from '../../models/line-stop';
 export class DijkstraGraphTraverser {
     public readonly unvisitedStops: Set<LineStop>;
     public readonly routeToLineStop: Map<LineStop, { timeTaken: number; previousStops: LineStop[] }>;
-    private readonly sourceStop: LineStop;
     private currentStop: LineStop;
 
-    public constructor(unvisitedStops: LineStop[], sourceStop: LineStop) {
-        this.sourceStop = sourceStop;
+    private constructor(unvisitedStops: LineStop[]) {
         this.unvisitedStops = new Set<LineStop>(unvisitedStops);
         this.routeToLineStop = new Map<LineStop, { timeTaken: number, previousStops: LineStop[] }>();
     }
 
     public static traverseWith(allStops: LineStop[], sourceStop: LineStop): DijkstraGraphTraverser {
-        const graphTraversor = new DijkstraGraphTraverser(allStops, sourceStop);
+        const graphTraversor = new DijkstraGraphTraverser(allStops);
         graphTraversor.unvisitedStops.forEach(stop => graphTraversor.routeToLineStop.set(stop, {
             timeTaken: Number.POSITIVE_INFINITY,
             previousStops: []
