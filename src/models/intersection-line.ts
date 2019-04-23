@@ -6,11 +6,9 @@ export class IntersectionLine extends Line {
         super([oneStop, anotherStop]);
     }
 
-    public static create(oneStop: LineStop, anotherStop: LineStop) {
-        return new IntersectionLine(oneStop, anotherStop);
-    }
-
-    public getTimeTakenBetweenStations(): number {
-        return 1;
+    public static create(oneStop: LineStop, anotherStop: LineStop, timeTakenToChangeLines: number): IntersectionLine {
+        const intersectionLine = new IntersectionLine(oneStop, anotherStop);
+        intersectionLine.setTimeTakenBetweenStations(timeTakenToChangeLines);
+        return intersectionLine;
     }
 }

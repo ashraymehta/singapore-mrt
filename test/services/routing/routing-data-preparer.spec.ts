@@ -79,11 +79,11 @@ class RoutingDataPreparerSpec {
         const result = await this.routingDataPreparer.prepare(lines);
 
         const expectedIntersectionLines = [
-            IntersectionLine.create(aLine.stops[0], anotherLine.stops[0]),
-            IntersectionLine.create(aLine.stops[0], yetAnotherLine.stops[0]),
-            IntersectionLine.create(anotherLine.stops[0], yetAnotherLine.stops[0])
+            IntersectionLine.create(aLine.stops[0], anotherLine.stops[0], 1),
+            IntersectionLine.create(aLine.stops[0], yetAnotherLine.stops[0], 1),
+            IntersectionLine.create(anotherLine.stops[0], yetAnotherLine.stops[0], 1)
         ];
-        expect(result.allLines).to.deep.equal(new Lines([aLine, anotherLine, yetAnotherLine, ...expectedIntersectionLines]));
+        expect([...result.allLines]).to.deep.equal([aLine, anotherLine, yetAnotherLine, ...expectedIntersectionLines]);
     }
 
     @test
@@ -215,5 +215,39 @@ class RoutingDataPreparerSpec {
         expect(allLines).to.have.lengthOf(1);
         expect(allStops).to.have.lengthOf(2);
         expect(allStops).to.deep.equal(aLine.stops);
+    }
+
+    @test
+    public async shouldAddIntersectionLinesWithLineChangingTimeWhenTravelTimeIsProvided(): Promise<void> {
+        const intersectionStation = new Station('Intersection Station');
+        const aLine = new Line([
+            LineStopBuilder.withDefaults().withCode('NS1').build(),
+            LineStopBuilder.withDefaults().withCode('NS2').stoppingAt(intersectionStation).build()
+        ]);
+        const anotherLine = new Line([
+            LineStopBuilder.withDefaults().withCode('CC1').build(),
+            LineStopBuilder.withDefaults().withCode('CC2').stoppingAt(intersectionStation).build()
+        ]);
+        const lines = new Lines([aLine, anotherLine]);
+        const timingsConfiguration = mock(LineTimingsConfiguration);
+        const timeOfTravel = new Date(2019, 1, 1, 6, 30, 0);
+        when(this.configurationProvider.provideLineTimingsConfiguration()).thenReturn(instance(timingsConfiguration));
+        when(timingsConfiguration.getLineConfiguration('NS', timeOfTravel)).thenReturn({
+            isOperational: true,
+            timeTakenPerStationInMinutes: 10,
+            timeTakenPerLineChangeInMinutes: 15
+        });
+        when(timingsConfiguration.getLineConfiguration('CC', timeOfTravel)).thenReturn({
+            isOperational: true,
+            timeTakenPerStationInMinutes: 12,
+            timeTakenPerLineChangeInMinutes: 15
+        });
+
+        const result = await this.routingDataPreparer.prepare(lines, timeOfTravel);
+
+        const expectedIntersectionLine = IntersectionLine.create(aLine.stops[1], anotherLine.stops[1], 15);
+        expect(result.allLines).to.have.lengthOf(3);
+        expect([...result.allLines][2]).to.deep.equal(expectedIntersectionLine);
+        expect(expectedIntersectionLine.getTimeTakenBetweenStations()).to.equal(15);
     }
 }

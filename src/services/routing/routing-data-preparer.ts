@@ -23,6 +23,7 @@ export class RoutingDataPreparer {
         const allStops = allLines.getAllStops();
         const filteredStops = timeOfTravel ? allStops.filter(stop => stop.wasOpenedOnOrBefore(timeOfTravel)) : allStops;
         const stations = filteredStops.map(stop => stop.stoppingAt);
+        let timeTakenForLineChange = 1;
 
         if (timeOfTravel) {
             const timingsConfiguration = this.configurationProvider.provideLineTimingsConfiguration();
@@ -31,8 +32,10 @@ export class RoutingDataPreparer {
                 const lineConfiguration = timingsConfiguration.getLineConfiguration(line.code(), timeOfTravel);
                 if (!lineConfiguration.isOperational) {
                     linesToBeRemoved.push(line);
+                } else {
+                    timeTakenForLineChange = lineConfiguration.timeTakenPerLineChangeInMinutes;
+                    line.setTimeTakenBetweenStations(lineConfiguration.timeTakenPerStationInMinutes);
                 }
-                line.setTimeTakenBetweenStations(lineConfiguration.timeTakenPerStationInMinutes);
             });
 
             linesToBeRemoved.forEach(line => {
@@ -42,20 +45,20 @@ export class RoutingDataPreparer {
             });
         }
 
-        const intersectionLines = this.createIntersectionLines(stations, filteredStops);
+        const intersectionLines = this.createIntersectionLines(stations, filteredStops, timeTakenForLineChange);
         intersectionLines.forEach(line => allLines.add(line));
 
         return {allLines, allStops: uniq(filteredStops)};
     }
 
-    private createIntersectionLines(stations: Station[], stops: LineStop[]) {
+    private createIntersectionLines(stations: Station[], stops: LineStop[], timeTakenForLineChange: number) {
         const duplicateStations = uniq(stations.filter((station: Station, index: number) => {
             return stations.indexOf(station, index + 1) > 0;
         }));
         return flatten(duplicateStations.map(station => {
             const stopsForStation = stops.filter(stop => stop.isFor(station));
             const lines = flatten(stopsForStation.map(stop => {
-                return difference(stopsForStation, [stop]).map(otherStop => IntersectionLine.create(stop, otherStop));
+                return difference(stopsForStation, [stop]).map(otherStop => IntersectionLine.create(stop, otherStop, timeTakenForLineChange));
             }));
 
             const uniqueIntersectionLines = lines.filter((line: IntersectionLine, index: number) => {
