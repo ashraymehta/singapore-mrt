@@ -1,8 +1,9 @@
 import {expect} from 'chai';
-import {instance, mock, when} from 'ts-mockito';
 import {suite, test} from 'mocha-typescript';
 import {Line} from '../../../src/models/line';
+import {instance, mock, when} from 'ts-mockito';
 import {Lines} from '../../../src/models/lines';
+import {Route} from '../../../src/models/route';
 import {Station} from '../../../src/models/station';
 import {LineStopBuilder} from '../../builders/line-stop.builder';
 import {RoutingService} from '../../../src/services/routing.service';
@@ -92,27 +93,25 @@ class RoutingServiceIntegrationSpec {
         expect(route).to.deep.equal([[firstStop, secondStop, thirdStop, lastStop]]);
     }
 
-    @test.skip
+    @test
     public async shouldFindShortestRouteWhenMultipleRoutesAreAvailable(): Promise<void> {
-        const interchangeStation = new Station('Common Station');
         const firstStop = LineStopBuilder.withDefaults().build();
-        const secondStop = LineStopBuilder.withDefaults().stoppingAt(interchangeStation).build();
+        const secondStop = LineStopBuilder.withDefaults().build();
         const thirdStop = LineStopBuilder.withDefaults().build();
         const fourthStop = LineStopBuilder.withDefaults().build();
-        const fifthStop = LineStopBuilder.withDefaults().stoppingAt(interchangeStation).build();
 
         const aLine = new Line([firstStop, secondStop, thirdStop, fourthStop]);
-        const anotherLine = new Line([fourthStop, fifthStop]);
+        const anotherLine = new Line([firstStop, secondStop, fourthStop]);
 
         const lines = new Lines([aLine, anotherLine]);
         when(this.linesRepository.findAll()).thenReturn(lines);
 
         const route = await this.router.findRoutesBetween(firstStop.stoppingAt, fourthStop.stoppingAt);
 
-        expect(route).to.deep.equal([[firstStop, secondStop, fifthStop, fourthStop]]);
+        expect(route).to.deep.equal([new Route(3, firstStop, secondStop, fourthStop)]);
     }
 
-    @test.skip
+    @test
     public async shouldFindMultipleShortestRoutesWhenAvailable(): Promise<void> {
         const firstStop = LineStopBuilder.withDefaults().withCode('AA1').build();
         const secondStop = LineStopBuilder.withDefaults().withCode('AA2').build();
@@ -130,7 +129,7 @@ class RoutingServiceIntegrationSpec {
             [firstStop, secondStop, fifthStop, fourthStop]]);
     }
 
-    @test.skip
+    @test
     public async shouldFindMultipleShortestRoutesWhenSourceAndDestinationBothAreIntersections(): Promise<void> {
         const sourceStation = new Station('Source Station');
         const destinationStation = new Station('Destination Station');

@@ -44,6 +44,21 @@ class RoutingDataPreparerSpec {
     }
 
     @test
+    public async shouldGetUniqueStopsFromMetro(): Promise<void> {
+        const commonStop = LineStopBuilder.withDefaults().build();
+        const aLine = new Line([LineStopBuilder.withDefaults().build(), commonStop]);
+        const anotherLine = new Line([LineStopBuilder.withDefaults().build(), commonStop]);
+        const lines = new Lines([aLine, anotherLine]);
+
+        const result = await this.routingDataPreparer.prepare(lines);
+
+        expect(result).to.deep.equal({
+            allLines: new Lines([aLine, anotherLine]),
+            allStops: [...aLine.stops, anotherLine.stops[0]]
+        });
+    }
+
+    @test
     public async shouldAddIntersectionLinesForAllIntersectionsInTheMetro(): Promise<void> {
         const brasBasah = new Station('Bras Basah');
         const dhobyGhaut = new Station('Dhoby Ghaut');

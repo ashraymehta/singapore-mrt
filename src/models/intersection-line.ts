@@ -11,6 +11,6 @@ export class IntersectionLine extends Line {
     }
 
     public getTimeTakenBetweenStations(): number {
-        return 0;
+        return 1;
     }
 }

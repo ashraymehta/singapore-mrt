@@ -11,9 +11,10 @@ export class LineStopBuilder {
     }
 
     public static withDefaults(): LineStopBuilder {
+        const identifier = uniqueId();
         return new LineStopBuilder()
-            .withCode(`CC${uniqueId()}`)
-            .stoppingAt(new Station(`A Station - ${uniqueId()}`))
+            .withCode(`CC${identifier}`)
+            .stoppingAt(new Station(`A Station - ${identifier}`))
             .withOpeningDate(new Date(2019, 0, 1))
     }
 

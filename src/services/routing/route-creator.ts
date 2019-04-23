@@ -24,10 +24,10 @@ export class RouteCreator {
         while (!to.includes(currentStop)) {
             route.push(currentStop);
             const previous = traversalState.routeToLineStop.get(currentStop).previousStops;
-            if (previous.length === 1) {
-                currentStop = previous[0];
+            if (previous.size === 1) {
+                currentStop = [...previous][0];
             } else {
-                const routesFromPrevious = flatten(previous.map(prev => this.findRoutes(prev, to, traversalState)))
+                const routesFromPrevious = flatten([...previous].map(prev => this.findRoutes(prev, to, traversalState)))
                     .map(furtherPath => route.concat(furtherPath));
                 routes.push(...routesFromPrevious);
                 return routes;

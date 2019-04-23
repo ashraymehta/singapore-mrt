@@ -16,9 +16,9 @@ class DijkstraGraphTraverserSpec {
 
         const defaultRouteInformation = {
             timeTaken: Number.POSITIVE_INFINITY,
-            previousStops: <LineStop[]>[]
+            previousStops: new Set<LineStop>()
         };
-        expect(traversor.routeToLineStop.get(sourceStop)).to.deep.equal({timeTaken: 0, previousStops: []});
+        expect(traversor.routeToLineStop.get(sourceStop)).to.deep.equal({timeTaken: 0, previousStops: new Set<LineStop>()});
         expect(traversor.routeToLineStop.get(firstStop)).to.deep.equal(defaultRouteInformation);
         expect(traversor.routeToLineStop.get(secondStop)).to.deep.equal(defaultRouteInformation);
     }
@@ -60,11 +60,11 @@ class DijkstraGraphTraverserSpec {
         expect(nextStop).to.equal(aSourceStop);
         expect(traversor.routeToLineStop.get(aSourceStop)).to.deep.equal({
             timeTaken: 0,
-            previousStops: []
+            previousStops: new Set<LineStop>()
         });
         expect(traversor.routeToLineStop.get(anotherSourceStop)).to.deep.equal({
             timeTaken: 0,
-            previousStops: []
+            previousStops: new Set<LineStop>()
         });
     }
 
@@ -107,7 +107,7 @@ class DijkstraGraphTraverserSpec {
         traversor.optionallySaveTimeToLineStop(secondStop, firstStop, 1);
 
         expect(traversor.routeToLineStop.get(secondStop).timeTaken).to.equal(3);
-        expect(traversor.routeToLineStop.get(secondStop).previousStops).to.deep.equal([firstStop]);
+        expect(traversor.routeToLineStop.get(secondStop).previousStops).to.deep.equal(new Set([firstStop]));
     }
 
     @test
@@ -122,7 +122,7 @@ class DijkstraGraphTraverserSpec {
         traversor.optionallySaveTimeToLineStop(secondStop, firstStop, 10);
 
         expect(traversor.routeToLineStop.get(secondStop).timeTaken).to.equal(5);
-        expect(traversor.routeToLineStop.get(secondStop).previousStops).to.deep.equal([sourceStop]);
+        expect(traversor.routeToLineStop.get(secondStop).previousStops).to.deep.equal(new Set([sourceStop]));
     }
 
     @test
@@ -137,6 +137,6 @@ class DijkstraGraphTraverserSpec {
         traversor.optionallySaveTimeToLineStop(secondStop, firstStop, 3);
 
         expect(traversor.routeToLineStop.get(secondStop).timeTaken).to.equal(5);
-        expect(traversor.routeToLineStop.get(secondStop).previousStops).to.deep.equal([sourceStop, firstStop]);
+        expect(traversor.routeToLineStop.get(secondStop).previousStops).to.deep.equal(new Set([sourceStop, firstStop]));
     }
 }

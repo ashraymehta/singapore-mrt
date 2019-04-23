@@ -6,9 +6,9 @@ import {IntersectionLine} from '../../src/models/intersection-line';
 @suite
 class IntersectionLineSpec {
     @test
-    public async shouldHaveTimeBetweenStationsAsZero(): Promise<void> {
+    public async shouldHaveTimeBetweenStationsAsOne(): Promise<void> {
         const intersectionLine = IntersectionLine.create(LineStopBuilder.withDefaults().build(), LineStopBuilder.withDefaults().build());
 
-        expect(intersectionLine.getTimeTakenBetweenStations()).to.equal(0);
+        expect(intersectionLine.getTimeTakenBetweenStations()).to.equal(1);
     }
 }

@@ -45,7 +45,7 @@ export class RoutingDataPreparer {
         const intersectionLines = this.createIntersectionLines(stations, filteredStops);
         intersectionLines.forEach(line => allLines.add(line));
 
-        return {allLines, allStops: filteredStops};
+        return {allLines, allStops: uniq(filteredStops)};
     }
 
     private createIntersectionLines(stations: Station[], stops: LineStop[]) {

@@ -129,4 +129,25 @@ class RouteCreatorSpec {
         expect(routes[0].timeTaken).to.equal(2);
         expect(routes).to.deep.equal([new Route(2, aSourceStop, aMiddleStop, aDestinationStop)]);
     }
+
+    @test
+    public async shouldReturnUniqueRoutes(): Promise<void> {
+        const sourceStation = new Station('Source Station');
+        const destinationStation = new Station('Destination Station');
+        const aSourceStop = LineStopBuilder.withDefaults().stoppingAt(sourceStation).withCode('AA1').build();
+        const aMiddleStop = LineStopBuilder.withDefaults().withCode('AA3').build();
+        const aDestinationStop = LineStopBuilder.withDefaults().stoppingAt(destinationStation).withCode('AA5').build();
+        const anotherDestinationStop = LineStopBuilder.withDefaults().stoppingAt(destinationStation).withCode('AA5').build();
+        const allStops = [aSourceStop, aMiddleStop, aDestinationStop, anotherDestinationStop];
+
+        const traverser = DijkstraGraphTraverser.traverseWith(allStops, [aSourceStop, aSourceStop]);
+        traverser.optionallySaveTimeToLineStop(aMiddleStop, aSourceStop, 1);
+        traverser.optionallySaveTimeToLineStop(aDestinationStop, aMiddleStop, 1);
+        traverser.optionallySaveTimeToLineStop(anotherDestinationStop, aDestinationStop, 1);
+
+        const routes = this.routeCreator.createFrom([aDestinationStop, anotherDestinationStop], [aSourceStop], traverser);
+
+        expect(routes[0].timeTaken).to.equal(2);
+        expect(routes).to.deep.equal([new Route(2, aSourceStop, aMiddleStop, aDestinationStop)]);
+    }
 }

@@ -3,23 +3,23 @@ import {LineStop} from '../../models/line-stop';
 
 export class DijkstraGraphTraverser {
     public readonly unvisitedStops: Set<LineStop>;
-    public readonly routeToLineStop: Map<LineStop, { timeTaken: number; previousStops: LineStop[] }>;
+    public readonly routeToLineStop: Map<LineStop, { timeTaken: number; previousStops: Set<LineStop> }>;
     private currentStop: LineStop;
 
     private constructor(unvisitedStops: LineStop[]) {
         this.unvisitedStops = new Set<LineStop>(unvisitedStops);
-        this.routeToLineStop = new Map<LineStop, { timeTaken: number, previousStops: LineStop[] }>();
+        this.routeToLineStop = new Map<LineStop, { timeTaken: number, previousStops: Set<LineStop> }>();
     }
 
     public static traverseWith(allStops: LineStop[], sourceStops: LineStop[]): DijkstraGraphTraverser {
         const graphTraversor = new DijkstraGraphTraverser(allStops);
         graphTraversor.unvisitedStops.forEach(stop => graphTraversor.routeToLineStop.set(stop, {
             timeTaken: Number.POSITIVE_INFINITY,
-            previousStops: []
+            previousStops: new Set<LineStop>()
         }));
 
         sourceStops.forEach(sourceStop => {
-            graphTraversor.routeToLineStop.set(sourceStop, {timeTaken: 0, previousStops: []});
+            graphTraversor.routeToLineStop.set(sourceStop, {timeTaken: 0, previousStops: new Set<LineStop>()});
         });
         return graphTraversor;
     }
@@ -28,9 +28,9 @@ export class DijkstraGraphTraverser {
         const timeTakenFromSource = this.routeToLineStop.get(via).timeTaken + timeTakenFromViaStop;
         const existingRouteForStop = this.routeToLineStop.get(stop);
         if (timeTakenFromSource < existingRouteForStop.timeTaken) {
-            this.routeToLineStop.set(stop, {timeTaken: timeTakenFromSource, previousStops: [via]});
+            this.routeToLineStop.set(stop, {timeTaken: timeTakenFromSource, previousStops: new Set([via])});
         } else if (timeTakenFromSource === existingRouteForStop.timeTaken) {
-            existingRouteForStop.previousStops.push(via);
+            existingRouteForStop.previousStops.add(via);
         }
     }
 
