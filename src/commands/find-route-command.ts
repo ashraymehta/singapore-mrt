@@ -1,6 +1,6 @@
 import {inject} from 'inversify';
 import {Route} from '../models/route';
-import {Logger} from '../utils/Logger';
+import {Logger} from '../utils/logger';
 import {provide} from 'inversify-binding-decorators';
 import {RoutingService} from '../services/routing.service';
 import {LinesRepository} from '../repositories/lines.repository';

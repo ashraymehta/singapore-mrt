@@ -1,5 +1,5 @@
 import {inject} from 'inversify';
-import {Logger} from './utils/Logger';
+import {Logger} from './utils/logger';
 import {MetroBuilder} from './metro-builder';
 import {provide} from 'inversify-binding-decorators';
 import {LinesRepository} from './repositories/lines.repository';
