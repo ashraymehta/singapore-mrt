@@ -8,8 +8,8 @@ import {Station} from '../../src/models/station';
 import {deepEqual, instance, mock, when} from 'ts-mockito';
 import {LineStopBuilder} from '../builders/line-stop.builder';
 import {RoutingService} from '../../src/services/routing.service';
-import {FindRouteCommand} from '../../src/commands/find-route-command';
 import {LinesRepository} from '../../src/repositories/lines.repository';
+import {FindRouteCommand} from '../../src/console/commands/find-route-command';
 
 @suite
 class FindRouteCommandSpec {

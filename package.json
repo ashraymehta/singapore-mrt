@@ -36,6 +36,8 @@
   "homepage": "https://github.com/ashraymehta/singapore-mrt#readme",
   "dependencies": {
     "commander": "2.20.0",
+    "inquirer": "6.3.1",
+    "inquirer-autocomplete-prompt": "^1.0.1",
     "inversify": "5.0.1",
     "inversify-binding-decorators": "4.0.0",
     "moment": "2.24.0",
@@ -46,6 +48,7 @@
   },
   "devDependencies": {
     "@types/chai": "4.1.2",
+    "@types/inquirer": "6.0.0",
     "@types/lodash": "4.14.92",
     "@types/moment-timezone": "0.5.12",
     "@types/node": "11.13.5",
