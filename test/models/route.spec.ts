@@ -40,6 +40,7 @@ class RouteSpec {
         const routeDescription = route.toString();
 
         expect(routeDescription).to.deep.equal([
+            '',
             `Stations travelled: 4`,
             `Time: 4 minutes`,
             `Route: ('CC21', 'CC20', 'CC19', 'DT9', 'DT10')`, '',

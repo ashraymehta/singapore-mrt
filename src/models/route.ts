@@ -25,7 +25,7 @@ export class Route extends Array<LineStop> {
 
     public toString(): string {
         const numberOfStations = uniq(this.map(stop => stop.stoppingAt)).length;
-        return [`Stations travelled: ${numberOfStations}`, `Time: ${this.timeTaken} minutes`,
+        return ['', `Stations travelled: ${numberOfStations}`, `Time: ${this.timeTaken} minutes`,
             `Route: (${this.map(s => `'${s.code}'`).join(', ')})`, '',
             ...this.describe()].join(EOL)
     }
