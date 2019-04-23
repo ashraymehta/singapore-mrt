@@ -1,8 +1,9 @@
+import {Line} from '../../models/line';
 import {Lines} from '../../models/lines';
 import {Station} from '../../models/station';
 import {LineStop} from '../../models/line-stop';
 import {provide} from 'inversify-binding-decorators';
-import {clone, difference, flatten, uniq} from 'lodash';
+import {clone, difference, flatten, remove, uniq} from 'lodash';
 import {IntersectionLine} from '../../models/intersection-line';
 import {ConfigurationProvider} from '../../providers/configuration-provider';
 
@@ -22,9 +23,18 @@ export class RoutingDataPreparer {
 
         if (timeOfTravel) {
             const timingsConfiguration = this.configurationProvider.provideLineTimingsConfiguration();
+            const linesToBeRemoved: Line[] = [];
             allLines.forEach(line => {
                 const lineConfiguration = timingsConfiguration.getLineConfiguration(line.code(), timeOfTravel);
+                if (!lineConfiguration.isOperational) {
+                    linesToBeRemoved.push(line);
+                }
                 line.setTimeTakenBetweenStations(lineConfiguration.timeTakenPerStationInMinutes);
+            });
+
+            linesToBeRemoved.forEach(line => {
+                remove(filteredStops, stop => line.hasStop(stop));
+                return allLines.delete(line);
             });
         }
 

@@ -2,9 +2,9 @@ import {expect} from 'chai';
 import {suite, test} from 'mocha-typescript';
 import {Line} from '../../../src/models/line';
 import {Lines} from '../../../src/models/lines';
-import {instance, mock, when} from 'ts-mockito';
 import {Station} from '../../../src/models/station';
 import {LineStop} from '../../../src/models/line-stop';
+import {anything, instance, mock, when} from 'ts-mockito';
 import {LineStopBuilder} from '../../builders/line-stop.builder';
 import {IntersectionLine} from '../../../src/models/intersection-line';
 import {ConfigurationProvider} from '../../../src/providers/configuration-provider';
@@ -82,6 +82,13 @@ class RoutingDataPreparerSpec {
         const anotherLine = new Line([anotherStopOpeningNextMonth]);
         const lines = new Lines([aLine, anotherLine]);
         const timeOfTravel = new Date(2019, 1, 1);
+        const timingsConfiguration = mock(LineTimingsConfiguration);
+        when(this.configurationProvider.provideLineTimingsConfiguration()).thenReturn(instance(timingsConfiguration));
+        when(timingsConfiguration.getLineConfiguration(anything(), timeOfTravel)).thenReturn({
+            isOperational: true,
+            timeTakenPerStationInMinutes: 10,
+            timeTakenPerLineChangeInMinutes: 10
+        });
 
         const result = await this.routingDataPreparer.prepare(lines, timeOfTravel);
 
@@ -101,10 +108,17 @@ class RoutingDataPreparerSpec {
         ]);
         const lines = new Lines([aLine, anotherLine]);
         const timeOfTravel = new Date(2019, 1, 1);
+        const timingsConfiguration = mock(LineTimingsConfiguration);
+        when(this.configurationProvider.provideLineTimingsConfiguration()).thenReturn(instance(timingsConfiguration));
+        when(timingsConfiguration.getLineConfiguration(anything(), timeOfTravel)).thenReturn({
+            isOperational: true,
+            timeTakenPerStationInMinutes: 10,
+            timeTakenPerLineChangeInMinutes: 10
+        });
 
         const result = await this.routingDataPreparer.prepare(lines, timeOfTravel);
 
-        expect(result.allLines).to.deep.equal(new Lines([aLine, anotherLine]));
+        expect(result.allLines).to.have.lengthOf(2);
     }
 
     @test
@@ -154,5 +168,37 @@ class RoutingDataPreparerSpec {
 
         expect([...allLines][0].getTimeTakenBetweenStations()).to.deep.equal(1);
         expect([...allLines][1].getTimeTakenBetweenStations()).to.deep.equal(1);
+    }
+
+    @test
+    public async shouldRemoveStopsAndLinesWhichAreNotOperationalForTheTravelTime(): Promise<void> {
+        const aLine = new Line([
+            LineStopBuilder.withDefaults().withCode('NS1').build(),
+            LineStopBuilder.withDefaults().withCode('NS2').build()
+        ]);
+        const anotherLine = new Line([
+            LineStopBuilder.withDefaults().withCode('CC1').build(),
+            LineStopBuilder.withDefaults().withCode('CC2').build()
+        ]);
+        const lines = new Lines([aLine, anotherLine]);
+        const timingsConfiguration = mock(LineTimingsConfiguration);
+        const timeOfTravel = new Date(2019, 1, 1, 6, 30, 0);
+        when(this.configurationProvider.provideLineTimingsConfiguration()).thenReturn(instance(timingsConfiguration));
+        when(timingsConfiguration.getLineConfiguration('NS', timeOfTravel)).thenReturn({
+            isOperational: true,
+            timeTakenPerStationInMinutes: 10,
+            timeTakenPerLineChangeInMinutes: 15
+        });
+        when(timingsConfiguration.getLineConfiguration('CC', timeOfTravel)).thenReturn({
+            isOperational: false,
+            timeTakenPerStationInMinutes: 12,
+            timeTakenPerLineChangeInMinutes: 15
+        });
+
+        const {allLines, allStops} = await this.routingDataPreparer.prepare(lines, timeOfTravel);
+
+        expect(allLines).to.have.lengthOf(1);
+        expect(allStops).to.have.lengthOf(2);
+        expect(allStops).to.deep.equal(aLine.stops);
     }
 }
