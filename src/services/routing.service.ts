@@ -23,9 +23,9 @@ export class RoutingService {
         this.graphTraversalStateManager = traversalManager;
     }
 
-    public async findRoutesBetween(source: Station, destination: Station): Promise<Route[]> {
+    public async findRoutesBetween(source: Station, destination: Station, timeOfTravel?: Date): Promise<Route[]> {
         const lines = this.linesRepository.findAll();
-        const {allLines, allStops} = await this.dataPreparer.prepare(lines);
+        const {allLines, allStops} = await this.dataPreparer.prepare(lines, timeOfTravel);
         const sourceStop = allStops.find(stop => stop.isFor(source));
 
         allStops.find(stop => stop.isFor(destination));

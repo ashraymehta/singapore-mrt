@@ -1,6 +1,7 @@
 require('reflect-metadata');
 
 import {EOL} from 'os';
+import {Command} from 'commander';
 import {Application} from './application';
 import {FindRouteCommand} from './commands/find-route-command';
 import {ContainerBuilder} from './dependency-injection/container-builder';
@@ -16,9 +17,10 @@ async function bootstrap() {
 
 function setupCommander() {
     commander.command('route <source> <destination>', null, {isDefault: true})
+        .option('-t, --start-time [startTime]', 'Start time of travel')
         .description('Find one or more routes between stations of the Singapore MRT')
-        .action(async (source: string, destination: string) => {
-            const results = await container.get(FindRouteCommand).execute(source, destination);
+        .action(async (source: string, destination: string, command: Command) => {
+            const results = await container.get(FindRouteCommand).execute(source, destination, command.startTime);
             console.log(results.join(EOL));
         });
     commander.parse(process.argv);

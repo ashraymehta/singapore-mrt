@@ -17,18 +17,20 @@ export class FindRouteCommand {
         this.linesRepository = linesRepository;
     }
 
-    public async execute(source: string, destination: string): Promise<string[]> {
-        const routes = await this.findRoutes(source, destination);
+    public async execute(source: string, destination: string, timeOfTravelAsString?: string): Promise<string[]> {
+        this.logger.log(`Finding routes from [${source}] to [${destination}].`);
+        const timeOfTravel = timeOfTravelAsString ? new Date(timeOfTravelAsString) : undefined;
+        const routes = await this.findRoutes(source, destination, timeOfTravel);
         return [`Found [${routes.length}] routes from [${source}] to [${destination}].`, '', ...routes.map(r => r.toString())];
     }
 
-    private async findRoutes(source: string, destination: string): Promise<Route[]> {
+    private async findRoutes(source: string, destination: string, timeOfTravel?: Date): Promise<Route[]> {
         const lines = await this.linesRepository.findAll();
         this.logger.log(`Found [${lines.size}] lines from repository.`);
         const allStations = lines.getAllStations();
         const sourceStation = allStations.findStationWithName(source);
         const destinationStation = allStations.findStationWithName(destination);
 
-        return await this.routingService.findRoutesBetween(sourceStation, destinationStation);
+        return await this.routingService.findRoutesBetween(sourceStation, destinationStation, timeOfTravel);
     }
 }

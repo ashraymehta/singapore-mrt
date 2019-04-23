@@ -7,10 +7,10 @@ import {IntersectionLine} from '../../models/intersection-line';
 
 @provide(RoutingDataPreparer)
 export class RoutingDataPreparer {
-    public async prepare(lines: Lines, timeOfJourney?: Date): Promise<{ allLines: Lines; allStops: LineStop[] }> {
+    public async prepare(lines: Lines, timeOfTravel?: Date): Promise<{ allLines: Lines; allStops: LineStop[] }> {
         const allLines = clone(lines);
         const allStops = allLines.getAllStops();
-        const filteredStops = timeOfJourney ? allStops.filter(stop => stop.wasOpenedOnOrBefore(timeOfJourney)) : allStops;
+        const filteredStops = timeOfTravel ? allStops.filter(stop => stop.wasOpenedOnOrBefore(timeOfTravel)) : allStops;
         const stations = filteredStops.map(stop => stop.stoppingAt);
         const intersectionLines = this.createIntersectionLines(stations, filteredStops);
         intersectionLines.forEach(line => allLines.add(line));

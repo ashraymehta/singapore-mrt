@@ -76,9 +76,9 @@ class RoutingDataPreparerSpec {
         const aLine = new Line([stopOpenedLastYear, stopOpeningNextYear, stopOpeningNextMonth]);
         const anotherLine = new Line([anotherStopOpeningNextMonth]);
         const lines = new Lines([aLine, anotherLine]);
-        const timeOfJourney = new Date(2019, 1, 1);
+        const timeOfTravel = new Date(2019, 1, 1);
 
-        const result = await this.routingDataPreparer.prepare(lines, timeOfJourney);
+        const result = await this.routingDataPreparer.prepare(lines, timeOfTravel);
 
         expect(result.allStops).to.deep.equal([stopOpenedLastYear]);
     }
@@ -95,9 +95,9 @@ class RoutingDataPreparerSpec {
             LineStopBuilder.withDefaults().build()
         ]);
         const lines = new Lines([aLine, anotherLine]);
-        const timeOfJourney = new Date(2019, 1, 1);
+        const timeOfTravel = new Date(2019, 1, 1);
 
-        const result = await this.routingDataPreparer.prepare(lines, timeOfJourney);
+        const result = await this.routingDataPreparer.prepare(lines, timeOfTravel);
 
         expect(result.allLines).to.deep.equal(new Lines([aLine, anotherLine]));
     }
