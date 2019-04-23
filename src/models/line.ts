@@ -1,9 +1,11 @@
+import {first} from 'lodash';
 import {Station} from './station';
 import {LineStop} from './line-stop';
 
 export class Line {
     public static readonly LineCodeLength = 2;
     public readonly stops: LineStop[];
+    private timeTakenBetweenStations: number = 1;
 
     constructor(stops: LineStop[]) {
         this.stops = stops;
@@ -22,6 +24,14 @@ export class Line {
     }
 
     public getTimeTakenBetweenStations(): number {
-        return 1;
+        return this.timeTakenBetweenStations;
+    }
+
+    public setTimeTakenBetweenStations(time: number): void {
+        this.timeTakenBetweenStations = time;
+    }
+
+    public code() {
+        return first(this.stops).code.substr(0, Line.LineCodeLength);
     }
 }

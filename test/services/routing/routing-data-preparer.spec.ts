@@ -2,18 +2,23 @@ import {expect} from 'chai';
 import {suite, test} from 'mocha-typescript';
 import {Line} from '../../../src/models/line';
 import {Lines} from '../../../src/models/lines';
+import {instance, mock, when} from 'ts-mockito';
 import {Station} from '../../../src/models/station';
 import {LineStop} from '../../../src/models/line-stop';
 import {LineStopBuilder} from '../../builders/line-stop.builder';
 import {IntersectionLine} from '../../../src/models/intersection-line';
+import {ConfigurationProvider} from '../../../src/providers/configuration-provider';
 import {RoutingDataPreparer} from '../../../src/services/routing/routing-data-preparer';
+import {LineTimingsConfiguration} from '../../../src/models/line-timings-configuration';
 
 @suite
 class RoutingDataPreparerSpec {
     private routingDataPreparer: RoutingDataPreparer;
+    private configurationProvider: ConfigurationProvider;
 
     public before(): void {
-        this.routingDataPreparer = new RoutingDataPreparer();
+        this.configurationProvider = mock(ConfigurationProvider);
+        this.routingDataPreparer = new RoutingDataPreparer(instance(this.configurationProvider));
     }
 
     @test
@@ -102,22 +107,52 @@ class RoutingDataPreparerSpec {
         expect(result.allLines).to.deep.equal(new Lines([aLine, anotherLine]));
     }
 
-    @test.skip
-    public async shouldSetTimeTakenPerStationForLinesIfTravelTimeFallsUnderPeakHours(): Promise<void> {
-        const congestedLine = new Line([
-            LineStopBuilder.withDefaults().withCode('NS').build(),
-            LineStopBuilder.withDefaults().withCode('NS').build()
+    @test
+    public async shouldSetTimeTakenPerStationForLinesWhenTravelTimeIsProvided(): Promise<void> {
+        const aLine = new Line([
+            LineStopBuilder.withDefaults().withCode('NS1').build(),
+            LineStopBuilder.withDefaults().withCode('NS2').build()
         ]);
-        const relativelyUncongestedLine = new Line([
-            LineStopBuilder.withDefaults().build(),
-            LineStopBuilder.withDefaults().build()
+        const anotherLine = new Line([
+            LineStopBuilder.withDefaults().withCode('CC1').build(),
+            LineStopBuilder.withDefaults().withCode('CC2').build()
         ]);
-        const lines = new Lines([congestedLine, relativelyUncongestedLine]);
+        const lines = new Lines([aLine, anotherLine]);
+        const timingsConfiguration = mock(LineTimingsConfiguration);
         const timeOfTravel = new Date(2019, 1, 1, 6, 30, 0);
+        when(this.configurationProvider.provideLineTimingsConfiguration()).thenReturn(instance(timingsConfiguration));
+        when(timingsConfiguration.getLineConfiguration('NS', timeOfTravel)).thenReturn({
+            isOperational: true,
+            timeTakenPerStationInMinutes: 10,
+            timeTakenPerLineChangeInMinutes: 15
+        });
+        when(timingsConfiguration.getLineConfiguration('CC', timeOfTravel)).thenReturn({
+            isOperational: true,
+            timeTakenPerStationInMinutes: 12,
+            timeTakenPerLineChangeInMinutes: 15
+        });
 
         const {allLines} = await this.routingDataPreparer.prepare(lines, timeOfTravel);
 
-        expect([...allLines][0].getTimeTakenBetweenStations()).to.deep.equal(12);
-        expect([...allLines][1].getTimeTakenBetweenStations()).to.deep.equal(10);
+        expect([...allLines][0].getTimeTakenBetweenStations()).to.deep.equal(10);
+        expect([...allLines][1].getTimeTakenBetweenStations()).to.deep.equal(12);
+    }
+
+    @test
+    public async shouldSetTimeTakenPerStationToOneForLinesWhenTravelTimeIsNotProvided(): Promise<void> {
+        const aLine = new Line([
+            LineStopBuilder.withDefaults().withCode('NS1').build(),
+            LineStopBuilder.withDefaults().withCode('NS2').build()
+        ]);
+        const anotherLine = new Line([
+            LineStopBuilder.withDefaults().withCode('CC1').build(),
+            LineStopBuilder.withDefaults().withCode('CC2').build()
+        ]);
+        const lines = new Lines([aLine, anotherLine]);
+
+        const {allLines} = await this.routingDataPreparer.prepare(lines);
+
+        expect([...allLines][0].getTimeTakenBetweenStations()).to.deep.equal(1);
+        expect([...allLines][1].getTimeTakenBetweenStations()).to.deep.equal(1);
     }
 }

@@ -4,16 +4,33 @@ import {LineStop} from '../../models/line-stop';
 import {provide} from 'inversify-binding-decorators';
 import {clone, difference, flatten, uniq} from 'lodash';
 import {IntersectionLine} from '../../models/intersection-line';
+import {ConfigurationProvider} from '../../providers/configuration-provider';
 
 @provide(RoutingDataPreparer)
 export class RoutingDataPreparer {
+    private readonly configurationProvider: ConfigurationProvider;
+
+    constructor(configurationProvider: ConfigurationProvider) {
+        this.configurationProvider = configurationProvider;
+    }
+
     public async prepare(lines: Lines, timeOfTravel?: Date): Promise<{ allLines: Lines; allStops: LineStop[] }> {
         const allLines = clone(lines);
         const allStops = allLines.getAllStops();
         const filteredStops = timeOfTravel ? allStops.filter(stop => stop.wasOpenedOnOrBefore(timeOfTravel)) : allStops;
         const stations = filteredStops.map(stop => stop.stoppingAt);
+
+        if (timeOfTravel) {
+            const timingsConfiguration = this.configurationProvider.provideLineTimingsConfiguration();
+            allLines.forEach(line => {
+                const lineConfiguration = timingsConfiguration.getLineConfiguration(line.code(), timeOfTravel);
+                line.setTimeTakenBetweenStations(lineConfiguration.timeTakenPerStationInMinutes);
+            });
+        }
+
         const intersectionLines = this.createIntersectionLines(stations, filteredStops);
         intersectionLines.forEach(line => allLines.add(line));
+
         return {allLines, allStops: filteredStops};
     }
 

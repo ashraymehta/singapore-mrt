@@ -8,6 +8,7 @@ import {LineStopBuilder} from '../../builders/line-stop.builder';
 import {RoutingService} from '../../../src/services/routing.service';
 import {RouteCreator} from '../../../src/services/routing/route-creator';
 import {LinesRepository} from '../../../src/repositories/lines.repository';
+import {ConfigurationProvider} from '../../../src/providers/configuration-provider';
 import {RoutingDataPreparer} from '../../../src/services/routing/routing-data-preparer';
 import {GraphTraversalManager} from '../../../src/services/routing/graph-traversal-manager';
 
@@ -18,7 +19,8 @@ class RoutingServiceIntegrationSpec {
 
     public before(): void {
         this.linesRepository = mock(LinesRepository);
-        this.router = new RoutingService(new RoutingDataPreparer(), new RouteCreator(), new GraphTraversalManager(), instance(this.linesRepository));
+        this.router = new RoutingService(new RoutingDataPreparer(new ConfigurationProvider()), new RouteCreator(),
+            new GraphTraversalManager(), instance(this.linesRepository));
     }
 
     @test
