@@ -8,6 +8,10 @@ export class TimeUtil {
         return moment(time).tz(TimeUtil.SingaporeTimezone).format('ddd');
     }
 
+    public static convertToDate(text: string, format: string) {
+        return moment.tz(text, format, 'Asia/Singapore').toDate()
+    }
+
     public static isBetween(start: string, end: string, time: Date): boolean {
         const startTime = moment.tz(start, 'H:m', TimeUtil.SingaporeTimezone);
         const endTime = moment.tz(end, 'H:m', TimeUtil.SingaporeTimezone);
