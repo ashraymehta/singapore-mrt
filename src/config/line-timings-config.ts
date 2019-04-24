@@ -23,7 +23,7 @@ export const Config = {
             }
         ],
     },
-    timings: {
+    timeConsumed: {
         perStop: [
             {
                 codes: ['NS', 'NE'],

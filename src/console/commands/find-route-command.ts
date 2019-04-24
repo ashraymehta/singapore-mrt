@@ -1,10 +1,10 @@
 import {inject} from 'inversify';
 import {Route} from '../../models/route';
 import {Logger} from '../../utils/logger';
+import {TimeUtil} from '../../utils/time-util';
 import {provide} from 'inversify-binding-decorators';
 import {RoutingService} from '../../services/routing-service';
 import {LinesRepository} from '../../repositories/lines-repository';
-import {TimeUtil} from '../../utils/time-util';
 
 @provide(FindRouteCommand)
 export class FindRouteCommand {
