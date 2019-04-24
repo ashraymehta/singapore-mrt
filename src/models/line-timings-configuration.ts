@@ -16,18 +16,18 @@ export class LineTimingsConfiguration {
         return Object.assign(new LineTimingsConfiguration(), config);
     }
 
-    public getLineConfiguration(lineCode: string, time: Date): { isOperational: boolean; timeTakenPerStationInMinutes: number; } {
+    public getLineConfiguration(lineCode: string, time: Date): { isOperational: boolean; timeTakenPerStop: number; } {
         const isPeakHourTime = this.isPeakHour(time);
         const isNightHourTime = this.isNightHour(time);
         const lineConfig = this.lines.find(lineConfig => lineConfig.codes.includes(lineCode));
         if (isPeakHourTime) {
-            return {isOperational: true, timeTakenPerStationInMinutes: lineConfig.peakHours.timeTakenPerStation};
+            return {isOperational: true, timeTakenPerStop: lineConfig.peakHours.timeTakenPerStation};
         } else if (isNightHourTime) {
             if (Object.keys(lineConfig.nightHours).includes('isOperational')) {
-                return {isOperational: false, timeTakenPerStationInMinutes: Infinity};
+                return {isOperational: false, timeTakenPerStop: Infinity};
             }
         }
-        return {isOperational: true, timeTakenPerStationInMinutes: lineConfig.otherHours.timeTakenPerStation};
+        return {isOperational: true, timeTakenPerStop: lineConfig.otherHours.timeTakenPerStation};
     }
 
     public getTimeTakenForLineChange(time: Date): number {

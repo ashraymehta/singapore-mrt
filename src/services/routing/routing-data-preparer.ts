@@ -35,7 +35,7 @@ export class RoutingDataPreparer {
             });
 
             operationalLines.forEach(line => {
-                const timeTakenPerStation = timingsConfiguration.getLineConfiguration(line.code(), timeOfTravel).timeTakenPerStationInMinutes;
+                const timeTakenPerStation = timingsConfiguration.getLineConfiguration(line.code(), timeOfTravel).timeTakenPerStop;
                 return line.setTimeTakenBetweenStations(timeTakenPerStation);
             });
 
