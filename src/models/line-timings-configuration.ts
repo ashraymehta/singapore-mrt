@@ -1,9 +1,16 @@
 import {first} from 'lodash';
 import {TimeUtil} from '../utils/time-util';
 
+class HoursConfig extends Array<{ start: string; days: string[]; end: string }> {
+    public isApplicableFor(time: Date): boolean {
+        return !!this.filter(night => night.days.includes(TimeUtil.getDay(time)))
+            .find(peak => TimeUtil.isBetween(peak.start, peak.end, time))
+    }
+}
+
 export class LineTimingsConfiguration {
-    private readonly peakHours: { start: string; days: string[]; end: string }[];
-    private readonly nightHours: { start: string; days: string[]; end: string }[];
+    private peakHours: HoursConfig;
+    private nightHours: HoursConfig;
     private readonly lines: {
         codes: string[];
         otherHours: { timeTakenForLineChange: number; timeTakenPerStation: number };
@@ -12,12 +19,15 @@ export class LineTimingsConfiguration {
     }[];
 
     public static from(config: object): LineTimingsConfiguration {
-        return Object.assign(new LineTimingsConfiguration(), config);
+        const configuration = Object.assign(new LineTimingsConfiguration(), config);
+        configuration.peakHours = new HoursConfig(...(<LineTimingsConfiguration>config).peakHours);
+        configuration.nightHours = new HoursConfig(...(<LineTimingsConfiguration>config).nightHours);
+        return configuration;
     }
 
     public getLineConfiguration(lineCode: string, time: Date): { isOperational: boolean; timeTakenPerStop: number; } {
-        const isPeakHourTime = this.isPeakHour(time);
-        const isNightHourTime = this.isNightHour(time);
+        const isPeakHourTime = this.peakHours.isApplicableFor(time);
+        const isNightHourTime = this.nightHours.isApplicableFor(time);
         const lineConfig = this.lines.find(lineConfig => lineConfig.codes.includes(lineCode));
         if (isPeakHourTime) {
             return {isOperational: true, timeTakenPerStop: lineConfig.peakHours.timeTakenPerStation};
@@ -31,22 +41,12 @@ export class LineTimingsConfiguration {
 
     public getTimeTakenForLineChange(time: Date): number {
         const lineConfig = first(this.lines);
-        if (this.isPeakHour(time)) {
+        if (this.peakHours.isApplicableFor(time)) {
             return lineConfig.peakHours.timeTakenForLineChange;
-        } else if (this.isNightHour(time)) {
+        } else if (this.nightHours.isApplicableFor(time)) {
             return (lineConfig.nightHours as any).timeTakenForLineChange;
         } else {
             return lineConfig.otherHours.timeTakenForLineChange;
         }
-    }
-
-    private isNightHour(time: Date): boolean {
-        return !!this.nightHours.filter(night => night.days.includes(TimeUtil.getDay(time)))
-            .find(peak => TimeUtil.isBetween(peak.start, peak.end, time));
-    }
-
-    private isPeakHour(time: Date): boolean {
-        return !!this.peakHours.filter(peak => peak.days.includes(TimeUtil.getDay(time)))
-            .find(peak => TimeUtil.isBetween(peak.start, peak.end, time));
     }
 }
