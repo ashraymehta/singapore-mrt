@@ -96,6 +96,21 @@ opening date for the stop is ignored.
 * Trains cannot travel _through_ stations which are not open. 
 Example: If the following is a train line: `Station A -> Station B -> Station C`. If Station B is not open yet, there is no route between Station A and Station C.
 
+## Terminology
+
+The following terminology is used in the code:
+
+* Line: The route that metro trains will take. (Eg: Circle Line, NorthSouth Line, etc.)
+* Line Code: The first two letters of all the stops in the line. (Eg: The line `NS1 -> NS2 -> ...` has `NS` as the line code)
+* Line Stop/Stop: All the stops made by a particular line. This is the place where users embark and disembark. (Eg: The line `NS1 -> NS2 
+-> ...` has `[NS1, 
+NS2, ...]` as the line stops)
+* Station: A station is home to one or more Line Stops. Any stations which has more than 1 stop, is an intersection station.
+* Intersection Line: Intersection Line is a virtual line used to connect two stops of the same station. This concept is used to make 
+line-change possible in the searching algorithm used. 
+(Eg: `Little India` is home to two stops: `NE7` & `DT12`. While searching for an optimal route, an intersection line is used to connect 
+`NE7` & `DT12`).
+
 ## Known Issues
 Here are the known issues with the solution:
 
