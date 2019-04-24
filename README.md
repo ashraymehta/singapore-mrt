@@ -85,3 +85,27 @@ npm start -- route "Holland Village" "Bugis"
 # With start-time
 npm start -- route "Holland Village" "Bugis" --start-time "2019-01-01T08:00"
 ```
+
+## Assumptions
+
+The following assumptions were made during the development:
+
+* Time taken per stop, time taken per line change and the opening dates only come into effect when the start time is provided.
+* If the start time is not provided, the time taken per stop and the time taken to change lines, both are assumed to be 1 minute. The 
+opening date for the stop is ignored.
+* Trains cannot travel _through_ stations which are not open. 
+Example: If the following is a train line: `Station A -> Station B -> Station C`. If Station B is not open yet, there is no route between Station A and Station C.
+
+## Known Issues
+Here are the known issues with the solution:
+
+##### Line Closing Time
+In case a train line is closing or opening in some time (due to night hours), but the start-time provided is just before the closing 
+time, the solution only takes into account the train lines which were open at the start-time provided. Any lines closure/opening that 
+happens after the start-time is not taken into account while determining the route.
+
+Example:
+
+Suppose a user is trying to go from Caldecott to Newton at `2019-01-01T21:59`. The optimum route, without considering the line closure 
+which takes place at `22:00`, would be `CC17 -> CC19 -> DT9 -> DT10 -> DT11`. However, since the DT line closes at `22:00`, the user will 
+not be able to switch to the DT line. 
