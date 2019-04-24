@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {suite, test} from 'mocha-typescript';
-import {Config} from '../../../src/providers/line-timings-config';
+import {Config} from '../../../src/config/line-timings-config';
 import {LineTimingsConfiguration} from '../../../src/models/config/line-timings-configuration';
 
 @suite
