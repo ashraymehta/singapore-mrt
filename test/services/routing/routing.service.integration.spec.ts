@@ -12,6 +12,7 @@ import {LinesRepository} from '../../../src/repositories/lines.repository';
 import {ConfigurationProvider} from '../../../src/providers/configuration-provider';
 import {RoutingDataPreparer} from '../../../src/services/routing/routing-data-preparer';
 import {GraphTraversalManager} from '../../../src/services/routing/graph-traversal-manager';
+import {IntersectionLinesFactory} from '../../../src/services/routing/intersection-lines-factory';
 
 @suite
 class RoutingServiceIntegrationSpec {
@@ -20,8 +21,8 @@ class RoutingServiceIntegrationSpec {
 
     public before(): void {
         this.linesRepository = mock(LinesRepository);
-        this.router = new RoutingService(new RoutingDataPreparer(new ConfigurationProvider()), new RoutesCreator(),
-            new GraphTraversalManager(), instance(this.linesRepository));
+        this.router = new RoutingService(new RoutingDataPreparer(new ConfigurationProvider(), new IntersectionLinesFactory()),
+            new RoutesCreator(), new GraphTraversalManager(), instance(this.linesRepository));
     }
 
     @test

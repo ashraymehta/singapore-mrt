@@ -2,27 +2,28 @@ import {inject} from 'inversify';
 import {Line} from '../../models/line';
 import {Lines} from '../../models/lines';
 import {Logger} from '../../utils/logger';
-import {Station} from '../../models/station';
+import {clone, remove, uniq} from 'lodash';
 import {LineStop} from '../../models/line-stop';
 import {provide} from 'inversify-binding-decorators';
-import {clone, difference, flatten, remove, uniq} from 'lodash';
-import {IntersectionLine} from '../../models/intersection-line';
+import {IntersectionLinesFactory} from './intersection-lines-factory';
 import {ConfigurationProvider} from '../../providers/configuration-provider';
 
 @provide(RoutingDataPreparer)
 export class RoutingDataPreparer {
     private readonly configurationProvider: ConfigurationProvider;
     private readonly logger = Logger.for(RoutingDataPreparer.name);
+    private readonly intersectionLinesFactory: IntersectionLinesFactory;
 
-    constructor(@inject(ConfigurationProvider) configurationProvider: ConfigurationProvider) {
+    constructor(@inject(ConfigurationProvider) configurationProvider: ConfigurationProvider,
+                @inject(IntersectionLinesFactory) intersectionLinesFactory: IntersectionLinesFactory) {
         this.configurationProvider = configurationProvider;
+        this.intersectionLinesFactory = intersectionLinesFactory;
     }
 
     public async prepare(lines: Lines, timeOfTravel?: Date): Promise<{ allLines: Lines; allStops: LineStop[] }> {
         const allLines = clone(lines);
         const allStops = allLines.getAllStops();
         const filteredStops = timeOfTravel ? allStops.filter(stop => stop.wasOpenedOnOrBefore(timeOfTravel)) : allStops;
-        const stations = filteredStops.map(stop => stop.stoppingAt);
         let timeTakenForLineChange = 1;
 
         if (timeOfTravel) {
@@ -45,32 +46,9 @@ export class RoutingDataPreparer {
             });
         }
 
-        const intersectionLines = this.createIntersectionLines(stations, filteredStops, timeTakenForLineChange);
+        const intersectionLines = this.intersectionLinesFactory.create(filteredStops, timeTakenForLineChange);
         intersectionLines.forEach(line => allLines.add(line));
 
         return {allLines, allStops: uniq(filteredStops)};
-    }
-
-    private createIntersectionLines(stations: Station[], stops: LineStop[], timeTakenForLineChange: number) {
-        const duplicateStations = uniq(stations.filter((station: Station, index: number) => {
-            return stations.indexOf(station, index + 1) > 0;
-        }));
-        return flatten(duplicateStations.map(station => {
-            const stopsForStation = stops.filter(stop => stop.isFor(station));
-            const lines = flatten(stopsForStation.map(stop => {
-                return difference(stopsForStation, [stop]).map(otherStop => IntersectionLine.create(stop, otherStop, timeTakenForLineChange));
-            }));
-
-            const uniqueIntersectionLines = lines.filter((line: IntersectionLine, index: number) => {
-                const firstStop = line.stops[0];
-                const secondStop = line.stops[1];
-                const isThereADuplicateIntersectionLineBeforeThisInTheArray = lines.slice(0, index)
-                    .find(aLine => aLine.hasStop(firstStop) && aLine.hasStop(secondStop));
-
-                return !isThereADuplicateIntersectionLineBeforeThisInTheArray;
-            });
-
-            return uniqueIntersectionLines;
-        }));
     }
 }

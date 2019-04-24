@@ -10,6 +10,7 @@ import {IntersectionLine} from '../../../src/models/intersection-line';
 import {ConfigurationProvider} from '../../../src/providers/configuration-provider';
 import {RoutingDataPreparer} from '../../../src/services/routing/routing-data-preparer';
 import {LineTimingsConfiguration} from '../../../src/models/line-timings-configuration';
+import {IntersectionLinesFactory} from '../../../src/services/routing/intersection-lines-factory';
 
 @suite
 class RoutingDataPreparerSpec {
@@ -18,7 +19,7 @@ class RoutingDataPreparerSpec {
 
     public before(): void {
         this.configurationProvider = mock(ConfigurationProvider);
-        this.routingDataPreparer = new RoutingDataPreparer(instance(this.configurationProvider));
+        this.routingDataPreparer = new RoutingDataPreparer(instance(this.configurationProvider), new IntersectionLinesFactory());
     }
 
     @test
