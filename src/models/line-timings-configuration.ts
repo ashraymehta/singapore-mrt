@@ -16,9 +16,9 @@ export class LineTimingsConfiguration {
     }
 
     public getLineConfiguration(lineCode: string, time: Date): { isOperational: boolean; timeTakenPerStationInMinutes: number; timeTakenPerLineChangeInMinutes: number } {
-        const isPeakHourTime = !!this.peakHours.filter(peak => peak.days.includes(moment(time).format('ddd')))
+        const isPeakHourTime = !!this.peakHours.filter(peak => peak.days.includes(moment(time).tz('Asia/Singapore').format('ddd')))
             .find(peak => this.isBetween(peak.start, peak.end, time));
-        const isNightHourTime = !!this.nightHours.filter(night => night.days.includes(moment(time).format('ddd')))
+        const isNightHourTime = !!this.nightHours.filter(night => night.days.includes(moment(time).tz('Asia/Singapore').format('ddd')))
             .find(peak => this.isBetween(peak.start, peak.end, time));
         const lineConfig = this.lines.find(lineConfig => lineConfig.codes.includes(lineCode));
         if (isPeakHourTime) {
