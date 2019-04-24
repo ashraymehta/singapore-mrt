@@ -12,7 +12,7 @@ The project is based on Typescript and uses Node.js v10 in order to execute.
 
 ##### How to install Node & NPM on Ubuntu 16.04?
 
-The following commands will install both Node v10.x and NPM are on the Ubuntu box.
+The following commands will install both Node v10.x and NPM are on Ubuntu 16.04.
 
 ```
 curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
@@ -23,9 +23,11 @@ sudo apt-get install -y nodejs
 You can verify the installation using the following commands:
 
 ```
-node --version # Prints (v10.15.3)
+node --version 
+# Prints Node version like (v10.15.3)
 
-npm --version # Prints (6.4.1)
+npm --version 
+# Prints NPM version like (6.4.1)
 ```
 
 ### Installing
@@ -53,14 +55,14 @@ Running the solution involves two steps:
 * Build (Transpile TypeScript into JavaScript)
 * Running the build output (javascript)
 
-##### Build
+#### Build
 You can build the project using the following command:
 ```
 # From the project root directory
 npm run build
 ```
 
-##### Run
+#### Run
 You can run the transpiled code using the following command:
 ```
 # From the project root directory
