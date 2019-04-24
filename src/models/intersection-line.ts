@@ -11,4 +11,9 @@ export class IntersectionLine extends Line {
         intersectionLine.setTimeTakenBetweenStations(timeTakenToChangeLines);
         return intersectionLine;
     }
+
+    public isSame(anotherIntersectionLine: IntersectionLine): boolean {
+        const [firstStop, secondStop] = this.stops;
+        return anotherIntersectionLine.hasStop(firstStop) && anotherIntersectionLine.hasStop(secondStop);
+    }
 }
