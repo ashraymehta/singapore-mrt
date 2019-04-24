@@ -4,8 +4,8 @@ import {Line} from '../../../src/models/line';
 import {Lines} from '../../../src/models/lines';
 import {Station} from '../../../src/models/station';
 import {LineStop} from '../../../src/models/line-stop';
-import {anything, instance, mock, when} from 'ts-mockito';
 import {LineStopBuilder} from '../../builders/line-stop.builder';
+import {anything, deepEqual, instance, mock, when} from 'ts-mockito';
 import {IntersectionLine} from '../../../src/models/intersection-line';
 import {ConfigurationProvider} from '../../../src/providers/configuration-provider';
 import {RoutingDataPreparer} from '../../../src/services/routing/routing-data-preparer';
@@ -16,10 +16,13 @@ import {IntersectionLinesFactory} from '../../../src/services/routing/intersecti
 class RoutingDataPreparerSpec {
     private routingDataPreparer: RoutingDataPreparer;
     private configurationProvider: ConfigurationProvider;
+    private intersectionLinesFactory: IntersectionLinesFactory;
 
     public before(): void {
         this.configurationProvider = mock(ConfigurationProvider);
-        this.routingDataPreparer = new RoutingDataPreparer(instance(this.configurationProvider), new IntersectionLinesFactory());
+        this.intersectionLinesFactory = mock(IntersectionLinesFactory);
+        this.routingDataPreparer = new RoutingDataPreparer(instance(this.configurationProvider), instance(this.intersectionLinesFactory));
+        when(this.intersectionLinesFactory.create(anything(), anything())).thenReturn(new Lines());
     }
 
     @test
@@ -60,31 +63,17 @@ class RoutingDataPreparerSpec {
     }
 
     @test
-    public async shouldAddIntersectionLinesForAllIntersectionsInTheMetro(): Promise<void> {
-        const brasBasah = new Station('Bras Basah');
-        const dhobyGhaut = new Station('Dhoby Ghaut');
-        const clarkeQuay = new Station('Clarke Quay');
-        const aLine = new Line([
-            new LineStop('NE6', dhobyGhaut, new Date('20 June 2003')),
-            new LineStop('NE5', clarkeQuay, new Date('20 June 2003'))
+    public async shouldAddIntersectionLinesToAllLines(): Promise<void> {
+        const lines = new Lines([new Line([LineStopBuilder.withDefaults().build(), LineStopBuilder.withDefaults().build()]),
+            new Line([LineStopBuilder.withDefaults().build(), LineStopBuilder.withDefaults().build()])]);
+        const createdIntersectionLines = new Lines([
+            IntersectionLine.create(LineStopBuilder.withDefaults().build(), LineStopBuilder.withDefaults().build(), 1)
         ]);
-        const anotherLine = new Line([
-            new LineStop('CC1', dhobyGhaut, new Date('17 April 2010')),
-            new LineStop('CC2', brasBasah, new Date('17 April 2010')),
-        ]);
-        const yetAnotherLine = new Line([
-            new LineStop('NS24', dhobyGhaut, new Date('12 December 1987'))
-        ]);
-        const lines = new Lines([aLine, anotherLine, yetAnotherLine]);
+        when(this.intersectionLinesFactory.create(deepEqual(lines.getAllStops()), 1)).thenReturn(createdIntersectionLines);
 
-        const result = await this.routingDataPreparer.prepare(lines);
+        const {allLines} = await this.routingDataPreparer.prepare(lines);
 
-        const expectedIntersectionLines = [
-            IntersectionLine.create(aLine.stops[0], anotherLine.stops[0], 1),
-            IntersectionLine.create(aLine.stops[0], yetAnotherLine.stops[0], 1),
-            IntersectionLine.create(anotherLine.stops[0], yetAnotherLine.stops[0], 1)
-        ];
-        expect([...result.allLines]).to.deep.equal([aLine, anotherLine, yetAnotherLine, ...expectedIntersectionLines]);
+        expect(allLines).to.deep.equal(new Lines([...lines, ...createdIntersectionLines]));
     }
 
     @test
@@ -109,32 +98,6 @@ class RoutingDataPreparerSpec {
         const result = await this.routingDataPreparer.prepare(lines, timeOfTravel);
 
         expect(result.allStops).to.deep.equal([stopOpenedLastYear]);
-    }
-
-    @test
-    public async shouldNotAddIntersectionLinesForStopsWhichHaveNotOpenedYet(): Promise<void> {
-        const intersectionStation = new Station('Dhoby Ghaut');
-        const aLine = new Line([
-            LineStopBuilder.withDefaults().stoppingAt(intersectionStation).withOpeningDate(new Date(2019, 2, 1)).build(),
-            LineStopBuilder.withDefaults().build()
-        ]);
-        const anotherLine = new Line([
-            LineStopBuilder.withDefaults().stoppingAt(intersectionStation).withOpeningDate(new Date(2018, 1, 1)).build(),
-            LineStopBuilder.withDefaults().build()
-        ]);
-        const lines = new Lines([aLine, anotherLine]);
-        const timeOfTravel = new Date(2019, 1, 1);
-        const timingsConfiguration = mock(LineTimingsConfiguration);
-        when(this.configurationProvider.provideLineTimingsConfiguration()).thenReturn(instance(timingsConfiguration));
-        when(timingsConfiguration.getLineConfiguration(anything(), timeOfTravel)).thenReturn({
-            isOperational: true,
-            timeTakenPerStationInMinutes: 10,
-            timeTakenPerLineChangeInMinutes: 10
-        });
-
-        const result = await this.routingDataPreparer.prepare(lines, timeOfTravel);
-
-        expect(result.allLines).to.have.lengthOf(2);
     }
 
     @test
@@ -216,39 +179,5 @@ class RoutingDataPreparerSpec {
         expect(allLines).to.have.lengthOf(1);
         expect(allStops).to.have.lengthOf(2);
         expect(allStops).to.deep.equal(aLine.stops);
-    }
-
-    @test
-    public async shouldAddIntersectionLinesWithLineChangingTimeWhenTravelTimeIsProvided(): Promise<void> {
-        const intersectionStation = new Station('Intersection Station');
-        const aLine = new Line([
-            LineStopBuilder.withDefaults().withCode('NS1').build(),
-            LineStopBuilder.withDefaults().withCode('NS2').stoppingAt(intersectionStation).build()
-        ]);
-        const anotherLine = new Line([
-            LineStopBuilder.withDefaults().withCode('CC1').build(),
-            LineStopBuilder.withDefaults().withCode('CC2').stoppingAt(intersectionStation).build()
-        ]);
-        const lines = new Lines([aLine, anotherLine]);
-        const timingsConfiguration = mock(LineTimingsConfiguration);
-        const timeOfTravel = new Date(2019, 1, 1, 6, 30, 0);
-        when(this.configurationProvider.provideLineTimingsConfiguration()).thenReturn(instance(timingsConfiguration));
-        when(timingsConfiguration.getLineConfiguration('NS', timeOfTravel)).thenReturn({
-            isOperational: true,
-            timeTakenPerStationInMinutes: 10,
-            timeTakenPerLineChangeInMinutes: 15
-        });
-        when(timingsConfiguration.getLineConfiguration('CC', timeOfTravel)).thenReturn({
-            isOperational: true,
-            timeTakenPerStationInMinutes: 12,
-            timeTakenPerLineChangeInMinutes: 15
-        });
-
-        const result = await this.routingDataPreparer.prepare(lines, timeOfTravel);
-
-        const expectedIntersectionLine = IntersectionLine.create(aLine.stops[1], anotherLine.stops[1], 15);
-        expect(result.allLines).to.have.lengthOf(3);
-        expect([...result.allLines][2]).to.deep.equal(expectedIntersectionLine);
-        expect(expectedIntersectionLine.getTimeTakenBetweenStations()).to.equal(15);
     }
 }
