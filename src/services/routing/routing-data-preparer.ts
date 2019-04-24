@@ -24,17 +24,16 @@ export class RoutingDataPreparer {
         const allLines = clone(lines);
         const allStops = allLines.getAllStops();
         const filteredStops = timeOfTravel ? allStops.filter(stop => stop.wasOpenedOnOrBefore(timeOfTravel)) : allStops;
-        let timeTakenForLineChange = 1;
+        const timingsConfiguration = this.configurationProvider.provideLineTimingsConfiguration();
+        const timeTakenForLineChange = timeOfTravel ? timingsConfiguration.getTimeTakenForLineChange(timeOfTravel) : 1;
 
         if (timeOfTravel) {
-            const timingsConfiguration = this.configurationProvider.provideLineTimingsConfiguration();
             const linesToBeRemoved: Line[] = [];
             allLines.forEach(line => {
                 const lineConfiguration = timingsConfiguration.getLineConfiguration(line.code(), timeOfTravel);
                 if (!lineConfiguration.isOperational) {
                     linesToBeRemoved.push(line);
                 } else {
-                    timeTakenForLineChange = lineConfiguration.timeTakenPerLineChangeInMinutes;
                     line.setTimeTakenBetweenStations(lineConfiguration.timeTakenPerStationInMinutes);
                 }
             });

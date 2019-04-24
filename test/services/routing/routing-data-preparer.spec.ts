@@ -64,16 +64,41 @@ class RoutingDataPreparerSpec {
 
     @test
     public async shouldAddIntersectionLinesToAllLines(): Promise<void> {
+        const timeOfTravel = new Date();
+        const timingsConfiguration = mock(LineTimingsConfiguration);
+        const lines = new Lines([new Line([LineStopBuilder.withDefaults().build(), LineStopBuilder.withDefaults().build()]),
+            new Line([LineStopBuilder.withDefaults().build(), LineStopBuilder.withDefaults().build()])]);
+        const createdIntersectionLines = new Lines([
+            IntersectionLine.create(LineStopBuilder.withDefaults().build(), LineStopBuilder.withDefaults().build(), 100)
+        ]);
+        when(this.configurationProvider.provideLineTimingsConfiguration()).thenReturn(instance(timingsConfiguration));
+        when(timingsConfiguration.getTimeTakenForLineChange(timeOfTravel)).thenReturn(100);
+        when(timingsConfiguration.getLineConfiguration(anything(), anything())).thenReturn({
+            isOperational: true, timeTakenPerLineChangeInMinutes: 10, timeTakenPerStationInMinutes: 1
+        });
+        when(this.intersectionLinesFactory.create(deepEqual(lines.getAllStops()), 100))
+            .thenReturn(createdIntersectionLines);
+
+        const {allLines} = await this.routingDataPreparer.prepare(lines, timeOfTravel);
+
+        expect([...allLines]).to.deep.equal([...lines, ...createdIntersectionLines]);
+    }
+
+    @test
+    public async shouldAddIntersectionLinesWithTimeTakenToChangeLineAsOneIfTravelTimeIsNotProvided(): Promise<void> {
+        const timingsConfiguration = mock(LineTimingsConfiguration);
         const lines = new Lines([new Line([LineStopBuilder.withDefaults().build(), LineStopBuilder.withDefaults().build()]),
             new Line([LineStopBuilder.withDefaults().build(), LineStopBuilder.withDefaults().build()])]);
         const createdIntersectionLines = new Lines([
             IntersectionLine.create(LineStopBuilder.withDefaults().build(), LineStopBuilder.withDefaults().build(), 1)
         ]);
-        when(this.intersectionLinesFactory.create(deepEqual(lines.getAllStops()), 1)).thenReturn(createdIntersectionLines);
+        when(this.configurationProvider.provideLineTimingsConfiguration()).thenReturn(instance(timingsConfiguration));
+        when(this.intersectionLinesFactory.create(deepEqual(lines.getAllStops()), 1))
+            .thenReturn(createdIntersectionLines);
 
         const {allLines} = await this.routingDataPreparer.prepare(lines);
 
-        expect(allLines).to.deep.equal(new Lines([...lines, ...createdIntersectionLines]));
+        expect([...allLines]).to.deep.equal([...lines, ...createdIntersectionLines]);
     }
 
     @test
