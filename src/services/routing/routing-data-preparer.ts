@@ -1,5 +1,4 @@
 import {inject} from 'inversify';
-import {Line} from '../../models/line';
 import {Lines} from '../../models/lines';
 import {Logger} from '../../utils/logger';
 import {clone, remove, uniq} from 'lodash';
@@ -28,17 +27,19 @@ export class RoutingDataPreparer {
         const timeTakenForLineChange = timeOfTravel ? timingsConfiguration.getTimeTakenForLineChange(timeOfTravel) : 1;
 
         if (timeOfTravel) {
-            const linesToBeRemoved: Line[] = [];
-            allLines.forEach(line => {
-                const lineConfiguration = timingsConfiguration.getLineConfiguration(line.code(), timeOfTravel);
-                if (!lineConfiguration.isOperational) {
-                    linesToBeRemoved.push(line);
-                } else {
-                    line.setTimeTakenBetweenStations(lineConfiguration.timeTakenPerStationInMinutes);
-                }
+            const operationalLines = [...allLines].filter(line => {
+                return timingsConfiguration.getLineConfiguration(line.code(), timeOfTravel).isOperational;
+            });
+            const unoperationalLines = [...allLines].filter(line => {
+                return !timingsConfiguration.getLineConfiguration(line.code(), timeOfTravel).isOperational;
             });
 
-            linesToBeRemoved.forEach(line => {
+            operationalLines.forEach(line => {
+                const timeTakenPerStation = timingsConfiguration.getLineConfiguration(line.code(), timeOfTravel).timeTakenPerStationInMinutes;
+                return line.setTimeTakenBetweenStations(timeTakenPerStation);
+            });
+
+            unoperationalLines.forEach(line => {
                 this.logger.debug(`Removing line [${line.code()}] as it is non-operational at [${timeOfTravel}].`);
                 remove(filteredStops, stop => line.hasStop(stop));
                 return allLines.delete(line);
