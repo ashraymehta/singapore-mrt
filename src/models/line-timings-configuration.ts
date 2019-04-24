@@ -1,6 +1,5 @@
 import {first} from 'lodash';
-import {Moment} from 'moment-timezone/moment-timezone';
-import moment = require('moment-timezone');
+import {TimeUtil} from '../utils/time-util';
 
 export class LineTimingsConfiguration {
     private readonly peakHours: { start: string; days: string[]; end: string }[];
@@ -42,24 +41,12 @@ export class LineTimingsConfiguration {
     }
 
     private isNightHour(time: Date): boolean {
-        return !!this.nightHours.filter(night => night.days.includes(moment(time).tz('Asia/Singapore').format('ddd')))
-            .find(peak => this.isBetween(peak.start, peak.end, time));
+        return !!this.nightHours.filter(night => night.days.includes(TimeUtil.getDay(time)))
+            .find(peak => TimeUtil.isBetween(peak.start, peak.end, time));
     }
 
     private isPeakHour(time: Date): boolean {
-        return !!this.peakHours.filter(peak => peak.days.includes(moment(time).tz('Asia/Singapore').format('ddd')))
-            .find(peak => this.isBetween(peak.start, peak.end, time));
-    }
-
-    private isBetween(start: string, end: string, time: Date): boolean {
-        const startTime = moment.tz(start, 'H:m', 'Asia/Singapore');
-        const endTime = moment.tz(end, 'H:m', 'Asia/Singapore');
-        const timeInSGTimezone = moment(time).tz('Asia/Singapore');
-        return this.minutesOfDay(timeInSGTimezone) >= this.minutesOfDay(startTime) &&
-            this.minutesOfDay(timeInSGTimezone) <= this.minutesOfDay(endTime);
-    }
-
-    private minutesOfDay(m: Moment): number {
-        return m.minutes() + m.hours() * 60;
+        return !!this.peakHours.filter(peak => peak.days.includes(TimeUtil.getDay(time)))
+            .find(peak => TimeUtil.isBetween(peak.start, peak.end, time));
     }
 }
