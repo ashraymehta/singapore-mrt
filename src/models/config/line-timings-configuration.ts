@@ -1,21 +1,28 @@
-import {first} from 'lodash';
 import {HoursConfig} from './hours-config';
 
 export class LineTimingsConfiguration {
     private peakHours: HoursConfig;
     private nightHours: HoursConfig;
+    private lineChange: Map<'peak' | 'night' | 'other', number>;
     private readonly lines: {
         codes: string[];
-        otherHours: { timeTakenForLineChange: number; timeTakenPerStation: number };
-        peakHours: { timeTakenForLineChange: number; timeTakenPerStation: number };
-        nightHours: { timeTakenForLineChange: number; timeTakenPerStation: number } | { isOperational: boolean }
+        otherHours: { timeTakenPerStation: number };
+        peakHours: { timeTakenPerStation: number };
+        nightHours: { timeTakenPerStation: number } | { isOperational: boolean }
     }[];
 
+    private constructor(peakHours: HoursConfig, nightHours: HoursConfig, lineChange: Map<"peak" | "night" | "other", number>, lines: any) {
+        this.peakHours = peakHours;
+        this.nightHours = nightHours;
+        this.lineChange = lineChange;
+        this.lines = lines;
+    }
+
     public static from(config: object): LineTimingsConfiguration {
-        const configuration = Object.assign(new LineTimingsConfiguration(), config);
-        configuration.peakHours = new HoursConfig(...(<LineTimingsConfiguration>config).peakHours);
-        configuration.nightHours = new HoursConfig(...(<LineTimingsConfiguration>config).nightHours);
-        return configuration;
+        const peakHours = new HoursConfig(...(<LineTimingsConfiguration>config).peakHours);
+        const nightHours = new HoursConfig(...(<LineTimingsConfiguration>config).nightHours);
+        const lineChange = new Map(Object.entries((<LineTimingsConfiguration>config).lineChange)) as Map<'peak' | 'night' | 'other', number>;
+        return new LineTimingsConfiguration(peakHours, nightHours, lineChange, (<any>config).lines);
     }
 
     public getLineConfiguration(lineCode: string, time: Date): { isOperational: boolean; timeTakenPerStop: number; } {
@@ -33,13 +40,12 @@ export class LineTimingsConfiguration {
     }
 
     public getTimeTakenForLineChange(time: Date): number {
-        const lineConfig = first(this.lines);
         if (this.peakHours.isApplicableFor(time)) {
-            return lineConfig.peakHours.timeTakenForLineChange;
+            return this.lineChange.get('peak');
         } else if (this.nightHours.isApplicableFor(time)) {
-            return (lineConfig.nightHours as any).timeTakenForLineChange;
+            return this.lineChange.get('night');
         } else {
-            return lineConfig.otherHours.timeTakenForLineChange;
+            return this.lineChange.get('other');
         }
     }
 }

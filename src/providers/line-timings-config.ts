@@ -25,75 +25,67 @@ export const Config = {
         {
             codes: ["NS", "NE"],
             peakHours: {
-                timeTakenPerStation: 12,
-                timeTakenForLineChange: 15
+                timeTakenPerStation: 12
             },
             nightHours: {
-                timeTakenPerStation: 10,
-                timeTakenForLineChange: 10
+                timeTakenPerStation: 10
             },
             otherHours: {
-                timeTakenPerStation: 10,
-                timeTakenForLineChange: 10
+                timeTakenPerStation: 10
             }
         },
         {
             codes: ["CG", "CE"],
             peakHours: {
-                timeTakenPerStation: 10,
-                timeTakenForLineChange: 15
+                timeTakenPerStation: 10
             },
             nightHours: {
                 isOperational: false
             },
             otherHours: {
-                timeTakenPerStation: 10,
-                timeTakenForLineChange: 10
+                timeTakenPerStation: 10
             }
         },
         {
             codes: ["DT"],
             peakHours: {
-                timeTakenPerStation: 10,
-                timeTakenForLineChange: 15
+                timeTakenPerStation: 10
             },
             nightHours: {
                 isOperational: false
             },
             otherHours: {
-                timeTakenPerStation: 8,
-                timeTakenForLineChange: 10
+                timeTakenPerStation: 8
             }
         },
         {
             codes: ["TE"],
             peakHours: {
-                timeTakenPerStation: 10,
-                timeTakenForLineChange: 15
+                timeTakenPerStation: 10
             },
             nightHours: {
-                timeTakenPerStation: 8,
-                timeTakenForLineChange: 10
+                timeTakenPerStation: 8
             },
             otherHours: {
-                timeTakenPerStation: 8,
-                timeTakenForLineChange: 10
+                timeTakenPerStation: 8
             }
         },
         {
             codes: ["EW", "CC"],
             peakHours: {
-                timeTakenPerStation: 10,
-                timeTakenForLineChange: 15
+                timeTakenPerStation: 10
             },
             nightHours: {
-                timeTakenPerStation: 10,
-                timeTakenForLineChange: 10
+                timeTakenPerStation: 10
             },
             otherHours: {
-                timeTakenPerStation: 10,
-                timeTakenForLineChange: 10
+                timeTakenPerStation: 10
             }
         }
-    ]
+    ],
+    lineChange: {
+        peak: 15,
+        night: 10,
+        other: 10
+    }
 };
