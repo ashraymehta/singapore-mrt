@@ -1,23 +1,23 @@
 import {inject} from 'inversify';
 import {Logger} from './utils/logger';
-import {MetroBuilder} from './metro-builder';
+import {LinesFactory} from './lines-factory';
 import {provide} from 'inversify-binding-decorators';
 import {LinesRepository} from './repositories/lines.repository';
 
 @provide(Application)
 export class Application {
-    private readonly metroBuilder: MetroBuilder;
+    private readonly linesFactory: LinesFactory;
     private readonly linesRepository: LinesRepository;
     private readonly logger = Logger.for(Application.name);
 
-    constructor(@inject(MetroBuilder) metroBuilder: MetroBuilder, @inject(LinesRepository) linesRepository: LinesRepository) {
-        this.metroBuilder = metroBuilder;
+    constructor(@inject(LinesFactory) linesFactory: LinesFactory, @inject(LinesRepository) linesRepository: LinesRepository) {
+        this.linesFactory = linesFactory;
         this.linesRepository = linesRepository;
     }
 
     public async initialize(): Promise<void> {
-        const metro = await this.metroBuilder.build();
-        this.logger.debug(`Built [${metro.lines.size}] metro lines.`);
-        this.linesRepository.save(metro.lines);
+        const lines = await this.linesFactory.create();
+        this.logger.debug(`Built [${lines.size}] metro lines.`);
+        this.linesRepository.save(lines);
     }
 }

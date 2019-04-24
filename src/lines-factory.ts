@@ -1,7 +1,6 @@
 import {inject} from 'inversify';
 import {Line} from './models/line';
 import {groupBy, uniq} from 'lodash';
-import {Metro} from './models/metro';
 import {Lines} from './models/lines';
 import {Station} from './models/station';
 import {Stations} from './models/stations';
@@ -11,8 +10,8 @@ import {JSONFileReader} from './utils/json-file-reader';
 import {UnparsedStationMap} from './models/unparsed-station-map';
 import {ConfigurationProvider} from './providers/configuration-provider';
 
-@provide(MetroBuilder)
-export class MetroBuilder {
+@provide(LinesFactory)
+export class LinesFactory {
     private readonly jsonFileReader: JSONFileReader;
     private readonly configurationProvider: ConfigurationProvider;
 
@@ -22,7 +21,7 @@ export class MetroBuilder {
         this.configurationProvider = configurationProvider;
     }
 
-    public async build(): Promise<Metro> {
+    public async create(): Promise<Lines> {
         const filePath = await this.configurationProvider.providePathForStationsMapFile();
         const unparsedStationsMap = await this.jsonFileReader.readFile(filePath) as UnparsedStationMap[];
         const unparsedStationsByLineCodes = groupBy(unparsedStationsMap, station => station.StationCode.substr(0, Line.LineCodeLength));
@@ -37,6 +36,6 @@ export class MetroBuilder {
             });
             return new Line(stops);
         });
-        return new Metro(new Lines(lines));
+        return new Lines(lines);
     }
 }

@@ -1,9 +1,8 @@
 import {Line} from '../src/models/line';
-import {Metro} from '../src/models/metro';
 import {Lines} from '../src/models/lines';
 import {suite, test} from 'mocha-typescript';
 import {Application} from '../src/application';
-import {MetroBuilder} from '../src/metro-builder';
+import {LinesFactory} from '../src/lines-factory';
 import {instance, mock, verify, when} from 'ts-mockito';
 import {LineStopBuilder} from './builders/line-stop.builder';
 import {LinesRepository} from '../src/repositories/lines.repository';
@@ -11,19 +10,19 @@ import {LinesRepository} from '../src/repositories/lines.repository';
 @suite
 class ApplicationSpec {
     private application: Application;
-    private metroBuilder: MetroBuilder;
+    private linesFactory: LinesFactory;
     private linesRepository: LinesRepository;
 
     public before(): void {
-        this.metroBuilder = mock(MetroBuilder);
+        this.linesFactory = mock(LinesFactory);
         this.linesRepository = mock(LinesRepository);
-        this.application = new Application(instance(this.metroBuilder), instance(this.linesRepository));
+        this.application = new Application(instance(this.linesFactory), instance(this.linesRepository));
     }
 
     @test
-    public async shouldBuildMetroAndSaveLinesToLinesRepository(): Promise<void> {
+    public async shouldInvokeCreationOfLinesAndSaveLinesToLinesRepository(): Promise<void> {
         const lines = new Lines([new Line([LineStopBuilder.withDefaults().build()])]);
-        when(this.metroBuilder.build()).thenResolve(new Metro(lines));
+        when(this.linesFactory.create()).thenResolve(lines);
 
         await this.application.initialize();
 
