@@ -140,4 +140,18 @@ class LineTimingsConfigurationSpec {
             timeTakenPerLineChangeInMinutes: 10
         });
     }
+
+    @test
+    public async shouldGetTimeTakenForLineChange(): Promise<void> {
+        const configuration = LineTimingsConfiguration.from(Config);
+        const nightHour = new Date("2019-01-23T22:00:00.000+08:00");
+        const nonPeakHour = new Date("2019-01-23T11:30:00.000+08:00");
+        const morningPeakHour = new Date("2019-01-23T08:30:00.000+08:00");
+        const eveningPeakHour = new Date("2019-01-23T20:30:00.000+08:00");
+
+        expect(configuration.getTimeTakenForLineChange(nightHour)).to.equal(10);
+        expect(configuration.getTimeTakenForLineChange(nonPeakHour)).to.equal(10);
+        expect(configuration.getTimeTakenForLineChange(morningPeakHour)).to.equal(15);
+        expect(configuration.getTimeTakenForLineChange(eveningPeakHour)).to.equal(15);
+    }
 }
