@@ -17,7 +17,7 @@ export class Application {
 
     public async initialize(): Promise<void> {
         const metro = await this.metroBuilder.build();
-        this.logger.log(`Built [${metro.lines.size}] metro lines.`);
+        this.logger.debug(`Built [${metro.lines.size}] metro lines.`);
         this.linesRepository.save(metro.lines);
     }
 }

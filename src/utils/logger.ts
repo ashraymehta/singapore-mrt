@@ -1,4 +1,5 @@
 export class Logger {
+    private static readonly IsDebugLoggingEnabled = false;
     private readonly name: string;
 
     constructor(name: string) {
@@ -9,7 +10,9 @@ export class Logger {
         return new Logger(name);
     }
 
-    public log(message: string): void {
-        console.log(`[${new Date().toISOString()}] - ${this.name} - ${message}`);
+    public debug(message: string): void {
+        if (Logger.IsDebugLoggingEnabled) {
+            console.debug(`[${new Date().toISOString()}] - ${this.name} - ${message}`);
+        }
     }
 }

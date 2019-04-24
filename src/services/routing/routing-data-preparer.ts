@@ -39,7 +39,7 @@ export class RoutingDataPreparer {
             });
 
             linesToBeRemoved.forEach(line => {
-                this.logger.log(`Removing line [${line.code()}] as it is non-operational at [${timeOfTravel}].`);
+                this.logger.debug(`Removing line [${line.code()}] as it is non-operational at [${timeOfTravel}].`);
                 remove(filteredStops, stop => line.hasStop(stop));
                 return allLines.delete(line);
             });

@@ -19,7 +19,7 @@ export class FindRouteCommand {
     }
 
     public async execute(source: string, destination: string, timeOfTravelAsString?: string): Promise<string[]> {
-        this.logger.log(`Finding routes from [${source}] to [${destination}].`);
+        this.logger.debug(`Finding routes from [${source}] to [${destination}].`);
         const timeOfTravel = timeOfTravelAsString ? moment.tz(timeOfTravelAsString, 'YYYY-MM-DDThh:mm', 'Asia/Singapore').toDate() : undefined;
         const routes = await this.findRoutes(source, destination, timeOfTravel);
         return [`Found [${routes.length}] routes from [${source}] to [${destination}].`, '', routes.toString()];
@@ -27,7 +27,7 @@ export class FindRouteCommand {
 
     private async findRoutes(source: string, destination: string, timeOfTravel?: Date): Promise<Route[]> {
         const lines = await this.linesRepository.findAll();
-        this.logger.log(`Found [${lines.size}] lines from repository.`);
+        this.logger.debug(`Found [${lines.size}] lines from repository.`);
         const allStations = lines.getAllStations();
         const sourceStation = allStations.findStationWithName(source);
         const destinationStation = allStations.findStationWithName(destination);
