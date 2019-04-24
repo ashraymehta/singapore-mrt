@@ -3,29 +3,29 @@ import {intersection} from 'lodash';
 import {Routes} from '../models/routes';
 import {Station} from '../models/station';
 import {provide} from 'inversify-binding-decorators';
-import {RoutesCreator} from './routing/routes-creator';
+import {RoutesCreator} from './dijkstra/routes-creator';
 import {LinesRepository} from '../repositories/lines.repository';
-import {RoutingDataPreparer} from './routing/routing-data-preparer';
-import {GraphTraversalManager} from './routing/graph-traversal-manager';
+import {DijkstraDataPreparer} from './dijkstra/dijkstra-data-preparer';
+import {GraphTraversalManager} from './dijkstra/graph-traversal-manager';
 
 @provide(RoutingService)
 export class RoutingService {
     private readonly routeCreator: RoutesCreator;
     private readonly linesRepository: LinesRepository;
-    private readonly dataPreparer: RoutingDataPreparer;
+    private readonly dijkstraDataPreparer: DijkstraDataPreparer;
     private readonly graphTraversalStateManager: GraphTraversalManager;
 
-    constructor(@inject(RoutingDataPreparer) dataPreparer: RoutingDataPreparer, @inject(RoutesCreator) routeCreator: RoutesCreator,
+    constructor(@inject(DijkstraDataPreparer) dataPreparer: DijkstraDataPreparer, @inject(RoutesCreator) routeCreator: RoutesCreator,
                 @inject(GraphTraversalManager) traversalManager: GraphTraversalManager, @inject(LinesRepository) linesRepository: LinesRepository) {
-        this.dataPreparer = dataPreparer;
         this.routeCreator = routeCreator;
         this.linesRepository = linesRepository;
+        this.dijkstraDataPreparer = dataPreparer;
         this.graphTraversalStateManager = traversalManager;
     }
 
     public async findRoutesBetween(source: Station, destination: Station, timeOfTravel?: Date): Promise<Routes> {
         const lines = this.linesRepository.findAll();
-        const {allLines, allStops} = await this.dataPreparer.prepare(lines, timeOfTravel);
+        const {allLines, allStops} = await this.dijkstraDataPreparer.prepare(lines, timeOfTravel);
         const sourceStops = allStops.filter(stop => stop.isFor(source));
         const destinationStops = allStops.filter(stop => stop.isFor(destination));
 

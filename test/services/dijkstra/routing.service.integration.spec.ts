@@ -7,12 +7,12 @@ import {Route} from '../../../src/models/route';
 import {Station} from '../../../src/models/station';
 import {LineStopBuilder} from '../../builders/line-stop.builder';
 import {RoutingService} from '../../../src/services/routing.service';
-import {RoutesCreator} from '../../../src/services/routing/routes-creator';
+import {RoutesCreator} from '../../../src/services/dijkstra/routes-creator';
 import {LinesRepository} from '../../../src/repositories/lines.repository';
 import {ConfigurationProvider} from '../../../src/providers/configuration-provider';
-import {RoutingDataPreparer} from '../../../src/services/routing/routing-data-preparer';
-import {GraphTraversalManager} from '../../../src/services/routing/graph-traversal-manager';
-import {IntersectionLinesFactory} from '../../../src/services/routing/intersection-lines-factory';
+import {DijkstraDataPreparer} from '../../../src/services/dijkstra/dijkstra-data-preparer';
+import {GraphTraversalManager} from '../../../src/services/dijkstra/graph-traversal-manager';
+import {IntersectionLinesFactory} from '../../../src/services/factories/intersection-lines-factory';
 
 @suite
 class RoutingServiceIntegrationSpec {
@@ -21,7 +21,7 @@ class RoutingServiceIntegrationSpec {
 
     public before(): void {
         this.linesRepository = mock(LinesRepository);
-        this.router = new RoutingService(new RoutingDataPreparer(new ConfigurationProvider(), new IntersectionLinesFactory()),
+        this.router = new RoutingService(new DijkstraDataPreparer(new ConfigurationProvider(), new IntersectionLinesFactory()),
             new RoutesCreator(), new GraphTraversalManager(), instance(this.linesRepository));
     }
 

@@ -7,7 +7,7 @@ import {Station} from '../../../src/models/station';
 import {LineStop} from '../../../src/models/line-stop';
 import {LineStopBuilder} from '../../builders/line-stop.builder';
 import {IntersectionLine} from '../../../src/models/intersection-line';
-import {IntersectionLinesFactory} from '../../../src/services/routing/intersection-lines-factory';
+import {IntersectionLinesFactory} from '../../../src/services/factories/intersection-lines-factory';
 
 @suite
 class IntersectionLinesFactorySpec {

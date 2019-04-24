@@ -1,8 +1,8 @@
 import {inject} from 'inversify';
 import {Logger} from './utils/logger';
-import {LinesFactory} from './lines-factory';
 import {provide} from 'inversify-binding-decorators';
 import {LinesRepository} from './repositories/lines.repository';
+import {LinesFactory} from './services/factories/lines-factory';
 
 @provide(Application)
 export class Application {

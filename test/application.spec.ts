@@ -2,9 +2,9 @@ import {Line} from '../src/models/line';
 import {Lines} from '../src/models/lines';
 import {suite, test} from 'mocha-typescript';
 import {Application} from '../src/application';
-import {LinesFactory} from '../src/lines-factory';
 import {instance, mock, verify, when} from 'ts-mockito';
 import {LineStopBuilder} from './builders/line-stop.builder';
+import {LinesFactory} from '../src/services/factories/lines-factory';
 import {LinesRepository} from '../src/repositories/lines.repository';
 
 @suite

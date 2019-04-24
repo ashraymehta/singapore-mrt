@@ -8,20 +8,20 @@ import {LineStopBuilder} from '../../builders/line-stop.builder';
 import {anything, deepEqual, instance, mock, when} from 'ts-mockito';
 import {IntersectionLine} from '../../../src/models/intersection-line';
 import {ConfigurationProvider} from '../../../src/providers/configuration-provider';
-import {RoutingDataPreparer} from '../../../src/services/routing/routing-data-preparer';
+import {DijkstraDataPreparer} from '../../../src/services/dijkstra/dijkstra-data-preparer';
 import {LineTimingsConfiguration} from '../../../src/models/config/line-timings-configuration';
-import {IntersectionLinesFactory} from '../../../src/services/routing/intersection-lines-factory';
+import {IntersectionLinesFactory} from '../../../src/services/factories/intersection-lines-factory';
 
 @suite
-class RoutingDataPreparerSpec {
-    private routingDataPreparer: RoutingDataPreparer;
+class DijkstraDataPreparerSpec {
+    private dijkstraDataPreparer: DijkstraDataPreparer;
     private configurationProvider: ConfigurationProvider;
     private intersectionLinesFactory: IntersectionLinesFactory;
 
     public before(): void {
         this.configurationProvider = mock(ConfigurationProvider);
         this.intersectionLinesFactory = mock(IntersectionLinesFactory);
-        this.routingDataPreparer = new RoutingDataPreparer(instance(this.configurationProvider), instance(this.intersectionLinesFactory));
+        this.dijkstraDataPreparer = new DijkstraDataPreparer(instance(this.configurationProvider), instance(this.intersectionLinesFactory));
         when(this.intersectionLinesFactory.create(anything(), anything())).thenReturn(new Lines());
     }
 
@@ -39,7 +39,7 @@ class RoutingDataPreparerSpec {
         ]);
         const lines = new Lines([aLine, anotherLine]);
 
-        const result = await this.routingDataPreparer.prepare(lines);
+        const result = await this.dijkstraDataPreparer.prepare(lines);
 
         expect(result).to.deep.equal({
             allLines: new Lines([aLine, anotherLine]),
@@ -54,7 +54,7 @@ class RoutingDataPreparerSpec {
         const anotherLine = new Line([LineStopBuilder.withDefaults().build(), commonStop]);
         const lines = new Lines([aLine, anotherLine]);
 
-        const result = await this.routingDataPreparer.prepare(lines);
+        const result = await this.dijkstraDataPreparer.prepare(lines);
 
         expect(result).to.deep.equal({
             allLines: new Lines([aLine, anotherLine]),
@@ -78,7 +78,7 @@ class RoutingDataPreparerSpec {
         when(this.intersectionLinesFactory.create(deepEqual(lines.getAllStops()), 100))
             .thenReturn(createdIntersectionLines);
 
-        const {allLines} = await this.routingDataPreparer.prepare(lines, timeOfTravel);
+        const {allLines} = await this.dijkstraDataPreparer.prepare(lines, timeOfTravel);
 
         expect([...allLines]).to.deep.equal([...lines, ...createdIntersectionLines]);
     }
@@ -95,7 +95,7 @@ class RoutingDataPreparerSpec {
         when(this.intersectionLinesFactory.create(deepEqual(lines.getAllStops()), 1))
             .thenReturn(createdIntersectionLines);
 
-        const {allLines} = await this.routingDataPreparer.prepare(lines);
+        const {allLines} = await this.dijkstraDataPreparer.prepare(lines);
 
         expect([...allLines]).to.deep.equal([...lines, ...createdIntersectionLines]);
     }
@@ -118,7 +118,7 @@ class RoutingDataPreparerSpec {
             timeTakenPerStop: 10
         });
 
-        const result = await this.routingDataPreparer.prepare(lines, timeOfTravel);
+        const result = await this.dijkstraDataPreparer.prepare(lines, timeOfTravel);
 
         expect(result.allStops).to.deep.equal([stopOpenedLastYear]);
     }
@@ -146,7 +146,7 @@ class RoutingDataPreparerSpec {
             timeTakenPerStop: 12
         });
 
-        const {allLines} = await this.routingDataPreparer.prepare(lines, timeOfTravel);
+        const {allLines} = await this.dijkstraDataPreparer.prepare(lines, timeOfTravel);
 
         expect([...allLines][0].getTimeTakenBetweenStations()).to.deep.equal(10);
         expect([...allLines][1].getTimeTakenBetweenStations()).to.deep.equal(12);
@@ -164,7 +164,7 @@ class RoutingDataPreparerSpec {
         ]);
         const lines = new Lines([aLine, anotherLine]);
 
-        const {allLines} = await this.routingDataPreparer.prepare(lines);
+        const {allLines} = await this.dijkstraDataPreparer.prepare(lines);
 
         expect([...allLines][0].getTimeTakenBetweenStations()).to.deep.equal(1);
         expect([...allLines][1].getTimeTakenBetweenStations()).to.deep.equal(1);
@@ -193,7 +193,7 @@ class RoutingDataPreparerSpec {
             timeTakenPerStop: 12
         });
 
-        const {allLines, allStops} = await this.routingDataPreparer.prepare(lines, timeOfTravel);
+        const {allLines, allStops} = await this.dijkstraDataPreparer.prepare(lines, timeOfTravel);
 
         expect(allLines).to.have.lengthOf(1);
         expect(allStops).to.have.lengthOf(2);

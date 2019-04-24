@@ -4,13 +4,13 @@ import {Logger} from '../../utils/logger';
 import {clone, remove, uniq} from 'lodash';
 import {LineStop} from '../../models/line-stop';
 import {provide} from 'inversify-binding-decorators';
-import {IntersectionLinesFactory} from './intersection-lines-factory';
 import {ConfigurationProvider} from '../../providers/configuration-provider';
+import {IntersectionLinesFactory} from '../factories/intersection-lines-factory';
 
-@provide(RoutingDataPreparer)
-export class RoutingDataPreparer {
+@provide(DijkstraDataPreparer)
+export class DijkstraDataPreparer {
     private readonly configurationProvider: ConfigurationProvider;
-    private readonly logger = Logger.for(RoutingDataPreparer.name);
+    private readonly logger = Logger.for(DijkstraDataPreparer.name);
     private readonly intersectionLinesFactory: IntersectionLinesFactory;
 
     constructor(@inject(ConfigurationProvider) configurationProvider: ConfigurationProvider,

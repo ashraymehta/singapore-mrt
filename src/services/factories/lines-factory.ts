@@ -1,14 +1,14 @@
 import {inject} from 'inversify';
-import {Line} from './models/line';
+import {Line} from '../../models/line';
 import {groupBy, uniq} from 'lodash';
-import {Lines} from './models/lines';
-import {Station} from './models/station';
-import {Stations} from './models/stations';
-import {LineStop} from './models/line-stop';
+import {Lines} from '../../models/lines';
+import {Station} from '../../models/station';
+import {Stations} from '../../models/stations';
+import {LineStop} from '../../models/line-stop';
 import {provide} from 'inversify-binding-decorators';
-import {JSONFileReader} from './utils/json-file-reader';
-import {UnparsedStationMap} from './models/unparsed-station-map';
-import {ConfigurationProvider} from './providers/configuration-provider';
+import {JSONFileReader} from '../../utils/json-file-reader';
+import {UnparsedStationMap} from '../../models/unparsed-station-map';
+import {ConfigurationProvider} from '../../providers/configuration-provider';
 
 @provide(LinesFactory)
 export class LinesFactory {

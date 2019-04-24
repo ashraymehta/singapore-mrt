@@ -3,8 +3,8 @@ import {suite, test} from 'mocha-typescript';
 import {Route} from '../../../src/models/route';
 import {Station} from '../../../src/models/station';
 import {LineStopBuilder} from '../../builders/line-stop.builder';
-import {RoutesCreator} from '../../../src/services/routing/routes-creator';
-import {DijkstraGraphTraverser} from '../../../src/services/routing/dijkstra-graph-traverser';
+import {RoutesCreator} from '../../../src/services/dijkstra/routes-creator';
+import {DijkstraGraphTraverser} from '../../../src/services/dijkstra/dijkstra-graph-traverser';
 
 @suite
 class RoutesCreatorSpec {

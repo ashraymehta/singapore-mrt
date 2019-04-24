@@ -1,13 +1,13 @@
 import {expect} from 'chai';
-import {Line} from '../src/models/line';
-import {Lines} from '../src/models/lines';
 import {suite, test} from 'mocha-typescript';
-import {Station} from '../src/models/station';
+import {Line} from '../../../src/models/line';
+import {Lines} from '../../../src/models/lines';
 import {instance, mock, when} from 'ts-mockito';
-import {LineStop} from '../src/models/line-stop';
-import {LinesFactory} from '../src/lines-factory';
-import {JSONFileReader} from '../src/utils/json-file-reader';
-import {ConfigurationProvider} from '../src/providers/configuration-provider';
+import {Station} from '../../../src/models/station';
+import {LineStop} from '../../../src/models/line-stop';
+import {JSONFileReader} from '../../../src/utils/json-file-reader';
+import {LinesFactory} from '../../../src/services/factories/lines-factory';
+import {ConfigurationProvider} from '../../../src/providers/configuration-provider';
 
 @suite
 class LinesFactorySpec {
