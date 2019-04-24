@@ -1,6 +1,6 @@
 import {Config} from './line-timings-config';
 import {provide} from 'inversify-binding-decorators';
-import {LineTimingsConfiguration} from '../models/line-timings-configuration';
+import {LineTimingsConfiguration} from '../models/config/line-timings-configuration';
 
 @provide(ConfigurationProvider)
 export class ConfigurationProvider {

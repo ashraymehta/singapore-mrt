@@ -9,7 +9,7 @@ import {anything, deepEqual, instance, mock, when} from 'ts-mockito';
 import {IntersectionLine} from '../../../src/models/intersection-line';
 import {ConfigurationProvider} from '../../../src/providers/configuration-provider';
 import {RoutingDataPreparer} from '../../../src/services/routing/routing-data-preparer';
-import {LineTimingsConfiguration} from '../../../src/models/line-timings-configuration';
+import {LineTimingsConfiguration} from '../../../src/models/config/line-timings-configuration';
 import {IntersectionLinesFactory} from '../../../src/services/routing/intersection-lines-factory';
 
 @suite

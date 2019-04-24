@@ -1,12 +1,5 @@
 import {first} from 'lodash';
-import {TimeUtil} from '../utils/time-util';
-
-class HoursConfig extends Array<{ start: string; days: string[]; end: string }> {
-    public isApplicableFor(time: Date): boolean {
-        return !!this.filter(night => night.days.includes(TimeUtil.getDay(time)))
-            .find(peak => TimeUtil.isBetween(peak.start, peak.end, time))
-    }
-}
+import {HoursConfig} from './hours-config';
 
 export class LineTimingsConfiguration {
     private peakHours: HoursConfig;
