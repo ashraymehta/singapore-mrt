@@ -68,3 +68,20 @@ You can run the transpiled code using the following command:
 # From the project root directory
 npm start
 ```
+
+#### Usage
+The easiest way to use the solution is `npm start`. Source station, Destination station and start-time (optional) are the arguments 
+accepted by the solution. You can provide the start-time in `YYYY-MM-DDThh:mm` format. In case no arguments are provided, you will be 
+prompted for the same.
+
+```
+# Be prompted for arguments
+npm start
+
+# Provide arguments while starting the solution 
+# Without providing start-time
+npm start -- route "Holland Village" "Bugis"
+
+# With start-time
+npm start -- route "Holland Village" "Bugis" --start-time "2019-01-01T08:00"
+```
