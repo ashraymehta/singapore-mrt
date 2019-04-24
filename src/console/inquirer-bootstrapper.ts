@@ -2,7 +2,7 @@ import {EOL} from "os";
 import {inject} from 'inversify';
 import {provide} from 'inversify-binding-decorators';
 import {FindRouteCommand} from './commands/find-route-command';
-import {LinesRepository} from '../repositories/lines.repository';
+import {LinesRepository} from '../repositories/lines-repository';
 import inquirer = require('inquirer');
 
 inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));

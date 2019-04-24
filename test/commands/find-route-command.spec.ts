@@ -7,8 +7,8 @@ import {Routes} from '../../src/models/routes';
 import {Station} from '../../src/models/station';
 import {deepEqual, instance, mock, when} from 'ts-mockito';
 import {LineStopBuilder} from '../builders/line-stop.builder';
-import {RoutingService} from '../../src/services/routing.service';
-import {LinesRepository} from '../../src/repositories/lines.repository';
+import {RoutingService} from '../../src/services/routing-service';
+import {LinesRepository} from '../../src/repositories/lines-repository';
 import {FindRouteCommand} from '../../src/console/commands/find-route-command';
 
 @suite

@@ -4,7 +4,7 @@ import {Routes} from '../models/routes';
 import {Station} from '../models/station';
 import {provide} from 'inversify-binding-decorators';
 import {RoutesCreator} from './dijkstra/routes-creator';
-import {LinesRepository} from '../repositories/lines.repository';
+import {LinesRepository} from '../repositories/lines-repository';
 import {DijkstraDataPreparer} from './dijkstra/dijkstra-data-preparer';
 import {GraphTraversalManager} from './dijkstra/graph-traversal-manager';
 

@@ -5,7 +5,7 @@ import {Application} from '../src/application';
 import {instance, mock, verify, when} from 'ts-mockito';
 import {LineStopBuilder} from './builders/line-stop.builder';
 import {LinesFactory} from '../src/services/factories/lines-factory';
-import {LinesRepository} from '../src/repositories/lines.repository';
+import {LinesRepository} from '../src/repositories/lines-repository';
 
 @suite
 class ApplicationSpec {

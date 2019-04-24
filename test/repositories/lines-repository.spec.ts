@@ -3,7 +3,7 @@ import {Line} from '../../src/models/line';
 import {suite, test} from 'mocha-typescript';
 import {Lines} from '../../src/models/lines';
 import {LineStopBuilder} from '../builders/line-stop.builder';
-import {LinesRepository} from '../../src/repositories/lines.repository';
+import {LinesRepository} from '../../src/repositories/lines-repository';
 
 @suite
 class LinesRepositorySpec {
