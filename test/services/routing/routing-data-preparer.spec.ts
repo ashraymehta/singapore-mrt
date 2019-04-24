@@ -73,9 +73,8 @@ class RoutingDataPreparerSpec {
         ]);
         when(this.configurationProvider.provideLineTimingsConfiguration()).thenReturn(instance(timingsConfiguration));
         when(timingsConfiguration.getTimeTakenForLineChange(timeOfTravel)).thenReturn(100);
-        when(timingsConfiguration.getLineConfiguration(anything(), anything())).thenReturn({
-            isOperational: true, timeTakenPerLineChangeInMinutes: 10, timeTakenPerStationInMinutes: 1
-        });
+        when(timingsConfiguration.getLineConfiguration(anything(), anything()))
+            .thenReturn({isOperational: true, timeTakenPerStationInMinutes: 1});
         when(this.intersectionLinesFactory.create(deepEqual(lines.getAllStops()), 100))
             .thenReturn(createdIntersectionLines);
 
@@ -116,8 +115,7 @@ class RoutingDataPreparerSpec {
         when(this.configurationProvider.provideLineTimingsConfiguration()).thenReturn(instance(timingsConfiguration));
         when(timingsConfiguration.getLineConfiguration(anything(), timeOfTravel)).thenReturn({
             isOperational: true,
-            timeTakenPerStationInMinutes: 10,
-            timeTakenPerLineChangeInMinutes: 10
+            timeTakenPerStationInMinutes: 10
         });
 
         const result = await this.routingDataPreparer.prepare(lines, timeOfTravel);
@@ -141,13 +139,11 @@ class RoutingDataPreparerSpec {
         when(this.configurationProvider.provideLineTimingsConfiguration()).thenReturn(instance(timingsConfiguration));
         when(timingsConfiguration.getLineConfiguration('NS', timeOfTravel)).thenReturn({
             isOperational: true,
-            timeTakenPerStationInMinutes: 10,
-            timeTakenPerLineChangeInMinutes: 15
+            timeTakenPerStationInMinutes: 10
         });
         when(timingsConfiguration.getLineConfiguration('CC', timeOfTravel)).thenReturn({
             isOperational: true,
-            timeTakenPerStationInMinutes: 12,
-            timeTakenPerLineChangeInMinutes: 15
+            timeTakenPerStationInMinutes: 12
         });
 
         const {allLines} = await this.routingDataPreparer.prepare(lines, timeOfTravel);
@@ -190,13 +186,11 @@ class RoutingDataPreparerSpec {
         when(this.configurationProvider.provideLineTimingsConfiguration()).thenReturn(instance(timingsConfiguration));
         when(timingsConfiguration.getLineConfiguration('NS', timeOfTravel)).thenReturn({
             isOperational: true,
-            timeTakenPerStationInMinutes: 10,
-            timeTakenPerLineChangeInMinutes: 15
+            timeTakenPerStationInMinutes: 10
         });
         when(timingsConfiguration.getLineConfiguration('CC', timeOfTravel)).thenReturn({
             isOperational: false,
-            timeTakenPerStationInMinutes: 12,
-            timeTakenPerLineChangeInMinutes: 15
+            timeTakenPerStationInMinutes: 12
         });
 
         const {allLines, allStops} = await this.routingDataPreparer.prepare(lines, timeOfTravel);

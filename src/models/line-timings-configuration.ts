@@ -16,30 +16,18 @@ export class LineTimingsConfiguration {
         return Object.assign(new LineTimingsConfiguration(), config);
     }
 
-    public getLineConfiguration(lineCode: string, time: Date): { isOperational: boolean; timeTakenPerStationInMinutes: number; timeTakenPerLineChangeInMinutes: number } {
+    public getLineConfiguration(lineCode: string, time: Date): { isOperational: boolean; timeTakenPerStationInMinutes: number; } {
         const isPeakHourTime = this.isPeakHour(time);
         const isNightHourTime = this.isNightHour(time);
         const lineConfig = this.lines.find(lineConfig => lineConfig.codes.includes(lineCode));
         if (isPeakHourTime) {
-            return {
-                isOperational: true,
-                timeTakenPerStationInMinutes: lineConfig.peakHours.timeTakenPerStation,
-                timeTakenPerLineChangeInMinutes: lineConfig.peakHours.timeTakenForLineChange,
-            }
+            return {isOperational: true, timeTakenPerStationInMinutes: lineConfig.peakHours.timeTakenPerStation};
         } else if (isNightHourTime) {
             if (Object.keys(lineConfig.nightHours).includes('isOperational')) {
-                return {
-                    isOperational: false,
-                    timeTakenPerStationInMinutes: Infinity,
-                    timeTakenPerLineChangeInMinutes: Infinity
-                };
+                return {isOperational: false, timeTakenPerStationInMinutes: Infinity};
             }
         }
-        return {
-            isOperational: true,
-            timeTakenPerStationInMinutes: lineConfig.otherHours.timeTakenPerStation,
-            timeTakenPerLineChangeInMinutes: lineConfig.otherHours.timeTakenForLineChange,
-        };
+        return {isOperational: true, timeTakenPerStationInMinutes: lineConfig.otherHours.timeTakenPerStation};
     }
 
     public getTimeTakenForLineChange(time: Date): number {
