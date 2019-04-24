@@ -17,7 +17,7 @@ export class Lines extends Set<Line> {
             .map(line => {
                 const previousStop = line.stops[line.stops.indexOf(stop) - 1];
                 const nextStop = line.stops[line.stops.indexOf(stop) + 1];
-                return [previousStop, nextStop].filter(stop => !!stop);
+                return [previousStop, nextStop].filter(s => !!s);
             });
         return uniq(flatten(neighbouringStopPairs));
     }

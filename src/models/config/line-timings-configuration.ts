@@ -4,15 +4,15 @@ export class LineTimingsConfiguration {
     private readonly timeSlots: { peak: HoursConfig; night: HoursConfig; };
     private readonly timings: {
         perLineChange: Map<'peak' | 'night' | 'other', number>,
-        perStop: {
+        perStop: Array<{
             codes: string[];
             peak: number;
             other: number;
             night: number | undefined;
-        }[];
+        }>;
     };
 
-    private constructor(peak: HoursConfig, night: HoursConfig, perLineChange: Map<"peak" | "night" | "other", number>, perStop: any) {
+    private constructor(peak: HoursConfig, night: HoursConfig, perLineChange: Map<'peak' | 'night' | 'other', number>, perStop: any) {
         this.timeSlots = {peak, night};
         this.timings = {perLineChange, perStop};
     }
@@ -28,7 +28,7 @@ export class LineTimingsConfiguration {
     public getLineConfiguration(lineCode: string, time: Date): { isOperational: boolean; timeTakenPerStop: number; } {
         const isPeakHourTime = this.timeSlots.peak.isApplicableFor(time);
         const isNightHourTime = this.timeSlots.night.isApplicableFor(time);
-        const lineConfig = this.timings.perStop.find(lineConfig => lineConfig.codes.includes(lineCode));
+        const lineConfig = this.timings.perStop.find(config => config.codes.includes(lineCode));
         if (isPeakHourTime) {
             return {isOperational: true, timeTakenPerStop: lineConfig.peak};
         } else if (isNightHourTime) {

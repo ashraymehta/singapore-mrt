@@ -1,5 +1,5 @@
 import {Moment} from 'moment';
-import moment = require("moment-timezone");
+import moment = require('moment-timezone');
 
 export class TimeUtil {
     private static SingaporeTimezone = 'Asia/Singapore';

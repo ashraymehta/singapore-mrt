@@ -21,21 +21,21 @@ class LinesFactorySpec {
         this.configurationProvider = mock(ConfigurationProvider);
         this.metroBuilder = new LinesFactory(instance(this.reader), instance(this.configurationProvider));
 
-        when(this.configurationProvider.providePathForStationsMapFile()).thenResolve(LinesFactorySpec.StationsMapFilePath)
+        when(this.configurationProvider.providePathForStationsMapFile()).thenResolve(LinesFactorySpec.StationsMapFilePath);
     }
 
     @test
     public async shouldBuildMetroWhenOnlyASingleLineIsPresent(): Promise<void> {
         when(this.reader.readFile(LinesFactorySpec.StationsMapFilePath)).thenResolve([
             {
-                StationCode: "NS1",
-                StationName: "Jurong East",
-                OpeningDate: "10 March 1990"
+                StationCode: 'NS1',
+                StationName: 'Jurong East',
+                OpeningDate: '10 March 1990'
             },
             {
-                StationCode: "NS2",
-                StationName: "Bukit Batok",
-                OpeningDate: "10 March 1990"
+                StationCode: 'NS2',
+                StationName: 'Bukit Batok',
+                OpeningDate: '10 March 1990'
             }
         ]);
 
@@ -54,14 +54,14 @@ class LinesFactorySpec {
     public async shouldBuildMetroWhenMultipleLinesArePresent(): Promise<void> {
         when(this.reader.readFile(LinesFactorySpec.StationsMapFilePath)).thenResolve([
             {
-                StationCode: "NS1",
-                StationName: "Jurong East",
-                OpeningDate: "10 March 1990"
+                StationCode: 'NS1',
+                StationName: 'Jurong East',
+                OpeningDate: '10 March 1990'
             },
             {
-                StationCode: "EW1",
-                StationName: "Pasir Ris",
-                OpeningDate: "16 December 1989"
+                StationCode: 'EW1',
+                StationName: 'Pasir Ris',
+                OpeningDate: '16 December 1989'
             }
         ]);
 
@@ -79,14 +79,14 @@ class LinesFactorySpec {
     public async shouldBuildMetroWithUniqueStationsWhenDuplicatesArePresentInDifferentLines(): Promise<void> {
         when(this.reader.readFile(LinesFactorySpec.StationsMapFilePath)).thenResolve([
             {
-                StationCode: "NE6",
-                StationName: "Dhoby Ghaut",
-                OpeningDate: "20 June 2003"
+                StationCode: 'NE6',
+                StationName: 'Dhoby Ghaut',
+                OpeningDate: '20 June 2003'
             },
             {
-                StationCode: "CC1",
-                StationName: "Dhoby Ghaut",
-                OpeningDate: "17 April 2010"
+                StationCode: 'CC1',
+                StationName: 'Dhoby Ghaut',
+                OpeningDate: '17 April 2010'
             }
         ]);
 

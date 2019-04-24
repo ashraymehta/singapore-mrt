@@ -69,7 +69,7 @@ class RoutingServiceSpec {
 
         const traverser = mock(DijkstraGraphTraverser);
         when(this.linesRepository.findAll()).thenReturn(lines);
-        when(this.dijkstraDataPreparer.prepare(lines, undefined)).thenResolve({allLines: lines, allStops: allStops});
+        when(this.dijkstraDataPreparer.prepare(lines, undefined)).thenResolve({allLines: lines, allStops});
         when(this.traversalManager.startTraversal(anything(), anything())).thenReturn(instance(traverser));
 
         await this.router.findRoutesBetween(source, destination);
@@ -90,7 +90,7 @@ class RoutingServiceSpec {
 
         const traverser = mock(DijkstraGraphTraverser);
         when(this.linesRepository.findAll()).thenReturn(lines);
-        when(this.dijkstraDataPreparer.prepare(lines, undefined)).thenResolve({allLines: lines, allStops: allStops});
+        when(this.dijkstraDataPreparer.prepare(lines, undefined)).thenResolve({allLines: lines, allStops});
         when(this.traversalManager.startTraversal(anything(), anything())).thenReturn(instance(traverser));
 
         await this.router.findRoutesBetween(source, destination);
@@ -110,7 +110,7 @@ class RoutingServiceSpec {
 
         const traverser = mock(DijkstraGraphTraverser);
         when(this.linesRepository.findAll()).thenReturn(lines);
-        when(this.dijkstraDataPreparer.prepare(lines, undefined)).thenResolve({allLines: lines, allStops: allStops});
+        when(this.dijkstraDataPreparer.prepare(lines, undefined)).thenResolve({allLines: lines, allStops});
         when(this.traversalManager.startTraversal(anything(), anything())).thenReturn(instance(traverser));
         when(traverser.hasNext()).thenReturn(true).thenReturn(true).thenReturn(false);
         when(traverser.unvisitedStops).thenReturn(new Set([lineStopForSource, anotherLineStop]));
@@ -134,7 +134,7 @@ class RoutingServiceSpec {
 
         const traverser = mock(DijkstraGraphTraverser);
         when(this.linesRepository.findAll()).thenReturn(lines);
-        when(this.dijkstraDataPreparer.prepare(lines, undefined)).thenResolve({allLines: lines, allStops: allStops});
+        when(this.dijkstraDataPreparer.prepare(lines, undefined)).thenResolve({allLines: lines, allStops});
         when(this.traversalManager.startTraversal(anything(), anything())).thenReturn(instance(traverser));
         when(traverser.hasNext()).thenReturn(true, true, false);
         when(traverser.moveToNext()).thenReturn(lineStopForSource, aLineStop, anotherLineStop);
@@ -159,7 +159,7 @@ class RoutingServiceSpec {
 
         const traverser = mock(DijkstraGraphTraverser);
         when(this.linesRepository.findAll()).thenReturn(lines);
-        when(this.dijkstraDataPreparer.prepare(lines, undefined)).thenResolve({allLines: lines, allStops: allStops});
+        when(this.dijkstraDataPreparer.prepare(lines, undefined)).thenResolve({allLines: lines, allStops});
         when(this.traversalManager.startTraversal(anything(), anything())).thenReturn(instance(traverser));
         when(traverser.moveToNext()).thenReturn(lineStopForSource, aLineStop, anotherLineStop);
         when(traverser.unvisitedStops).thenReturn(new Set([anotherLineStop]));
@@ -186,7 +186,7 @@ class RoutingServiceSpec {
         const traverser = mock(DijkstraGraphTraverser);
         when(this.linesRepository.findAll()).thenReturn(lines);
         when(this.traversalManager.startTraversal(anything(), anything())).thenReturn(instance(traverser));
-        when(this.dijkstraDataPreparer.prepare(lines, undefined)).thenResolve({allLines: lines, allStops: allStops});
+        when(this.dijkstraDataPreparer.prepare(lines, undefined)).thenResolve({allLines: lines, allStops});
         when(traverser.moveToNext()).thenReturn(lineStopForSource, aLineStop, yetAnotherLineStop, anotherLineStop);
         when(traverser.getCurrentStop()).thenReturn(undefined, lineStopForSource, aLineStop);
         when(traverser.unvisitedStops).thenReturn(new Set([anotherLineStop]));

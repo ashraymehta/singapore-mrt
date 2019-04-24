@@ -14,13 +14,13 @@ export class IntersectionLinesFactory {
         }));
         const intersectionLines = flatten(duplicateStations.map(station => {
             const stopsForStation = stops.filter(stop => stop.isFor(station));
-            const intersectionLines = flatten(stopsForStation.map(stop => {
+            const intersectionLinesWithAllCombinations = flatten(stopsForStation.map(stop => {
                 return difference(stopsForStation, [stop]).map(otherStop => {
                     return IntersectionLine.create(stop, otherStop, timeTakenForLineChange);
                 });
             }));
 
-            return uniqWith(intersectionLines, (anIntersectionLine: IntersectionLine, anotherIntersectionLine: IntersectionLine) => {
+            return uniqWith(intersectionLinesWithAllCombinations, (anIntersectionLine: IntersectionLine, anotherIntersectionLine: IntersectionLine) => {
                 return anIntersectionLine.isSame(anotherIntersectionLine);
             });
         }));

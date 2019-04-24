@@ -18,10 +18,10 @@ class LineStopSpec {
     public async shouldDetermineIfLineStopWasOpenBeforeAProvidedDateForStation(): Promise<void> {
         const stop = LineStopBuilder.withDefaults().withOpeningDate(new Date('2019-01-01T00:00:00.000Z')).build();
 
-        expect(stop.wasOpenedOnOrBefore(new Date("2019-02-01T00:00:00.000Z"))).to.be.true;
-        expect(stop.wasOpenedOnOrBefore(new Date("2019-01-01T00:00:00.000Z"))).to.be.true;
+        expect(stop.wasOpenedOnOrBefore(new Date('2019-02-01T00:00:00.000Z'))).to.be.true;
+        expect(stop.wasOpenedOnOrBefore(new Date('2019-01-01T00:00:00.000Z'))).to.be.true;
 
-        expect(stop.wasOpenedOnOrBefore(new Date("2018-12-31T21:59:59.999Z"))).to.be.false;
-        expect(stop.wasOpenedOnOrBefore(new Date("2018-02-01T00:00:00.000Z"))).to.be.false;
+        expect(stop.wasOpenedOnOrBefore(new Date('2018-12-31T21:59:59.999Z'))).to.be.false;
+        expect(stop.wasOpenedOnOrBefore(new Date('2018-02-01T00:00:00.000Z'))).to.be.false;
     }
 }

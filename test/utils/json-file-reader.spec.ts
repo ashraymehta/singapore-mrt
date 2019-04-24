@@ -13,14 +13,14 @@ class JsonFileReaderSpec {
         expect(result).to.be.an.instanceOf(Object);
         expect(result).to.deep.equal([
             {
-                "StationCode": "NS1",
-                "StationName": "Jurong East",
-                "OpeningDate": "10 March 1990"
+                StationCode: 'NS1',
+                StationName: 'Jurong East',
+                OpeningDate: '10 March 1990'
             },
             {
-                "StationCode": "NS2",
-                "StationName": "Bukit Batok",
-                "OpeningDate": "10 March 1990"
+                StationCode: 'NS2',
+                StationName: 'Bukit Batok',
+                OpeningDate: '10 March 1990'
             }
         ]);
     }

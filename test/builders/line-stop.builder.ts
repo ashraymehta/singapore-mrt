@@ -15,7 +15,7 @@ export class LineStopBuilder {
         return new LineStopBuilder()
             .withCode(`CC${identifier}`)
             .stoppingAt(new Station(`A Station - ${identifier}`))
-            .withOpeningDate(new Date(2019, 0, 1))
+            .withOpeningDate(new Date(2019, 0, 1));
     }
 
     public withCode(code: string): this {

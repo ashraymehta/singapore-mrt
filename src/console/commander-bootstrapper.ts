@@ -1,4 +1,4 @@
-import {EOL} from "os";
+import {EOL} from 'os';
 import {inject} from 'inversify';
 import {Command} from 'commander';
 import {provide} from 'inversify-binding-decorators';
